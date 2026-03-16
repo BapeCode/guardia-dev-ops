@@ -5,9 +5,8 @@ services:
       - "5000:5000"
     volumes:
       - ./backend:/app
-    # SQLite a juste besoin d'un fichier, pas de variables complexes
     environment:
-      - DATABASE_URL=sqlite:///app.db
+      - DATABASE_URL=sqlite:///database.db
 
   frontend:
     build: ./frontend
@@ -16,5 +15,8 @@ services:
     volumes:
       - ./frontend:/app
       - /app/node_modules
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+      - WATCHPACK_POLLING=true
     stdin_open: true
     tty: true

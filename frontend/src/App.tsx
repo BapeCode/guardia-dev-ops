@@ -1,9 +1,10 @@
-
+import { Route, Routes } from "react-router-dom";
+import Home from "./pages/Home.tsx";
 
 export default function App() {
   return (
-      <main className="w-full h-screen grid grid-cols-2 gap-4">
-          <h1>Connectez vous ou crée un compte</h1>
-      </main>
-  )
+    <Routes>
+      <Route path="/" element={<Home />} />
+    </Routes>
+  );
 }

@@ -1,34 +1,31 @@
-version: '3.8'
-
 services:
-  # --- Base de données MySQL ---
   db:
     image: mysql:8.0
-    container_name: guardia-dev-ops
     restart: always
     environment:
-      MYSQL_DATABASE: root
-      MYSQL_ROOT_PASSWORD: root # À changer plus tard !
-      MYSQL_USER: user_guardia
-      MYSQL_PASSWORD: user_password
-    ports:
-      - "3306:3306"
+      MYSQL_DATABASE: oncity_db
+      MYSQL_ROOT_PASSWORD: root_password
+      MYSQL_USER: user_oncity
+      MYSQL_PASSWORD: password_oncity
     volumes:
-      - db_data:/var/lib/mysql
+      - mysql_data:/var/lib/mysql
 
-  # --- API Flask (Backend) ---
-  api:
+  backend:
     build: ./backend
-    container_name: guardia-dev-ops_api
-    restart: always
     ports:
       - "5000:5000"
+    env_file: .env
     environment:
-      - FLASK_ENV=development
-      - DATABASE_URL=mysql+pymysql://user_guardia:user_password@db/guardiagram_db
+      - .env
     depends_on:
       - db
 
-# Persistence des données MySQL même si le container s'arrête
-volumes:
-  db_data:
+  frontend:
+    build: ./frontend
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    stdin_open: true
+    tty: true

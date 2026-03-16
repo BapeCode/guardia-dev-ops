@@ -1,1 +1,35 @@
 @import "tailwindcss";
+
+:root {
+    --bg:          #F7F5F2;
+    --bg-card:     #FAFAF8;
+    --bg-glass:    rgba(250,250,248,0.82);
+    --border:      rgba(0,0,0,0.08);
+    --border-gold: rgba(188,158,103,0.35);
+    --text-1:      #1A1A18;
+    --text-2:      #5A5A56;
+    --text-3:      #9A9A94;
+    --gold:        #C9A96E;
+    --gold-light:  #E8D5B0;
+    --gold-subtle: rgba(201,169,110,0.12);
+    --sidebar-w:   240px;
+    --radius:      14px;
+    --shadow-sm:   0 1px 3px rgba(0,0,0,0.05), 0 4px 16px rgba(0,0,0,0.04);
+    --shadow-md:   0 2px 8px rgba(0,0,0,0.06), 0 12px 40px rgba(0,0,0,0.07);
+    --transition:  all 0.25s cubic-bezier(0.4,0,0.2,1);
+}
+
+
+@theme {
+    --color-background : var(--bg);
+    --color-card       : var(--bg-card);
+    --color-glass      : var(--bg-glass);
+    --color-border     : var(--border);
+    --color-border-gold: var(--border-gold);
+    --color-text-1     : var(--text-1);
+    --color-text-2     : var(--text-2);
+    --color-text-3     : var(--text-3);
+    --color-primary       : var(--gold);
+    --color-primary-light : var(--gold-light);
+    --color-primary-subtitle: var(--gold-subtle);
+}

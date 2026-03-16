@@ -2,8 +2,8 @@
 
 export default function App() {
   return (
-    <h1 class="text-3xl font-bold underline text-blue-500">
-      Hello world!
-    </h1>
+      <main className="w-full h-screen grid grid-cols-2 gap-4">
+          <h1>Connectez vous ou crée un compte</h1>
+      </main>
   )
 }

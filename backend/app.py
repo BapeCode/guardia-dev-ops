@@ -3,12 +3,14 @@ from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
 import os
 
+
 app = Flask(__name__)
 CORS(app)
 
-# Configuration SQLite (plus simple, pas d'utilisateur/mot de passe requis)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///oncity.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+
 
 db = SQLAlchemy(app)
 

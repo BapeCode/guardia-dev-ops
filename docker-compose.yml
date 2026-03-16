@@ -1,24 +1,13 @@
 services:
-  db:
-    image: mysql:8.0
-    restart: always
-    environment:
-      MYSQL_DATABASE: oncity_db
-      MYSQL_ROOT_PASSWORD: root_password
-      MYSQL_USER: user_oncity
-      MYSQL_PASSWORD: password_oncity
-    volumes:
-      - mysql_data:/var/lib/mysql
-
   backend:
     build: ./backend
     ports:
       - "5000:5000"
-    env_file: .env
+    volumes:
+      - ./backend:/app
+    # SQLite a juste besoin d'un fichier, pas de variables complexes
     environment:
-      - .env
-    depends_on:
-      - db
+      - DATABASE_URL=sqlite:///app.db
 
   frontend:
     build: ./frontend

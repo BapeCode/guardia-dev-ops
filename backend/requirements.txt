@@ -1,5 +1,4 @@
 flask
 flask-cors
 flask-sqlalchemy
-mysql-connector-python
 python-dotenv

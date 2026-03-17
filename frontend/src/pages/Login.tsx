@@ -2,6 +2,7 @@ import Section from "../components/Section.tsx";
 import Input from "../components/Input.tsx";
 import Button from "../components/Button.tsx";
 import {useState} from "react";
+import { Link } from "react-router-dom";
 
 export default function Login() {
     const [message, setMessage] = useState("")
@@ -24,7 +25,7 @@ export default function Login() {
 
             const data = await resp.json();
             if (resp.ok) {
-                setMessage('Connexion réussite !')
+                setMessage(data.message)
             } else {
                 setMessage(data.error || 'Erreur de connexion')
             }
@@ -38,7 +39,7 @@ export default function Login() {
             <div className="flex flex-col justify-center items-center gap-6 h-screen">
                 <div className="w-1/3">
                     <h2 className="text-text-1 font-serif text-2xl">Glint</h2>
-                    <p className="text-text-1/40 font-serif text-sm text-justify">Rejoingnez une communauté où le raffinement rencontre l'authenticité</p>
+                    <p className="text-text-1/40 font-serif text-sm ">Rejoingnez une communauté où le raffinement rencontre l'authenticité</p>
                 </div>
 
                 <div className="bg-card border-border rounded-xs shadow-sm p-6 w-1/3">
@@ -57,6 +58,13 @@ export default function Login() {
                             <p className="text-text-1 uppercase text-sm font-medium">Se connecter</p>
                         </Button>
                     </form>
+                    <div className="flex justify-center items-center mt-6">
+                        <p className="font-extralight text-text-1/60 text-sm">
+                            <Link to="/" className="text-text-1 font-medium hover:underline">
+                                Retour à l'accueil
+                            </Link>
+                        </p>
+                    </div>
                 </div>
             </div>
         </Section>

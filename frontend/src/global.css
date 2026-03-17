@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap');
 
 :root {
     --bg:          #F7F5F2;
@@ -17,8 +18,9 @@
     --shadow-sm:   0 1px 3px rgba(0,0,0,0.05), 0 4px 16px rgba(0,0,0,0.04);
     --shadow-md:   0 2px 8px rgba(0,0,0,0.06), 0 12px 40px rgba(0,0,0,0.07);
     --transition:  all 0.25s cubic-bezier(0.4,0,0.2,1);
+    --mono: Manrope, sans-serif;
+    --serif: Playfair Display, serif;
 }
-
 
 @theme {
     --color-background : var(--bg);
@@ -32,4 +34,13 @@
     --color-primary       : var(--gold);
     --color-primary-light : var(--gold-light);
     --color-primary-subtitle: var(--gold-subtle);
+    --font-mono: var(--mono);
+    --font-serif: var(--serif);
+}
+
+body {
+    background-color: var(--color-background);
+    color: var(--color-text-1);
+    font-family: var(--mono);
+    line-height: 1.6;
 }

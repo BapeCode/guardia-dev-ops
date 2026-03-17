@@ -2,6 +2,7 @@ import Section from "../components/Section.tsx";
 import Input from "../components/Input.tsx";
 import Button from "../components/Button.tsx";
 import {useState} from "react";
+import { Link } from "react-router-dom";
 
 export default function Login() {
     const [message, setMessage] = useState("")
@@ -57,6 +58,13 @@ export default function Login() {
                             <p className="text-text-1 uppercase text-sm font-medium">Se connecter</p>
                         </Button>
                     </form>
+                    <div className="flex justify-center items-center mt-6">
+                        <p className="font-extralight text-text-1/60 text-sm">
+                            <Link to="/" className="text-text-1 font-medium hover:underline">
+                                Retour à l'accueil
+                            </Link>
+                        </p>
+                    </div>
                 </div>
             </div>
         </Section>

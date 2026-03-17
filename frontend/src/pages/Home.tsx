@@ -40,13 +40,15 @@ export default function Home() {
           </p>
 
           <div className="relative z-10 mt-8 flex gap-4">
-            <Button
-              size="lg"
-              className="gap-2 px-8 bg-primary text-primary-foreground hover:bg-primary/90 border-2 border-primary/10"
-            >
-              S'inscrire
-              <ArrowRight className="h-4 w-4" />
-            </Button>
+            <Link to="/register">
+              <Button
+                  size="lg"
+                  className="gap-2 px-8 bg-primary text-primary-foreground hover:bg-primary/90 border-2 border-primary/10"
+              >
+                S'inscrire
+                <ArrowRight className="h-4 w-4" />
+              </Button>
+            </Link>
             <Link to="/login">
               <Button size="lg" variant="outline" className="gap-2 px-8">
                 <LogIn className="h-4 w-4" />

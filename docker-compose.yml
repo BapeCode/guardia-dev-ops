@@ -6,7 +6,14 @@ services:
     volumes:
       - ./backend:/app
     environment:
-      - DATABASE_URL=sqlite:///database.db
+      - FLASK_APP=app.py
+      - FLASK_DEBUG=1
+      - FLASK_RUN_HOST=0.0.0.0
+      - FLASK_RUN_PORT=5000
+      - PYTHONPATH=/app
+    command: flask run
+    networks:
+      - app-network
 
   frontend:
     build: ./frontend
@@ -20,3 +27,9 @@ services:
       - WATCHPACK_POLLING=true
     stdin_open: true
     tty: true
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge

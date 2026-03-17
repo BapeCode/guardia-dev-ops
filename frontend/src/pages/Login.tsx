@@ -6,10 +6,31 @@ import {useState} from "react";
 export default function Login() {
     const [message, setMessage] = useState("")
 
-    const handleSubmit = (e: SubmitEventHandler<HTMLFormElement>) => {
-        e.preventDefault()
-        console.log(e.target)
-        setMessage("Votre compte n'a pas été trouver, veuillez réessayer")
+    const handleSubmit = async (e: FormData) => {
+        const email = e.get('user_email')
+        const password = e.get('user_password')
+
+        try {
+            const resp = await fetch('/api/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    'email': email,
+                    'password': password
+                })
+            });
+
+            const data = await resp.json();
+            if (resp.ok) {
+                setMessage('Connexion réussite !')
+            } else {
+                setMessage(data.error || 'Erreur de connexion')
+            }
+        } catch (error) {
+            setMessage('Une erreur réseau est survenu : ' + error)
+        }
     }
 
     return (
@@ -27,8 +48,8 @@ export default function Login() {
                     </div>
 
                     <form className="flex flex-col items-start justify-center mt-8 w-full gap-4" action={handleSubmit}>
-                        <Input label="Adresse mail" placeholder="votre@email.fr" type="email"/>
-                        <Input label="Mot de passe" placeholder="****" type="password"/>
+                        <Input required={true} label="Adresse mail" placeholder="votre@email.fr" type="email" name={"user_email"}/>
+                        <Input required={true} label="Mot de passe" placeholder="****" type="password" name={"user_password"}/>
 
                         <p className={message == "" ? "hidden" : "block text-xs text-red-500"}>{message}</p>
 

@@ -8,11 +8,11 @@ interface InputProps {
 export default function Input({label, type = "text", placeholder}: InputProps) {
     return (
         <div className="flex flex-col items-start gap-2 w-full">
-            <label className="text-sm font-medium text-text-1/40 uppercase tracking-widest">{label}</label>
+            <label className="text-xs font-light text-text-1/40 uppercase tracking-widest">{label}</label>
             <input
                 type={type}
                 placeholder={placeholder}
-                className="w-full px-3 py-4 shadow-sm border-border focus:outline-none focus:ring-1 focus:ring-border-gold focus:ring-offset-2" />
+                className="w-full px-2.5 py-3 shadow-sm border-border focus:outline-none focus:ring-1 focus:ring-border-gold focus:ring-offset-2" />
         </div>
     )
 }

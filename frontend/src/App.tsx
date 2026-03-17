@@ -1,6 +1,6 @@
 import { Route, Routes } from "react-router-dom";
-import Home from "../pages/Home.tsx";
-import Login from "../pages/Login.tsx";
+import Home from "./pages/Home.tsx";
+import Login from "./pages/Login.tsx";
 
 export default function App() {
   return (

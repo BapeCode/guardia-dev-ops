@@ -5,74 +5,113 @@ import Input from "../components/Input.tsx";
 import Button from "../components/Button.tsx";
 
 export default function Register() {
-    const [email, setEmail] = useState('');
-    const [Nom, setNom] = useState('');
-    const [Pseudo, setPseudo] = useState('');
-    const [password, setPassword] = useState('');
-    const [confirmPassword, setConfirmPassword] = useState('');
+   
+    const [message, setMessage] = useState("");
 
-    const handleSubmit = (e: React.FormEvent) => {
-        e.preventDefault();
-        // Logique de création de compte à insérer ici
+    const handleSubmit = async (e: FormData) => {
+
+        const email = e.get('email');
+        const fullName = e.get('fullName');
+        const username = e.get('username');
+        const password = e.get('password');
+        const confirmPassword = e.get('confirmPassword');
+
         if (password !== confirmPassword) {
-            console.log("Les mots de passe ne correspondent pas");
-            return;
+            setMessage("Les mots de passe ne correspondent pas.");
+            return; 
         }
-        console.log("Tentative d'inscription avec :", email, password);
+
+        try {
+            const resp = await fetch('/api/register', { 
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    email: email,
+                    fullName: fullName,
+                    username: username,
+                    password: password
+                })
+            });
+
+            const data = await resp.json();
+            if (resp.ok) {
+                setMessage("Inscription réussie !");
+            } else {
+                setMessage(data.error || "Erreur lors de l'inscription");
+            }
+        } catch (error) {
+            setMessage("Une erreur réseau est survenue : " + error);
+        }
     };
 
     return (
         <Section>
-            <div className="flex justify-center items-center gap-6 h-screen">
+           
+            <div className="flex flex-col justify-center items-center gap-6 h-screen">
+
+                <div className="w-1/3">
+                    <h2 className="text-text-1 font-serif text-2xl">Glint</h2>
+                    <p className="text-text-1/40 font-serif text-sm text-justify">Rejoignez une communauté où le raffinement rencontre l'authenticité</p>
+                </div>
+
                 <div className="bg-card border-border rounded-xs shadow-sm p-6 w-1/3">
                     <div className="flex flex-col items-start justify-center gap-1">
                         <h1 className="tracking-widest font-light text-text-1 font-serif text-lg">Inscription</h1>
                         <p className="font-extralight text-text-1/40 font-mono text-sm">Créez votre compte pour commencer</p>
                     </div>
 
-                    <form onSubmit={handleSubmit} className="flex flex-col items-start justify-center mt-8 w-full gap-4">
+                    <form action={handleSubmit} className="flex flex-col items-start justify-center mt-8 w-full gap-4">
                         <Input
                             label="Adresse mail"
+                            name="email"
                             placeholder="exemple@gmail.com"
                             type="email"
-                            value={email}
-                            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)}
+                            required
                         />
+                        
                         <Input
                             label="Nom Complet"
+                            name="fullName"
                             placeholder="Prénom NOM"
-                            type="Nom"
-                            value={Nom}
-                            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setNom(e.target.value)}
+                            type="text" 
+                            required
                         />
+                       
                         <Input
                             label="Nom d'utilisateur"
+                            name="username"
                             placeholder="Pseudo123456"
-                            type="Pseudo"
-                            value={Pseudo}
-                            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPseudo(e.target.value)}
+                            type="text"
+                            required
                         />
                         <Input
                             label="Mot de passe"
+                            name="password"
                             placeholder="********"
                             type="password"
-                            value={password}
-                            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)}
+                            required
                         />
                         <Input
                             label="Confirmer le mot de passe"
+                            name="confirmPassword"
                             placeholder="********"
                             type="password"
-                            value={confirmPassword}
-                            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setConfirmPassword(e.target.value)}
+                            required
                         />
+
+                       
+                        <p className={message === "" ? "hidden" : "block text-xs text-red-500"}>
+                            {message}
+                        </p>
 
                         <Button type="submit" className="w-full mt-2">
                             <p className="text-text-1 uppercase text-sm font-medium">S'inscrire</p>
                         </Button>
                     </form>
 
-                    {/* Liens de navigation */}
+                    
                     <div className="flex flex-col items-center gap-2 mt-6">
                         <p className="font-extralight text-text-1/60 text-sm">
                             Déjà un compte ?{' '}

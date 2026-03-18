@@ -18,19 +18,21 @@ def login():
     else:
         return jsonify({"message": "Login successful", "user": {"id": user.id, "name": user.name, "email": user.email}}), 200
 
+
 @auth_bp.route('/register', methods=['POST'])
 def register():
     data = request.get_json()
-    fullName = data.get("fullName")
+    name = data.get("fullName")
     username = data.get("username")
     email = data.get("email")
     password = data.get("password")
-    user = User(email=email, name=fullName, username=username, password=password)   
 
-    if user:
-        return jsonify({"message": "Registration failed: email already used"}), 400
-    else:
-        db.session.add(user)
-        db.session.commit()
-        return jsonify({"message": "Registration successful"}), 200
-        
+    existing_user = User.query.filter_by(email=email).first()
+
+    if existing_user:
+        return jsonify({"message": "Email already registered"}), 400
+
+    new_user = User(name=name, username=username, email=email, password=password)
+    db.session.add(new_user)
+    db.session.commit()
+    return jsonify({"message": "Registration successful"}), 200

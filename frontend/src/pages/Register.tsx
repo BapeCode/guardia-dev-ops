@@ -1,163 +1,88 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
-import Section from "../components/Section.tsx";
-import { AnimatedGridPattern } from "../components/ui/animated-grid-pattern.tsx";
-import Input from "../components/Input.tsx";
-import { Button } from "../components/ui/button.tsx";
-import { cn } from "@/lib/utils.ts";
-import ShinyText from "@/components/ShinyText.tsx";
+import {useState} from "react";
+import Section from "@/components/Section.tsx";
+import Input from "@/components/Input.tsx";
+import {Button} from "@/components/ui/button.tsx";
+import {Link} from "react-router-dom";
 
-export default function Register() {
-    const [message, setMessage] = useState("");
+export default function Login() {
+    const [message, setMessage] = useState("")
 
     const handleSubmit = async (e: FormData) => {
-        const email = e.get('email');
-        const fullName = e.get('fullName');
-        const username = e.get('username');
-        const password = e.get('password');
-        const confirmPassword = e.get('confirmPassword');
+        const fullName = e.get("user_name")
+        const username = e.get("username")
+        const email = e.get('user_email')
+        const password = e.get('user_password')
+        const confirmPassword = e.get('user_confirmPassword')
 
         if (password !== confirmPassword) {
-            setMessage("Les mots de passe ne correspondent pas.");
-            return; 
+            setMessage("Les mots de passe ne correspondent pas.")
+            return
         }
 
         try {
-            const resp = await fetch('/api/register', { 
+            const resp = await fetch('/api/register', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
                     'email': email,
+                    'password': password,
                     'fullName': fullName,
-                    'username': username,
-                    'password': password
+                    'username': username
                 })
             });
 
             const data = await resp.json();
+            console.log(data)
             if (resp.ok) {
-                setMessage("Inscription réussie !");
+                setMessage(data.message)
             } else {
-                setMessage(data.error || "Erreur lors de l'inscription");
+                setMessage(data.message || 'Erreur de connexion')
             }
         } catch (error) {
-            setMessage("Une erreur réseau est survenue : " + error);
+            setMessage('Une erreur réseau est survenu : ' + error)
         }
-    };
+    }
+
+
 
     return (
         <Section>
-            {/* Conteneur principal avec la grille animée en fond */}
-            <div className="relative flex min-h-[100vh] flex-col md:flex-row justify-center items-center gap-12 p-6">
-                
-                {/* ─── ARRIÈRE-PLAN ANIMÉ (Même que sur Home) ─── */}
-                <AnimatedGridPattern
-                    numSquares={30}
-                    maxOpacity={0.1}
-                    duration={3}
-                    repeatDelay={1}
-                    className={cn(
-                        "mask-[radial-gradient(500px_circle_at_center,white,transparent)]",
-                        "inset-x-0 inset-y-[-30%] h-[200%] skew-y-12 w-full absolute z-0 pointer-events-none" // Ajout de pointer-events-none pour ne pas gêner le clic
-                    )}
-                />
-
-                {/* ─── PARTIE GAUCHE : TEXTE & LOGO ─── */}
-                <div className="relative z-10 w-full max-w-md text-center md:text-left flex flex-col items-center md:items-start">
-                    <ShinyText
-                        text="GLINT"
-                        className="text-6xl font-extrabold tracking-tight sm:text-7xl mb-4"
-                        speed={2.5}
-                        color="#b8860b"
-                        shineColor="#ffffff"
-                        spread={120}
-                        direction="left"
-                    />
-                    <p className="text-muted-foreground text-lg leading-relaxed max-w-sm">
-                        Rejoins une communauté intime. Sans likes publics, sans scroll infini — juste des connexions authentiques avec tes proches.
-                    </p>
+            <div className="flex flex-col justify-center items-center gap-6 h-screen">
+                <div className="w-1/3">
+                    <h2 className="text-text-1 font-serif text-2xl">Glint</h2>
+                    <p className="text-text-1/40 font-serif text-sm ">Rejoingnez une communauté où le raffinement rencontre l'authenticité</p>
                 </div>
 
-                {/* ─── PARTIE DROITE : FORMULAIRE D'INSCRIPTION ─── */}
-                <div className="relative z-10 bg-card border border-border rounded-xl shadow-lg p-8 w-full max-w-md">
-                    <div className="flex flex-col items-start justify-center gap-2 mb-8">
-                        <h1 className="text-3xl font-bold tracking-tight">Inscription</h1>
-                        <p className="text-sm text-muted-foreground">Créez votre compte pour commencer l'expérience.</p>
+                <div className="bg-card border-border rounded-xs shadow-sm p-6 w-1/3">
+                    <div className="flex flex-col items-start justify-center gap-1">
+                        <h1 className="tracking-widest font-light text-text-1 font-serif text-lg">Inscription</h1>
+                        <p className="font-extralight text-text-1/40 font-mono text-sm">Créez votre compte pour commencer l'expérience</p>
                     </div>
 
-                    <form action={handleSubmit} className="flex flex-col gap-4">
-                        <Input
-                            label="Adresse mail"
-                            name="email"
-                            placeholder="exemple@gmail.com"
-                            type="email"
-                            required
-                        />
-                        
-                        <Input
-                            label="Nom Complet"
-                            name="fullName"
-                            placeholder="Prénom NOM"
-                            type="text" 
-                            required
-                        />
-                        
-                        <Input
-                            label="Nom d'utilisateur"
-                            name="username"
-                            placeholder="Nom d'utilisateur"
-                            type="text"
-                            required
-                        />
-                        <Input
-                            label="Mot de passe"
-                            name="password"
-                            placeholder="********"
-                            type="password"
-                            required
-                        />
-                        <Input
-                            label="Confirmer le mot de passe"
-                            name="confirmPassword"
-                            placeholder="********"
-                            type="password"
-                            required
-                        />
+                    <form className="flex flex-col items-start justify-center mt-8 w-full gap-4" action={handleSubmit}>
+                        <Input required={true} label="Nom Complet" placeholder="John Doe" type="text" name={"user_name"}/>
+                        <Input required={true} label="Nom d'utilisateur" placeholder="john_doe" type="text" name={"username"}/>
+                        <Input required={true} label="Adresse mail" placeholder="votre@email.fr" type="email" name={"user_email"}/>
+                        <Input required={true} label="Mot de passe" placeholder="****" type="password" name={"user_password"}/>
+                        <Input required={true} label="Confirmation Mot de passe" placeholder="****" type="password" name={"user_confirmPassword"}/>
 
-                        {/* Affichage des erreurs */}
-                        {message && (
-                            <p className="text-sm font-medium text-red-500 mt-2">
-                                {message}
-                            </p>
-                        )}
+                        <p className={message == "" ? "hidden" : "block text-xs text-red-500"}>{message}</p>
 
-                        <Button
-                            size="lg" type="submit"
-                            className="w-full gap-2 px-8 bg-primary text-primary-foreground hover:bg-primary/90 border-2 border-primary/10"
-                        >
-                            <p className="text-text-1 uppercase text-sm font-medium">S'inscrire</p>
+                        <Button size="lg" type="submit" className="w-full">
+                            <p className="text-text-1 uppercase text-sm font-medium">Se connecter</p>
                         </Button>
                     </form>
-
-                    {/* Liens de navigation */}
-                    <div className="flex flex-col items-center gap-3 mt-8">
-                        <p className="text-sm text-muted-foreground">
-                            Déjà un compte ?{' '}
-                            <Link to="/login" className="font-semibold text-primary hover:underline">
-                                Se connecter
-                            </Link>
-                        </p>
-                        <p className="text-sm text-muted-foreground">
-                            <Link to="/" className="hover:underline">
+                    <div className="flex justify-center items-center mt-6">
+                        <p className="font-extralight text-text-1/60 text-sm">
+                            <Link to="/" className="text-text-1 font-medium hover:underline">
                                 Retour à l'accueil
                             </Link>
                         </p>
                     </div>
                 </div>
-
             </div>
         </Section>
-    );
+    )
 }

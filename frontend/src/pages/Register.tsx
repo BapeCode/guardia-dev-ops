@@ -5,11 +5,9 @@ import Input from "../components/Input.tsx";
 import { Button } from "../components/ui/button.tsx";
 
 export default function Register() {
-   
     const [message, setMessage] = useState("");
 
     const handleSubmit = async (e: FormData) => {
-
         const email = e.get('email');
         const fullName = e.get('fullName');
         const username = e.get('username');
@@ -48,21 +46,45 @@ export default function Register() {
 
     return (
         <Section>
-           
-            <div className="flex flex-col justify-center items-center gap-6 h-screen">
+            {/* Conteneur principal avec la grille animée en fond */}
+            <div className="relative flex min-h-[100vh] flex-col md:flex-row justify-center items-center gap-12 p-6">
+                
+                {/* ─── ARRIÈRE-PLAN ANIMÉ (Même que sur Home) ─── */}
+                <AnimatedGridPattern
+                    numSquares={30}
+                    maxOpacity={0.1}
+                    duration={3}
+                    repeatDelay={1}
+                    className={cn(
+                        "mask-[radial-gradient(500px_circle_at_center,white,transparent)]",
+                        "inset-x-0 inset-y-[-30%] h-[200%] skew-y-12 w-full absolute z-0 pointer-events-none" // Ajout de pointer-events-none pour ne pas gêner le clic
+                    )}
+                />
 
-                <div className="w-1/3">
-                    <h2 className="text-text-1 font-serif text-2xl">Glint</h2>
-                    <p className="text-text-1/40 font-serif text-sm text-justify">Rejoignez une communauté où le raffinement rencontre l'authenticité</p>
+                {/* ─── PARTIE GAUCHE : TEXTE & LOGO ─── */}
+                <div className="relative z-10 w-full max-w-md text-center md:text-left flex flex-col items-center md:items-start">
+                    <ShinyText
+                        text="GLINT"
+                        className="text-6xl font-extrabold tracking-tight sm:text-7xl mb-4"
+                        speed={2.5}
+                        color="#b8860b"
+                        shineColor="#ffffff"
+                        spread={120}
+                        direction="left"
+                    />
+                    <p className="text-muted-foreground text-lg leading-relaxed max-w-sm">
+                        Rejoins une communauté intime. Sans likes publics, sans scroll infini — juste des connexions authentiques avec tes proches.
+                    </p>
                 </div>
 
-                <div className="bg-card border-border rounded-xs shadow-sm p-6 w-1/3">
-                    <div className="flex flex-col items-start justify-center gap-1">
-                        <h1 className="tracking-widest font-light text-text-1 font-serif text-lg">Inscription</h1>
-                        <p className="font-extralight text-text-1/40 font-mono text-sm">Créez votre compte pour commencer</p>
+                {/* ─── PARTIE DROITE : FORMULAIRE D'INSCRIPTION ─── */}
+                <div className="relative z-10 bg-card border border-border rounded-xl shadow-lg p-8 w-full max-w-md">
+                    <div className="flex flex-col items-start justify-center gap-2 mb-8">
+                        <h1 className="text-3xl font-bold tracking-tight">Inscription</h1>
+                        <p className="text-sm text-muted-foreground">Créez votre compte pour commencer l'expérience.</p>
                     </div>
 
-                    <form action={handleSubmit} className="flex flex-col items-start justify-center mt-8 w-full gap-4">
+                    <form action={handleSubmit} className="flex flex-col gap-4">
                         <Input
                             label="Adresse mail"
                             name="email"
@@ -78,7 +100,7 @@ export default function Register() {
                             type="text" 
                             required
                         />
-                       
+                        
                         <Input
                             label="Nom d'utilisateur"
                             name="username"
@@ -101,10 +123,12 @@ export default function Register() {
                             required
                         />
 
-                       
-                        <p className={message === "" ? "hidden" : "block text-xs text-red-500"}>
-                            {message}
-                        </p>
+                        {/* Affichage des erreurs */}
+                        {message && (
+                            <p className="text-sm font-medium text-red-500 mt-2">
+                                {message}
+                            </p>
+                        )}
 
                         <Button
                             size="lg"
@@ -114,21 +138,22 @@ export default function Register() {
                         </Button>
                     </form>
 
-                    
-                    <div className="flex flex-col items-center gap-2 mt-6">
-                        <p className="font-extralight text-text-1/60 text-sm">
+                    {/* Liens de navigation */}
+                    <div className="flex flex-col items-center gap-3 mt-8">
+                        <p className="text-sm text-muted-foreground">
                             Déjà un compte ?{' '}
-                            <Link to="/login" className="text-text-1 font-medium hover:underline">
+                            <Link to="/login" className="font-semibold text-primary hover:underline">
                                 Se connecter
                             </Link>
                         </p>
-                        <p className="font-extralight text-text-1/60 text-sm">
-                            <Link to="/" className="text-text-1 font-medium hover:underline">
+                        <p className="text-sm text-muted-foreground">
+                            <Link to="/" className="hover:underline">
                                 Retour à l'accueil
                             </Link>
                         </p>
                     </div>
                 </div>
+
             </div>
         </Section>
     );

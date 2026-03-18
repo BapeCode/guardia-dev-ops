@@ -2,7 +2,7 @@ import {useState} from "react";
 import Section from "@/components/Section.tsx";
 import Input from "@/components/Input.tsx";
 import {Button} from "@/components/ui/button.tsx";
-import {Link} from "react-router-dom";
+import {Link, redirect} from "react-router-dom";
 
 export default function Login() {
     const [message, setMessage] = useState("")
@@ -34,9 +34,9 @@ export default function Login() {
             });
 
             const data = await resp.json();
-            console.log(data)
             if (resp.ok) {
                 setMessage(data.message)
+                redirect("/dashboard")
             } else {
                 setMessage(data.message || 'Erreur de connexion')
             }
@@ -71,7 +71,7 @@ export default function Login() {
                         <p className={message == "" ? "hidden" : "block text-xs text-red-500"}>{message}</p>
 
                         <Button size="lg" type="submit" className="w-full">
-                            <p className="text-text-1 uppercase text-sm font-medium">Se connecter</p>
+                            <p className="text-text-1 uppercase text-sm font-medium">S'inscrire</p>
                         </Button>
                     </form>
                     <div className="flex justify-center items-center mt-6">

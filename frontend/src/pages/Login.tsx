@@ -2,7 +2,7 @@ import Section from "../components/Section.tsx";
 import Input from "../components/Input.tsx";
 import {Button} from "../components/ui/button.tsx";
 import {useState} from "react";
-import { Link } from "react-router-dom";
+import {Link, redirect} from "react-router-dom";
 
 export default function Login() {
     const [message, setMessage] = useState("")
@@ -26,6 +26,7 @@ export default function Login() {
             const data = await resp.json();
             if (resp.ok) {
                 setMessage(data.message)
+                redirect("/dashboard")
             } else {
                 setMessage(data.message || 'Erreur de connexion')
             }

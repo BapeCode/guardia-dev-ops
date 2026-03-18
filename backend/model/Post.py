@@ -7,5 +7,4 @@ class Post(db.Model):
     author_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     like_amount = db.Column(db.Integer, default=0)
     repost_amount = db.Column(db.Integer, default=False)
-
     author = db.relationship('User', backref=db.backref('posts', lazy=True))

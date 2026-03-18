@@ -1,6 +1,6 @@
 import Section from "../components/Section.tsx";
 import Input from "../components/Input.tsx";
-import Button from "../components/Button.tsx";
+import {Button} from "../components/ui/button.tsx";
 import {useState} from "react";
 import { Link } from "react-router-dom";
 
@@ -27,7 +27,7 @@ export default function Login() {
             if (resp.ok) {
                 setMessage(data.message)
             } else {
-                setMessage(data.error || 'Erreur de connexion')
+                setMessage(data.message || 'Erreur de connexion')
             }
         } catch (error) {
             setMessage('Une erreur réseau est survenu : ' + error)
@@ -54,7 +54,7 @@ export default function Login() {
 
                         <p className={message == "" ? "hidden" : "block text-xs text-red-500"}>{message}</p>
 
-                        <Button type="submit" className="w-full">
+                        <Button size="lg" type="submit" className="w-full">
                             <p className="text-text-1 uppercase text-sm font-medium">Se connecter</p>
                         </Button>
                     </form>

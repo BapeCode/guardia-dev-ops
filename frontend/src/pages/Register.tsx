@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import Section from "../components/Section.tsx";
 import Input from "../components/Input.tsx";
-import Button from "../components/Button.tsx";
+import { Button } from "../components/ui/button.tsx";
 
 export default function Register() {
    
@@ -82,7 +82,7 @@ export default function Register() {
                         <Input
                             label="Nom d'utilisateur"
                             name="username"
-                            placeholder="Pseudo123456"
+                            placeholder="Nom d'utilisateur"
                             type="text"
                             required
                         />
@@ -106,7 +106,10 @@ export default function Register() {
                             {message}
                         </p>
 
-                        <Button type="submit" className="w-full mt-2">
+                        <Button
+                            size="lg"
+                            className="w-full gap-2 px-8 bg-primary text-primary-foreground hover:bg-primary/90 border-2 border-primary/10"
+                        >
                             <p className="text-text-1 uppercase text-sm font-medium">S'inscrire</p>
                         </Button>
                     </form>

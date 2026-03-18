@@ -2,10 +2,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import Section from "../components/Section.tsx";
 import Input from "../components/Input.tsx";
-import { Button } from "@/components/ui/button.tsx"; // Attention : J'utilise le Button de ton composant Home (shadcn/ui a priori)
-import { AnimatedGridPattern } from "../components/ui/animated-grid-pattern.tsx";
-import ShinyText from "@/components/ShinyText.tsx";
-import { cn } from "@/lib/utils.ts";
+import { Button } from "../components/ui/button.tsx";
 
 export default function Register() {
     const [message, setMessage] = useState("");
@@ -107,7 +104,7 @@ export default function Register() {
                         <Input
                             label="Nom d'utilisateur"
                             name="username"
-                            placeholder="Pseudo123456"
+                            placeholder="Nom d'utilisateur"
                             type="text"
                             required
                         />
@@ -133,12 +130,11 @@ export default function Register() {
                             </p>
                         )}
 
-                        <Button 
-                            type="submit" 
-                            size="lg" 
-                            className="w-full mt-4 bg-primary text-primary-foreground hover:bg-primary/90"
+                        <Button
+                            size="lg"
+                            className="w-full gap-2 px-8 bg-primary text-primary-foreground hover:bg-primary/90 border-2 border-primary/10"
                         >
-                            S'inscrire
+                            <p className="text-text-1 uppercase text-sm font-medium">S'inscrire</p>
                         </Button>
                     </form>
 

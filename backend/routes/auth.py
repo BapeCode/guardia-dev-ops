@@ -11,8 +11,12 @@ def login():
     user = User.query.filter_by(email=email).first()
 
     if not user:
-        return jsonify({"message": "User not found"}), 404
+        return jsonify({"message": "Utilisateur introuvable"}), 404
     elif user.password != password:
         return jsonify({"message": "Incorrect password"}), 401
     else:
         return jsonify({"message": "Login successful", "user": {"id": user.id, "name": user.name, "email": user.email}}), 200
+
+@auth_bp.route('/register', methods=['POST'])
+def register():
+    return jsonify({"message": "Registration endpoint"})

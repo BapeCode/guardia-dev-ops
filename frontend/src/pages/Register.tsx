@@ -1,8 +1,11 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import Section from "../components/Section.tsx";
+import { AnimatedGridPattern } from "../components/ui/animated-grid-pattern.tsx";
 import Input from "../components/Input.tsx";
 import { Button } from "../components/ui/button.tsx";
+import { cn } from "@/lib/utils.ts";
+import ShinyText from "@/components/ShinyText.tsx";
 
 export default function Register() {
     const [message, setMessage] = useState("");
@@ -26,10 +29,10 @@ export default function Register() {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    email: email,
-                    fullName: fullName,
-                    username: username,
-                    password: password
+                    'email': email,
+                    'fullName': fullName,
+                    'username': username,
+                    'password': password
                 })
             });
 
@@ -131,7 +134,7 @@ export default function Register() {
                         )}
 
                         <Button
-                            size="lg"
+                            size="lg" type="submit"
                             className="w-full gap-2 px-8 bg-primary text-primary-foreground hover:bg-primary/90 border-2 border-primary/10"
                         >
                             <p className="text-text-1 uppercase text-sm font-medium">S'inscrire</p>

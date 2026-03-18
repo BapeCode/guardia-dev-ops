@@ -1,7 +1,8 @@
 from flask import Blueprint, request, jsonify
 from ..model.User import User
+from ..instance.db import db
 
-auth_bp = Blueprint("users", __name__)
+auth_bp = Blueprint("auth", __name__)
 
 @auth_bp.route("/login", methods=['POST'])
 def login():
@@ -19,4 +20,17 @@ def login():
 
 @auth_bp.route('/register', methods=['POST'])
 def register():
-    return jsonify({"message": "Registration endpoint"})
+    data = request.get_json()
+    fullName = data.get("fullName")
+    username = data.get("username")
+    email = data.get("email")
+    password = data.get("password")
+    user = User(email=email, name=fullName, username=username, password=password)   
+
+    if user:
+        return jsonify({"message": "Registration failed: email already used"}), 400
+    else:
+        db.session.add(user)
+        db.session.commit()
+        return jsonify({"message": "Registration successful"}), 200
+        

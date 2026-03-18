@@ -15,7 +15,7 @@ export default function Header() {
           <ul className="flex items-center gap-6">
             <li>
               <a
-                href="#"
+                href="/"
                 className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
               >
                 Accueil

@@ -10,14 +10,6 @@ import {
   FieldSet,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 
 export default function Subscribe() {
@@ -40,7 +32,7 @@ export default function Subscribe() {
         <div className="col-start-1 col-end-4 row-start-2 row-end-6 flex flex-col justify-center px-15 bg-white">
           <p className="text-gray-500 text-lg mb-15 max-w-10/12">
             Rejoignez des milliers de membres GLINT et débloquez une expérience
-            entièrement repensée — pensée pour vous démarquer, à chaque instant.
+            entièrement repensée.
           </p>
           <ul className="space-y-7 max-w-10/12">
             <li className="flex items-start gap-4">
@@ -89,12 +81,13 @@ export default function Subscribe() {
               <span className="text-2xl mt-0.5">🚀</span>
               <div>
                 <p className="font-semibold text-slate-900 text-base">
-                  Accès prioritaire aux nouvelles fonctionnalités
+                  Archives de Posts
                 </p>
                 <p className="text-sm text-gray-500 mt-1">
-                  Soyez toujours en avance. Découvrez et testez les nouveautés
-                  GLINT avant tout le monde, influencez leur développement et
-                  profitez d'un avantage que les autres n'ont pas encore.
+                  Déverrouillez le coffre-fort GLINT. Accédez en illimité à
+                  votre bibliothèque privée regroupant l'intégralité de vos
+                  publications passées. N'oubliez plus jamais vos moments
+                  favoris!
                 </p>
               </div>
             </li>

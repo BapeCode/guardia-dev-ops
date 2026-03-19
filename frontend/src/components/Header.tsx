@@ -5,17 +5,19 @@ export default function Header() {
   return (
     <header className="sticky top-0 z-20 border-b border-border bg-background/50 backdrop-blur-sm">
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-6">
-        <h1
-          className="text-xl font-bold"
-          style={{ fontFamily: '"Space Grotesk", sans-serif' }}
-        >
-          GLINT
-        </h1>
+        <a href="/">
+          <h1
+            className="text-xl font-bold"
+            style={{ fontFamily: '"Space Grotesk", sans-serif' }}
+          >
+            GLINT
+          </h1>
+        </a>
         <nav>
           <ul className="flex items-center gap-6">
             <li>
               <a
-                href="#"
+                href="/"
                 className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
               >
                 Accueil

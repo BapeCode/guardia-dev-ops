@@ -35,15 +35,15 @@ export default function Home() {
           />
 
           <p className="relative z-10 mt-6 max-w-xl text-lg text-muted-foreground">
-            Un réseau social intime pour toi et tes proches. Sans likes publics,
-            sans scroll infini — juste des connexions authentiques.
+            Un réseau social intime pour toi et tes amis. Axé sur les connexions
+            authentiques.
           </p>
 
           <div className="relative z-10 mt-8 flex gap-4">
             <Link to="/register">
               <Button
-                  size="lg"
-                  className="gap-2 px-8 bg-primary text-primary-foreground hover:bg-primary/90 border-2 border-primary/10"
+                size="lg"
+                className="gap-2 px-8 bg-primary text-primary-foreground hover:bg-primary/90 border-2 border-primary/10"
               >
                 S'inscrire
                 <ArrowRight className="h-4 w-4" />
@@ -88,7 +88,7 @@ export default function Home() {
               </div>
             </div>
             <div>
-              <div className="text-3xl font-bold">5</div>
+              <div className="text-3xl font-bold">50</div>
               <div className="mt-1 text-sm text-muted-foreground">
                 Proches max
               </div>

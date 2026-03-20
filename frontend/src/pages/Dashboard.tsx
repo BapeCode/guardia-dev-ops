@@ -20,15 +20,21 @@ export default function Dashboard() {
     if (loading) return <div>Chargement...</div>
     if (!isAuthenticated) return <Navigate to={"/login"}/>
 
+    const render = () => {
+        switch (currentHash) {
+            case '#fil':
+                return <Fill/>
+            case '#profil':
+                return <Profile/>
+             default:
+                 return <Fill/>
+        }
+    }
+
     return (
         <>
             <NavigationDashboard/>
-            {(currentHash == "#fill" || currentHash === "#fills")} && (
-                <Fill/>
-            )
-            {(currentHash === "#profil" || currentHash === "#profile") && (
-                <Profile />
-            )}
+            {render()}
         </>
     )
 }

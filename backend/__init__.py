@@ -1,4 +1,5 @@
 import os
+from datetime import timedelta
 from flask import Flask
 from flask_cors import CORS
 from database import db
@@ -16,6 +17,8 @@ def create_app():
     os.makedirs(app.instance_path, exist_ok=True)
     app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///database.db"
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+    app.config["JWT_SECRET_KEY"] = "c133d8f3767c0667d1149bba38500713f2cf9f39c5864e799d85b1ec630aaecc"
+    app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(hours=24)
 
 
     db.init_app(app)

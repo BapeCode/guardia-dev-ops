@@ -14,4 +14,4 @@ class User(db.Model):
     locate = db.Column(db.String(120), nullable=False, default="")
     banner = db.Column(db.String(120), nullable=False, default="")
     avatar = db.Column(db.String(120), nullable=False, default="")
-    created_at = db.Column(db.DateTime, nullable=False, default=datetime.time())
+    created_at = db.Column(db.DateTime, nullable=False, default=datetime.datetime.utcnow)

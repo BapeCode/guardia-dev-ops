@@ -2,10 +2,13 @@ import Section from "../components/Section.tsx";
 import Input from "../components/Input.tsx";
 import {Button} from "../components/ui/button.tsx";
 import {useState} from "react";
-import {Link, redirect} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
+import {useAuth} from "@/store/AuthContext.tsx";
 
 export default function Login() {
     const [message, setMessage] = useState("")
+    const { login } = useAuth()
+    const navigate = useNavigate()
 
     const handleSubmit = async (e: FormData) => {
         const email = e.get('user_email')
@@ -26,7 +29,8 @@ export default function Login() {
             const data = await resp.json();
             if (resp.ok) {
                 setMessage(data.message)
-                redirect("/dashboard")
+                login(data.user, data.token)
+                navigate("/dashboard#fil")
             } else {
                 setMessage(data.message || 'Erreur de connexion')
             }

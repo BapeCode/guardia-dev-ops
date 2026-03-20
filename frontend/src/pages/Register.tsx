@@ -2,10 +2,10 @@ import {useState} from "react";
 import Section from "@/components/Section.tsx";
 import Input from "@/components/Input.tsx";
 import {Button} from "@/components/ui/button.tsx";
-import {Link} from "react-router-dom";
+import {Link, redirect} from "react-router-dom";
 import {useAuth} from "@/store/AuthContext.tsx";
 
-export default function Login() {
+export default function Register() {
     const [message, setMessage] = useState("")
     const { login } = useAuth()
 
@@ -20,7 +20,6 @@ export default function Login() {
             setMessage("Les mots de passe ne correspondent pas.")
             return
         }
-
         try {
             const resp = await fetch('/api/register', {
                 method: 'POST',
@@ -39,6 +38,7 @@ export default function Login() {
             if (resp.ok) {
                 setMessage(data.message)
                 login(data.user, data.token)
+                redirect("http://localhost:5173/dashboard")
             } else {
                 setMessage(data.message || 'Erreur de connexion')
             }

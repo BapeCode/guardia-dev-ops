@@ -3,6 +3,7 @@ import Section from "@/components/Section";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { Settings, Image as ImageIcon, Lock, MapPin, CalendarDays, Camera } from "lucide-react";
+import {useAuth} from "@/store/AuthContext.tsx";
 
 // --- Données factices ---
 const MOCK_USER = {
@@ -27,6 +28,7 @@ const MOCK_POSTS = [
 
 export default function Profile() {
     const [activeTab, setActiveTab] = useState<"posts" | "memories">("posts");
+    const { user } = useAuth()
 
     // Action pour rediriger vers la vue d'édition
     const handleEditProfile = () => {
@@ -79,26 +81,26 @@ export default function Profile() {
                     {/* Informations Utilisateur */}
                     <div className="flex flex-col items-center md:items-start text-center md:text-left md:ml-6 mt-2 md:mt-4 w-full">
                         <h1 className="text-3xl font-serif font-light tracking-tight text-foreground">
-                            {MOCK_USER.fullName}
+                            {user?.name}
                         </h1>
                         <p className="text-muted-foreground font-mono text-sm mt-1 mb-4">
-                            {MOCK_USER.username}
+                            @{user?.username}
                         </p>
 
                         <p className="text-foreground/90 leading-relaxed max-w-lg mb-4 text-sm md:text-base">
-                            {MOCK_USER.bio}
+                            {user?.bio === "" ? "Aucune bio pour le moment..." : user?.bio}
                         </p>
 
                         <div className="flex items-center gap-6 mb-4">
                             <div className="flex flex-col md:flex-row md:items-center gap-1 cursor-pointer group">
                                 <span className="text-lg md:text-base font-semibold text-foreground group-hover:text-primary transition-colors">
-                                    {MOCK_USER.following}
+                                    {user?.followers}
                                 </span>
                                 <span className="text-sm text-muted-foreground">suivis</span>
                             </div>
                             <div className="flex flex-col md:flex-row md:items-center gap-1 cursor-pointer group">
                                 <span className="text-lg md:text-base font-semibold text-foreground group-hover:text-primary transition-colors">
-                                    {MOCK_USER.followers}
+                                    {user?.following}
                                 </span>
                                 <span className="text-sm text-muted-foreground">abonnés</span>
                             </div>
@@ -107,11 +109,11 @@ export default function Profile() {
                         <div className="flex flex-wrap items-center justify-center md:justify-start gap-4 text-xs text-muted-foreground font-medium uppercase tracking-wider">
                             <div className="flex items-center gap-1.5">
                                 <MapPin className="h-3.5 w-3.5" />
-                                {MOCK_USER.location}
+                                {user?.location === "" ? "Aucune localisation" : user?.location}
                             </div>
                             <div className="flex items-center gap-1.5">
                                 <CalendarDays className="h-3.5 w-3.5" />
-                                Rejoint en {MOCK_USER.joinDate}
+                                Rejoint en {user?.created_at ? new Date(user.created_at).toLocaleDateString("fr-FR", { month: "long", year: "numeric" }) : "Date inconnue"}
                             </div>
                         </div>
                     </div>

@@ -2,6 +2,7 @@ import {Bookmark, House, Search, Settings, User2} from "lucide-react";
 import { useState} from "react";
 import {cn} from "@/lib/utils.ts";
 import {Avatar, AvatarFallback, AvatarImage} from "@/components/ui/avatar.tsx";
+import {useAuth} from "@/store/AuthContext.tsx";
 
 interface NavigationsItems {
     name: string;
@@ -12,6 +13,7 @@ interface NavigationsItems {
 
 export default function NavigationDashboard() {
     const [active, setActive] = useState<string>("fil")
+    const { logout } = useAuth()
 
     const navigationItems: NavigationsItems[] = [
         {
@@ -80,9 +82,9 @@ export default function NavigationDashboard() {
                 </div>
 
                 <div className="flex items-center justify-end gap-2 flex-1">
-                    <Avatar className="border border-border">
+                    <Avatar className="border border-border cursor-pointer" onClick={logout}>
                         <AvatarImage src={"https://github.com/shadcn.png"}/>
-                        <AvatarFallback>CN</AvatarFallback>
+                        <AvatarFallback></AvatarFallback>
                     </Avatar>
                 </div>
             </nav>

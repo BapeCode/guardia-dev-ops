@@ -21,7 +21,17 @@ def login():
         return jsonify({
             'message': 'Connexion réussite, vous allez être redirigé',
             'token': token,
-            'user': user
+            'user': {
+                'id': user.id,
+                'name': user.name,
+                'email': user.email,
+                'username': user.username,
+                'bio': user.bio,
+                'location': user.locate,
+                'followers': user.followers,
+                'following': user.following,
+                'created_at': user.created_at
+            }
         }), 200
 
 
@@ -41,4 +51,18 @@ def register():
     new_user = User(name=name, username=username, email=email, password=password)
     db.session.add(new_user)
     db.session.commit()
-    return jsonify({"message": "Registration successful"}), 200
+    token = create_access_token(identity=str(new_user.id))
+    return jsonify({
+        'message': 'Inscription réussie',
+        'token': token,
+        'user': {
+            'id': new_user.id,
+            'name': new_user.name,
+            'email': new_user.email,
+            'username': new_user.username,
+            'bio': new_user.bio,
+            'location': new_user.locate,
+            'followers': new_user.followers,
+            'following': new_user.following,
+        }
+    }), 201

@@ -3,7 +3,13 @@ import { createContext, useContext, useState, useEffect, type ReactNode } from "
 interface User {
     id: number
     name: string
-    email: string
+    email: string,
+    username: string,
+    bio: string,
+    location: string,
+    followers: number,
+    following: number,
+    created_at: Date
 }
 
 interface AuthContextType {

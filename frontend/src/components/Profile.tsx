@@ -2,7 +2,7 @@ import { useState } from "react";
 import Section from "@/components/Section";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { Settings, Image as ImageIcon, Lock, MapPin, CalendarDays, Camera } from "lucide-react";
+import {Settings, Image as ImageIcon, Lock, MapPin, CalendarDays, Camera, Pin, Calendar} from "lucide-react";
 import {useAuth} from "@/store/AuthContext.tsx";
 
 // --- Données factices ---
@@ -30,15 +30,12 @@ export default function Profile() {
     const [activeTab, setActiveTab] = useState<"posts" | "memories">("posts");
     const { user } = useAuth()
 
-    // Action pour rediriger vers la vue d'édition
     const handleEditProfile = () => {
         window.location.hash = "#profile#edit";
     };
 
     return (
-        <div className="w-full max-w-5xl mx-auto py-32 animate-in fade-in duration-700">
-            
-            {/* ─── BANNIÈRE ─── */}
+        <section className="flex flex-col items-center justify-start py-6 border-x border-border w-full bg-glass h-full overflow-auto">
             {user?.banner && (
                 <div className="relative w-full h-48 md:h-64 lg:h-72 bg-muted overflow-hidden group">
                     <img
@@ -55,14 +52,9 @@ export default function Profile() {
                 </div>
             )}
 
-            {/* ─── EN-TÊTE DU PROFIL (Identité) ─── */}
-            <Section className="pb-8">
-                <div className="flex flex-col md:flex-row items-center md:items-start px-4 md:px-8 relative">
-                    
-                    {/* Avatar */}
-                    <div className="relative z-10 -mt-16 md:-mt-20 mb-4 md:mb-0">
-                        <div className="absolute -inset-0.5 bg-gradient-to-tr from-primary/50 to-primary/10 rounded-full blur opacity-50 transition duration-500"></div>
-                        <div className="relative flex justify-center items-center h-32 w-32 md:h-40 md:w-40 overflow-hidden rounded-full border-4 border-background bg-background shadow-md">
+            <div className="flex flex-col md:flex-row items-center md:items-start px-4 md:px-8 w-full">
+                <div className="flex items-center justify-start w-full">
+                    <div className="relative flex justify-center items-center h-14 w-14 md:h-20 md:w-20 overflow-hidden rounded-full border-4 border-background bg-background shadow-md">
                             {user?.avatar && (
                                 <img
                                     src={MOCK_USER.avatarUrl}
@@ -70,114 +62,153 @@ export default function Profile() {
                                     className="h-full w-full object-cover transition-transform duration-500 hover:scale-105 cursor-pointer"
                                 />
                             )}
-                            <p className="text-8xl">{user?.name.charAt(0)}</p>
-                        </div>
-                    </div>
-
-                    {/* Bouton Éditer */}
-                    <div className="w-full flex justify-center md:justify-end md:absolute md:top-4 md:right-8 mt-4 md:mt-0">
-                        {/* AJOUT DU ONCLICK ICI */}
-                        <Button onClick={handleEditProfile} variant="outline" size="sm" className="gap-2 rounded-full px-6">
-                            <Settings className="h-4 w-4" /> 
-                            <span className="text-xs uppercase tracking-widest font-medium">Éditer le profil</span>
-                        </Button>
-                    </div>
-
-                    {/* Informations Utilisateur */}
-                    <div className="flex flex-col items-center md:items-start text-center md:text-left md:ml-6 mt-2 md:mt-4 w-full">
-                        <h1 className="text-3xl font-serif font-light tracking-tight text-foreground">
-                            {user?.name}
-                        </h1>
-                        <p className="text-muted-foreground font-mono text-sm mt-1 mb-4">
-                            @{user?.username}
-                        </p>
-
-                        <p className="text-foreground/90 leading-relaxed max-w-lg mb-4 text-sm md:text-base">
-                            {user?.bio === "" ? "Aucune bio pour le moment..." : user?.bio}
-                        </p>
-
-                        <div className="flex items-center gap-6 mb-4">
-                            <div className="flex flex-col md:flex-row md:items-center gap-1 cursor-pointer group">
-                                <span className="text-lg md:text-base font-semibold text-foreground group-hover:text-primary transition-colors">
-                                    {user?.followers}
-                                </span>
-                                <span className="text-sm text-muted-foreground">suivis</span>
-                            </div>
-                            <div className="flex flex-col md:flex-row md:items-center gap-1 cursor-pointer group">
-                                <span className="text-lg md:text-base font-semibold text-foreground group-hover:text-primary transition-colors">
-                                    {user?.following}
-                                </span>
-                                <span className="text-sm text-muted-foreground">abonnés</span>
-                            </div>
-                        </div>
-
-                        <div className="flex flex-wrap items-center justify-center md:justify-start gap-4 text-xs text-muted-foreground font-medium uppercase tracking-wider">
-                            <div className="flex items-center gap-1.5">
-                                <MapPin className="h-3.5 w-3.5" />
-                                {user?.location === "" ? "Aucune localisation" : user?.location}
-                            </div>
-                            <div className="flex items-center gap-1.5">
-                                <CalendarDays className="h-3.5 w-3.5" />
-                                Rejoint en {user?.created_at ? new Date(user.created_at).toLocaleDateString("fr-FR", { month: "long", year: "numeric" }) : "Date inconnue"}
-                            </div>
-                        </div>
+                        <p className="text-3xl">{user?.name.charAt(0)}</p>
                     </div>
                 </div>
-            </Section>
 
-            {/* ─── SÉPARATEUR & ONGLETS ─── */}
-            <div className="w-full px-4 md:px-8 mt-4">
-                <div className="flex items-center justify-center md:justify-start gap-8 border-b border-border/40">
-                    <button 
-                        onClick={() => setActiveTab("posts")}
-                        className={cn("group flex items-center gap-2 pb-4 text-sm font-medium transition-all duration-300 relative", activeTab === "posts" ? "text-foreground" : "text-muted-foreground hover:text-foreground/80")}
-                    >
-                        <ImageIcon className={cn("h-4 w-4 transition-transform", activeTab === "posts" && "scale-110 text-primary")} />
-                        Publications
-                        {activeTab === "posts" && <span className="absolute bottom-0 left-0 w-full h-[2px] bg-primary rounded-t-md animate-in slide-in-from-left-2" />}
-                    </button>
-
-                    <button 
-                        onClick={() => setActiveTab("memories")}
-                        className={cn("group flex items-center gap-2 pb-4 text-sm font-medium transition-all duration-300 relative", activeTab === "memories" ? "text-foreground" : "text-muted-foreground hover:text-foreground/80")}
-                    >
-                        <Lock className={cn("h-4 w-4 transition-transform", activeTab === "memories" && "scale-110 text-primary")} />
-                        Cercle Intime
-                        {activeTab === "memories" && <span className="absolute bottom-0 left-0 w-full h-[2px] bg-primary rounded-t-md animate-in slide-in-from-right-2" />}
-                    </button>
+                <div className="w-full flex justify-center md:justify-end">
+                        <Button onClick={handleEditProfile} variant="outline" size="sm" className="gap-2 rounded-full px-6">
+                            <Settings className="h-4 w-4" />
+                            <span className="text-xs uppercase tracking-widest font-medium">Éditer le profil</span>
+                        </Button>
                 </div>
             </div>
 
-            {/* ─── CONTENU (GRILLE) ─── */}
-            <Section className="pt-8 px-4 md:px-8">
-                {activeTab === "posts" ? (
-                    <div className="grid grid-cols-2 md:grid-cols-3 gap-1 md:gap-4">
-                        {MOCK_POSTS.map((post) => (
-                            <div key={post.id} className="group relative aspect-square overflow-hidden bg-muted md:rounded-xl cursor-pointer">
-                                <img src={post.imageUrl} alt={post.caption} className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110" />
-                                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100 flex flex-col justify-end p-4 md:p-6">
-                                    <p className="text-white text-sm md:text-base font-medium line-clamp-2 translate-y-4 transition-transform duration-300 group-hover:translate-y-0">{post.caption}</p>
-                                    <p className="text-white/60 font-mono text-xs mt-2 opacity-0 transition-opacity duration-500 delay-100 group-hover:opacity-100">{post.date}</p>
-                                </div>
-                            </div>
-                        ))}
-                    </div>
-                ) : (
-                    <div className="flex flex-col items-center justify-center py-32 text-center">
-                        <div className="relative mb-6">
-                            <div className="absolute inset-0 bg-primary/20 blur-xl rounded-full"></div>
-                            <div className="relative bg-background border border-border/50 rounded-full p-6 shadow-sm">
-                                <Lock className="h-8 w-8 text-primary/80" />
-                            </div>
+            <div className="flex flex-col items-center md:items-start text-center md:text-left w-full border-b border-border pb-4">
+                <div className="px-4">
+                    <h1 className="text-xl font-sans font-light tracking-tight text-foreground">
+                        {user?.name}
+                    </h1>
+                    <p className="text-text-2/50 font-mono text-sm mt-1 mb-4">
+                        @{user?.username}
+                    </p>
+                    <p className="text-foreground/90 leading-relaxed max-w-lg mb-4 text-sm md:text-base">
+                        {user?.bio === "" ? "Aucune bio pour le moment..." : user?.bio}
+                    </p>
+
+                    <div className="flex flex-row items-center justify-start gap-4">
+                        <div className="flex items-center gap-2">
+                            <Pin className="h-3 w-3"/>
+                            <p className="text-xs font-light text-text-1/80">{user?.location === "" ? "Aucune localisation" : user?.location}</p>
                         </div>
-                        <h3 className="text-2xl font-serif tracking-tight mb-2">Un espace juste pour vous</h3>
-                        <p className="text-muted-foreground text-sm max-w-md leading-relaxed">
-                            Ce que vous publiez ici n'est visible que par vos <span className="text-foreground font-medium">proches de confiance</span>.
-                        </p>
-                        <Button className="mt-8 rounded-full px-8" variant="outline">Ajouter un souvenir privé</Button>
+                        <div className="flex items-center gap-2">
+                            <Calendar className="h-3 w-3"/>
+                            <p className="text-xs font-light text-text-1/80">Membre depuis {user?.created_at ? new Date(user.created_at).toLocaleDateString("fr-FR", { month: "long", year: "numeric" }) : "Date inconnue"}</p>
+                        </div>
                     </div>
-                )}
-            </Section>
-        </div>
+
+                    <div className="flex flex-row items-center justify-start gap-4 mt-6">
+                        <div className="flex flex-col md:flex-row md:items-center gap-1 cursor-pointer group">
+                            <span className="text-lg md:text-base font-semibold text-foreground group-hover:text-primary transition-colors">
+                                {user?.followers}
+                            </span>
+                            <span className="text-sm text-muted-foreground">suivis</span>
+                        </div>
+                        <div className="flex flex-col md:flex-row md:items-center gap-1 cursor-pointer group">
+                            <span className="text-lg md:text-base font-semibold text-foreground group-hover:text-primary transition-colors">
+                                {user?.following}
+                            </span>
+                            <span className="text-sm text-muted-foreground">abonnés</span>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+        </section>
+
+        // <div className="w-full max-w-5xl mx-auto py-32 animate-in fade-in duration-700">
+
+        //
+        //     {/* ─── EN-TÊTE DU PROFIL (Identité) ─── */}
+        //     <Section className="pb-8">
+        //         <div className="flex flex-col md:flex-row items-center md:items-start px-4 md:px-8 relative">
+        //
+        //             {/* Informations Utilisateur */}
+        //             <div className="flex flex-col items-center md:items-start text-center md:text-left md:ml-6 mt-2 md:mt-4 w-full">
+        //
+        //                 <div className="flex items-center gap-6 mb-4">
+        //                     <div className="flex flex-col md:flex-row md:items-center gap-1 cursor-pointer group">
+        //                         <span className="text-lg md:text-base font-semibold text-foreground group-hover:text-primary transition-colors">
+        //                             {user?.followers}
+        //                         </span>
+        //                         <span className="text-sm text-muted-foreground">suivis</span>
+        //                     </div>
+        //                     <div className="flex flex-col md:flex-row md:items-center gap-1 cursor-pointer group">
+        //                         <span className="text-lg md:text-base font-semibold text-foreground group-hover:text-primary transition-colors">
+        //                             {user?.following}
+        //                         </span>
+        //                         <span className="text-sm text-muted-foreground">abonnés</span>
+        //                     </div>
+        //                 </div>
+        //
+        //                 <div className="flex flex-wrap items-center justify-center md:justify-start gap-4 text-xs text-muted-foreground font-medium uppercase tracking-wider">
+        //                     <div className="flex items-center gap-1.5">
+        //                         <MapPin className="h-3.5 w-3.5" />
+        //                         {user?.location === "" ? "Aucune localisation" : user?.location}
+        //                     </div>
+        //                     <div className="flex items-center gap-1.5">
+        //                         <CalendarDays className="h-3.5 w-3.5" />
+        //                         Rejoint en {user?.created_at ? new Date(user.created_at).toLocaleDateString("fr-FR", { month: "long", year: "numeric" }) : "Date inconnue"}
+        //                     </div>
+        //                 </div>
+        //             </div>
+        //         </div>
+        //     </Section>
+        //
+        //     {/* ─── SÉPARATEUR & ONGLETS ─── */}
+        //     <div className="w-full px-4 md:px-8 mt-4">
+        //         <div className="flex items-center justify-center md:justify-start gap-8 border-b border-border/40">
+        //             <button
+        //                 onClick={() => setActiveTab("posts")}
+        //                 className={cn("group flex items-center gap-2 pb-4 text-sm font-medium transition-all duration-300 relative", activeTab === "posts" ? "text-foreground" : "text-muted-foreground hover:text-foreground/80")}
+        //             >
+        //                 <ImageIcon className={cn("h-4 w-4 transition-transform", activeTab === "posts" && "scale-110 text-primary")} />
+        //                 Publications
+        //                 {activeTab === "posts" && <span className="absolute bottom-0 left-0 w-full h-[2px] bg-primary rounded-t-md animate-in slide-in-from-left-2" />}
+        //             </button>
+        //
+        //             <button
+        //                 onClick={() => setActiveTab("memories")}
+        //                 className={cn("group flex items-center gap-2 pb-4 text-sm font-medium transition-all duration-300 relative", activeTab === "memories" ? "text-foreground" : "text-muted-foreground hover:text-foreground/80")}
+        //             >
+        //                 <Lock className={cn("h-4 w-4 transition-transform", activeTab === "memories" && "scale-110 text-primary")} />
+        //                 Cercle Intime
+        //                 {activeTab === "memories" && <span className="absolute bottom-0 left-0 w-full h-[2px] bg-primary rounded-t-md animate-in slide-in-from-right-2" />}
+        //             </button>
+        //         </div>
+        //     </div>
+        //
+        //     {/* ─── CONTENU (GRILLE) ─── */}
+        //     <Section className="pt-8 px-4 md:px-8">
+        //         {activeTab === "posts" ? (
+        //             <div className="grid grid-cols-2 md:grid-cols-3 gap-1 md:gap-4">
+        //                 {MOCK_POSTS.map((post) => (
+        //                     <div key={post.id} className="group relative aspect-square overflow-hidden bg-muted md:rounded-xl cursor-pointer">
+        //                         <img src={post.imageUrl} alt={post.caption} className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110" />
+        //                         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100 flex flex-col justify-end p-4 md:p-6">
+        //                             <p className="text-white text-sm md:text-base font-medium line-clamp-2 translate-y-4 transition-transform duration-300 group-hover:translate-y-0">{post.caption}</p>
+        //                             <p className="text-white/60 font-mono text-xs mt-2 opacity-0 transition-opacity duration-500 delay-100 group-hover:opacity-100">{post.date}</p>
+        //                         </div>
+        //                     </div>
+        //                 ))}
+        //             </div>
+        //         ) : (
+        //             <div className="flex flex-col items-center justify-center py-32 text-center">
+        //                 <div className="relative mb-6">
+        //                     <div className="absolute inset-0 bg-primary/20 blur-xl rounded-full"></div>
+        //                     <div className="relative bg-background border border-border/50 rounded-full p-6 shadow-sm">
+        //                         <Lock className="h-8 w-8 text-primary/80" />
+        //                     </div>
+        //                 </div>
+        //                 <h3 className="text-2xl font-serif tracking-tight mb-2">Un espace juste pour vous</h3>
+        //                 <p className="text-muted-foreground text-sm max-w-md leading-relaxed">
+        //                     Ce que vous publiez ici n'est visible que par vos <span className="text-foreground font-medium">proches de confiance</span>.
+        //                 </p>
+        //                 <Button className="mt-8 rounded-full px-8" variant="outline">Ajouter un souvenir privé</Button>
+        //             </div>
+        //         )}
+        //     </Section>
+        // </div>
     );
 }

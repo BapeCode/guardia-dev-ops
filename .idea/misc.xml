@@ -3,5 +3,5 @@
   <component name="Black">
     <option name="sdkName" value="Python 3.14 (guardia-dev-ops)" />
   </component>
-  <component name="ProjectRootManager" version="2" project-jdk-name="Python 3.14 (guardia-dev-ops)" project-jdk-type="Python SDK" />
+  <component name="ProjectRootManager" version="2" project-jdk-name="Remote 3.12 Docker Compose (backend)" project-jdk-type="Python SDK" />
 </project>

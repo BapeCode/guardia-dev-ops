@@ -9,7 +9,7 @@
     <content url="file://$MODULE_DIR$">
       <excludeFolder url="file://$MODULE_DIR$/backend/venv" />
     </content>
-    <orderEntry type="jdk" jdkName="Python 3.14 (guardia-dev-ops)" jdkType="Python SDK" />
+    <orderEntry type="jdk" jdkName="Remote 3.12 Docker Compose (backend)" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="Python 3.14 (guardia-dev-ops) interpreter library" level="application" />
   </component>

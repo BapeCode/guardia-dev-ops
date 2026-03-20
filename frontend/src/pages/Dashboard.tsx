@@ -4,6 +4,7 @@ import Profile from "@/components/Profile.tsx";
 import Fill from "@/components/Fill.tsx";
 import {useAuth} from "@/store/AuthContext";
 import {Navigate} from "react-router-dom";
+import Suggestion from "@/components/Suggestion.tsx";
 
 export default function Dashboard() {
     const [currentHash, setCurrentHash] = useState(window.location.hash || "#fil");
@@ -32,9 +33,10 @@ export default function Dashboard() {
     }
 
     return (
-        <>
+        <section className="h-screen max-w-7xl mx-auto flex items-start justify-start gap-4">
             <NavigationDashboard/>
             {render()}
-        </>
+            <Suggestion/>
+        </section>
     )
 }

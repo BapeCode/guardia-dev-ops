@@ -36,22 +36,24 @@ export default function Profile() {
     };
 
     return (
-        <div className="w-full max-w-5xl mx-auto pb-24 animate-in fade-in duration-700">
+        <div className="w-full max-w-5xl mx-auto py-32 animate-in fade-in duration-700">
             
             {/* ─── BANNIÈRE ─── */}
-            <div className="relative w-full h-48 md:h-64 lg:h-72 bg-muted overflow-hidden group">
-                <img 
-                    src={MOCK_USER.bannerUrl} 
-                    alt="Bannière de profil" 
-                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                />
-                <div className="absolute inset-0 bg-black/10 transition-opacity duration-300 group-hover:bg-black/20" />
-                
-                <button className="absolute top-4 right-4 md:top-6 md:right-6 bg-black/40 hover:bg-black/60 text-white p-2.5 rounded-full backdrop-blur-md transition-all duration-300 flex items-center gap-2">
-                    <Camera className="h-4 w-4" />
-                    <span className="text-xs font-medium hidden md:inline-block pr-1">Modifier la bannière</span>
-                </button>
-            </div>
+            {user?.banner && (
+                <div className="relative w-full h-48 md:h-64 lg:h-72 bg-muted overflow-hidden group">
+                    <img
+                        src={user.banner}
+                        alt="Bannière de profil"
+                        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                    />
+                    <div className="absolute inset-0 bg-black/10 transition-opacity duration-300 group-hover:bg-black/20" />
+
+                    <button className="absolute top-4 right-4 md:top-6 md:right-6 bg-black/40 hover:bg-black/60 text-white p-2.5 rounded-full backdrop-blur-md transition-all duration-300 flex items-center gap-2">
+                        <Camera className="h-4 w-4" />
+                        <span className="text-xs font-medium hidden md:inline-block pr-1">Modifier la bannière</span>
+                    </button>
+                </div>
+            )}
 
             {/* ─── EN-TÊTE DU PROFIL (Identité) ─── */}
             <Section className="pb-8">
@@ -60,12 +62,15 @@ export default function Profile() {
                     {/* Avatar */}
                     <div className="relative z-10 -mt-16 md:-mt-20 mb-4 md:mb-0">
                         <div className="absolute -inset-0.5 bg-gradient-to-tr from-primary/50 to-primary/10 rounded-full blur opacity-50 transition duration-500"></div>
-                        <div className="relative h-32 w-32 md:h-40 md:w-40 overflow-hidden rounded-full border-4 border-background bg-background shadow-md">
-                            <img 
-                                src={MOCK_USER.avatarUrl} 
-                                alt={MOCK_USER.fullName} 
-                                className="h-full w-full object-cover transition-transform duration-500 hover:scale-105 cursor-pointer"
-                            />
+                        <div className="relative flex justify-center items-center h-32 w-32 md:h-40 md:w-40 overflow-hidden rounded-full border-4 border-background bg-background shadow-md">
+                            {user?.avatar && (
+                                <img
+                                    src={MOCK_USER.avatarUrl}
+                                    alt={MOCK_USER.fullName}
+                                    className="h-full w-full object-cover transition-transform duration-500 hover:scale-105 cursor-pointer"
+                                />
+                            )}
+                            <p className="text-8xl">{user?.name.charAt(0)}</p>
                         </div>
                     </div>
 

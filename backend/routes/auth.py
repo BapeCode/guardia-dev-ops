@@ -30,7 +30,9 @@ def login():
                 'location': user.locate,
                 'followers': user.followers,
                 'following': user.following,
-                'created_at': user.created_at
+                'created_at': user.created_at,
+                'avatar': user.avatar,
+                'banner': user.banner
             }
         }), 200
 

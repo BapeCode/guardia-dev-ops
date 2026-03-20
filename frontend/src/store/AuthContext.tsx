@@ -9,7 +9,9 @@ interface User {
     location: string,
     followers: number,
     following: number,
-    created_at: Date
+    created_at: Date,
+    avatar: string,
+    banner: string
 }
 
 interface AuthContextType {

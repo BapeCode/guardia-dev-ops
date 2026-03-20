@@ -3,9 +3,9 @@ import Section from "@/components/Section";
 import NavigationDashboard from "@/components/Navigation";
 import Profile from "@/components/Profile";
 import Edit from "@/components/Edit"; // Nouvel import pour le formulaire
+import Fill from "@/components/Fill.tsx";
 
 export default function Dashboard() {
-    // 1. On crée un état pour stocker le bout de l'URL actuel (le hash)
     const [currentHash, setCurrentHash] = useState(window.location.hash || "#fil");
 
     // 2. On écoute les changements dans l'URL (quand on clique sur la navigation ou un bouton)
@@ -13,7 +13,6 @@ export default function Dashboard() {
         const handleHashChange = () => {
             setCurrentHash(window.location.hash || "#fil");
         };
-        
         window.addEventListener("hashchange", handleHashChange);
         return () => window.removeEventListener("hashchange", handleHashChange);
     }, []);
@@ -38,11 +37,17 @@ export default function Dashboard() {
 
     return (
         <>
-            {/* Ton header reste intact et toujours visible */}
-            <NavigationDashboard />
+            
 
             {/* Contenu dynamique basé sur l'URL */}
             {renderContent()}
+            <NavigationDashboard/>
+            {(currentHash == "#fill" || currentHash === "#fills")} && (
+                <Fill/>
+            )
+            {(currentHash === "#profil" || currentHash === "#profile") && (
+                <Profile />
+            )}
         </>
     );
 }

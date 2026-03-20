@@ -15,7 +15,7 @@ export default function NavigationDashboard() {
 
     const navigationItems: NavigationsItems[] = [
         {
-            name: "fil",
+            name: "fill",
             label: "Fil",
             href: "/dashboard#fil",
             icon: House
@@ -42,9 +42,7 @@ export default function NavigationDashboard() {
 
     return (
         <header className="sticky top-0 z-50 flex justify-center items-center w-full bg-card/95 backdrop-blur border-b border-border shadow-sm">
-            <nav className="flex justify-between items-center max-w-7xl mx-auto w-full px-4 h-16">
-                
-                {/* RECHERCHE */}
+            <nav className="flex justify-between items-center max-w-7xl mx-auto w-full px-4">
                 <div className="flex-1">
                     <div className="flex items-center gap-2 bg-muted border border-border px-3 py-2 rounded-md w-2/3">
                         <Search className="text-muted-foreground h-4 w-4"/>
@@ -56,7 +54,6 @@ export default function NavigationDashboard() {
                     </div>
                 </div>
 
-                {/* BOUTONS DE NAVIGATION */}
                 <div className="flex justify-center items-center gap-1 flex-1">
                     {navigationItems.map((item) => {
                         const isActive = active === item.name;
@@ -67,7 +64,7 @@ export default function NavigationDashboard() {
                                 key={item.name} 
                                 onClick={() => setActive(item.name)}
                                 className={cn(
-                                    "flex flex-col gap-1 items-center px-4 py-2 rounded-lg transition-all duration-300",
+                                    "flex flex-col gap-1 items-center px-4 py-2 transition-all duration-300",
                                     isActive 
                                         ? "bg-primary text-primary-foreground shadow-sm scale-105" 
                                         : "text-muted-foreground hover:bg-muted hover:text-foreground" 
@@ -82,7 +79,6 @@ export default function NavigationDashboard() {
                     })}
                 </div>
 
-                {/* AVATAR */}
                 <div className="flex items-center justify-end gap-2 flex-1">
                     <Avatar className="border border-border">
                         <AvatarImage src={"https://github.com/shadcn.png"}/>

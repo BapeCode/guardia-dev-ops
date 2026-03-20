@@ -3,24 +3,29 @@ from flask import Flask
 from flask_cors import CORS
 from database import db
 from routes.auth import auth_bp
+from flask_migrate import Migrate
+from flask_jwt_extended import JWTManager
 
 def create_app():
-    app = Flask(__name__)
+    app = Flask(
+        __name__,
+        instance_path=os.path.join(os.path.dirname(os.path.abspath(__file__)), "instance")
+    )
     CORS(app)
 
-    basedir = os.path.abspath(os.path.dirname(__file__))
-    db_path = os.path.join(basedir, 'database.db')
+    os.makedirs(app.instance_path, exist_ok=True)
+    app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///database.db"
+    app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
-    app.config['SQLALCHEMY_DATABASE_URI'] = f"sqlite:///{db_path}"
-    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
     db.init_app(app)
-
-    with app.app_context():
-        from model.User import User # Pas de point
-        from model.Post import Post # Pas de point
-        db.create_all()
+    migrate = Migrate(app, db)
+    from model.User import User
+    from model.Post import Post
+    from routes.auth import auth_bp
 
     app.register_blueprint(auth_bp, url_prefix="/api")
+
+    JWTManager(app)
 
     return app

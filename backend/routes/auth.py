@@ -1,6 +1,7 @@
 from flask import Blueprint, request, jsonify
 from database import db
 from model.User import User
+from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
 
 auth_bp = Blueprint("auth", __name__)
 
@@ -16,7 +17,12 @@ def login():
     elif user.password != password:
         return jsonify({"message": "Mot de passe non valide"}), 401
     else:
-        return jsonify({"message": "Connexion réussite, vous allez être redirigé"}), 200
+        token = create_access_token(identity=str(user.id))
+        return jsonify({
+            'message': 'Connexion réussite, vous allez être redirigé',
+            'token': token,
+            'user': user
+        }), 200
 
 
 @auth_bp.route('/register', methods=['POST'])

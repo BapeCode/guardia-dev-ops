@@ -5,6 +5,7 @@ services:
       - "5000:5000"
     volumes:
       - ./backend:/app
+      - ./backend/instance:/app/instanceO
     environment:
       - FLASK_APP=app.py
       - FLASK_DEBUG=1

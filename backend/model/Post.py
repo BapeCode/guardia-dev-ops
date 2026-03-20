@@ -1,4 +1,4 @@
-from ..instance.db import db
+from database import db
 
 class Post(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -7,5 +7,4 @@ class Post(db.Model):
     author_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     like_amount = db.Column(db.Integer, default=0)
     repost_amount = db.Column(db.Integer, default=False)
-
     author = db.relationship('User', backref=db.backref('posts', lazy=True))

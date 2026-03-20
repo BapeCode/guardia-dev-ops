@@ -1,6 +1,6 @@
 from flask import Blueprint, request, jsonify
-from ..model.User import User
-from ..instance.db import db
+from database import db
+from model.User import User
 
 auth_bp = Blueprint("auth", __name__)
 
@@ -14,9 +14,9 @@ def login():
     if not user:
         return jsonify({"message": "Utilisateur introuvable"}), 404
     elif user.password != password:
-        return jsonify({"message": "Incorrect password"}), 401
+        return jsonify({"message": "Mot de passe non valide"}), 401
     else:
-        return jsonify({"message": "Login successful", "user": {"id": user.id, "name": user.name, "email": user.email}}), 200
+        return jsonify({"message": "Connexion réussite, vous allez être redirigé"}), 200
 
 
 @auth_bp.route('/register', methods=['POST'])

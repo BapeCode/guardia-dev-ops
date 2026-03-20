@@ -4,10 +4,10 @@ export default function Footer() {
       <div className="border-t border-border" />
 
       <div className="mx-auto max-w-5xl px-6 py-6">
-        <div className="grid grid-cols-3 gap-6">
-          <div className="flex flex-col gap-2">
+        <div className="grid grid-cols-3 gap-6 justify-items-center">
+          <div className="flex flex-col gap-2 items-center">
             <h3 className="text-sm font-semibold text-foreground">Naviguer</h3>
-            <ul className="flex flex-col gap-1">
+            <ul className="flex flex-col gap-1 items-center">
               <li>
                 <a
                   href="/"
@@ -19,9 +19,9 @@ export default function Footer() {
             </ul>
           </div>
 
-          <div className="flex flex-col gap-2">
+          <div className="flex flex-col gap-2 items-center">
             <h3 className="text-sm font-semibold text-foreground">Connexion</h3>
-            <ul className="flex flex-col gap-1">
+            <ul className="flex flex-col gap-1 items-center">
               <li>
                 <a
                   href="/login"
@@ -33,11 +33,11 @@ export default function Footer() {
             </ul>
           </div>
 
-          <div className="flex flex-col gap-2">
+          <div className="flex flex-col gap-2 items-center">
             <h3 className="text-sm font-semibold text-foreground">
               Inscription
             </h3>
-            <ul className="flex flex-col gap-1">
+            <ul className="flex flex-col gap-1 items-center">
               <li>
                 <a
                   href="/register"
@@ -50,10 +50,10 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="mt-6 inline-flex flex-col">
-          <div className="border-t-2 border-border pt-2">
+        <div className="mt-6 flex flex-col items-center">
+          <div className="inline-flex flex-col items-center border-t-2 border-border pt-2">
             <p className="text-2xl font-bold tracking-tight text-foreground">
-              Glint
+              Glint<span className="text-xs align-super">®</span>
             </p>
           </div>
         </div>

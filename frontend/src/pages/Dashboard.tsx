@@ -5,6 +5,7 @@ import Fill from "@/components/Fill.tsx";
 import {useAuth} from "@/store/AuthContext";
 import {Navigate} from "react-router-dom";
 import Suggestion from "@/components/Suggestion.tsx";
+import Edit from "@/components/Edit.tsx";
 
 export default function Dashboard() {
     const [currentHash, setCurrentHash] = useState(window.location.hash || "#fil");
@@ -27,8 +28,10 @@ export default function Dashboard() {
                 return <Fill/>
             case '#profil':
                 return <Profile/>
+            case "#profile#edit":
+                return <Edit/>
              default:
-                 return <Fill/>
+                 return null
         }
     }
 

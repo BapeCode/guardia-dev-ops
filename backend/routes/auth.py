@@ -1,6 +1,6 @@
 from flask import Blueprint, request, jsonify
-from database import db
-from model.User import User
+from ..database import db
+from ..models.User import User
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
 
 auth_bp = Blueprint("auth", __name__)
@@ -28,11 +28,10 @@ def login():
                 'username': user.username,
                 'bio': user.bio,
                 'location': user.locate,
-                'followers': user.followers,
-                'following': user.following,
                 'created_at': user.created_at,
+                'updated_at': user.updated_at,
                 'avatar': user.avatar,
-                'banner': user.banner
+                'banner': user.banner,
             }
         }), 200
 
@@ -64,7 +63,10 @@ def register():
             'username': new_user.username,
             'bio': new_user.bio,
             'location': new_user.locate,
-            'followers': new_user.followers,
-            'following': new_user.following,
+            'created_at': new_user.created_at,
+            'updated_at': new_user.updated_at,
+            'avatar': new_user.avatar,
+            'banner': new_user.banner,
+
         }
     }), 201

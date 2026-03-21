@@ -2,8 +2,8 @@ import os
 from datetime import timedelta
 from flask import Flask
 from flask_cors import CORS
-from database import db
-from routes.auth import auth_bp
+from .database import db
+from .routes.auth import auth_bp
 from flask_migrate import Migrate
 from flask_jwt_extended import JWTManager
 
@@ -23,9 +23,11 @@ def create_app():
 
     db.init_app(app)
     migrate = Migrate(app, db)
-    from model.User import User
-    from model.Post import Post
-    from routes.auth import auth_bp
+    from .models import (
+        User, Post, Comment, Like, Follow,
+        Repost, Conversation, ConversationMember,
+        Message, Notification, Suggestion
+    )
 
     app.register_blueprint(auth_bp, url_prefix="/api")
 

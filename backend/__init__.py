@@ -4,6 +4,7 @@ from flask import Flask
 from flask_cors import CORS
 from .database import db
 from .routes.auth import auth_bp
+from .routes.payment import payment_bp
 from flask_migrate import Migrate
 from flask_jwt_extended import JWTManager
 

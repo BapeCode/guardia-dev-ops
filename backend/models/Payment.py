@@ -1,7 +1,7 @@
 import hashlib
 import uuid
 from datetime import datetime, timezone
-from ..instance.db import db
+from ..database import db
 
 
 class Payment(db.Model):

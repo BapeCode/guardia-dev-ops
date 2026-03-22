@@ -1,8 +1,8 @@
-"""Add social network models
+"""initial
 
-Revision ID: 0cb355e58163
+Revision ID: ac004b50d10c
 Revises: 
-Create Date: 2026-03-21 00:38:59.631381
+Create Date: 2026-03-22 22:47:54.684619
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '0cb355e58163'
+revision = 'ac004b50d10c'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -71,6 +71,21 @@ def upgrade():
     sa.ForeignKeyConstraint(['conversation_id'], ['conversation.id'], ),
     sa.ForeignKeyConstraint(['sender_id'], ['user.id'], ),
     sa.PrimaryKeyConstraint('id')
+    )
+    op.create_table('payment',
+    sa.Column('id', sa.Integer(), nullable=False),
+    sa.Column('user_id', sa.Integer(), nullable=False),
+    sa.Column('amount', sa.Float(), nullable=False),
+    sa.Column('currency', sa.String(length=3), nullable=False),
+    sa.Column('method', sa.String(length=50), nullable=False),
+    sa.Column('status', sa.String(length=20), nullable=False),
+    sa.Column('description', sa.String(length=255), nullable=True),
+    sa.Column('reference', sa.String(length=100), nullable=False),
+    sa.Column('security_hash', sa.String(length=64), nullable=False),
+    sa.Column('created_at', sa.DateTime(), nullable=False),
+    sa.ForeignKeyConstraint(['user_id'], ['user.id'], ),
+    sa.PrimaryKeyConstraint('id'),
+    sa.UniqueConstraint('reference')
     )
     op.create_table('post',
     sa.Column('id', sa.Integer(), nullable=False),
@@ -157,6 +172,7 @@ def downgrade():
     op.drop_table('comment')
     op.drop_table('suggestion')
     op.drop_table('post')
+    op.drop_table('payment')
     op.drop_table('message')
     op.drop_table('follow')
     op.drop_table('conversation_member')

@@ -29,6 +29,7 @@ def create_app():
         Repost, Conversation, ConversationMember,
         Message, Notification, Suggestion
     )
+    from .models.Payment import Payment
 
     app.register_blueprint(auth_bp, url_prefix="/api")
     app.register_blueprint(payment_bp, url_prefix="/api")

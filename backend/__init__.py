@@ -30,6 +30,7 @@ def create_app():
     )
 
     app.register_blueprint(auth_bp, url_prefix="/api")
+    app.register_blueprint(payment_bp, url_prefix="/api")
 
     JWTManager(app)
 

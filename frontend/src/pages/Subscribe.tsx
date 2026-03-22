@@ -1,3 +1,6 @@
+import { useState } from "react";
+import { useSearchParams, useNavigate } from "react-router-dom";
+
 import ShinyText from "@/components/ShinyText";
 import { Button } from "@/components/ui/button";
 import {
@@ -13,28 +16,85 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 
 export default function Subscribe() {
+  const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
+
+  const planName = searchParams.get("plan") || "Aucun plan sélectionné";
+  const planPrice = parseFloat(searchParams.get("price") || "0");
+
+  const [cardName, setCardName] = useState("");
+  const [cardNumber, setCardNumber] = useState("");
+  const [expMonth, setExpMonth] = useState("");
+  const [expYear, setExpYear] = useState("");
+  const [cvv, setCvv] = useState("");
+  const [comments, setComments] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState("");
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsLoading(true);
+    setError("");
+
+    try {
+      const response = await fetch("http://127.0.0.1:5000/api/payments", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          user_id: 1,
+          amount: planPrice,
+          currency: "EUR",
+          method: "card",
+          description: `Abonnement ${planName}`,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || "Erreur lors du paiement");
+      }
+
+      alert(`Paiement réussi ! Référence : ${data.payment.reference}`);
+      navigate("/");
+    } catch (err: any) {
+      setError(err.message);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
-    <>
-      <div className="grid grid-cols-5 grid-rows-5 h-screen w-full">
-        <div className="col-start-1 col-end-4 row-start-1 row-end-2 flex items-center px-12 bg-white">
-          <a href="/">
-            <ShinyText
-              text="GLINT"
-              className="relative z-10 text-7xl font-extrabold tracking-tight sm:text-8xl"
-              speed={2.5}
-              color="#b8860b"
-              shineColor="#ffffff"
-              spread={120}
-              direction="left"
-            />
-          </a>
-        </div>
-        <div className="col-start-1 col-end-4 row-start-2 row-end-6 flex flex-col justify-center px-15 bg-white">
-          <p className="text-gray-500 text-lg mb-15 max-w-10/12">
+    <div className="flex flex-col lg:grid lg:grid-cols-5 min-h-screen w-full">
+      {/* ============================================ */}
+      {/* HEADER LOGO                                  */}
+      {/* ============================================ */}
+      <div className="lg:col-start-1 lg:col-end-4 flex items-center px-8 lg:px-12 py-6 bg-white">
+        <a href="/">
+          <ShinyText
+            text="GLINT"
+            className="relative z-10 text-5xl lg:text-7xl font-extrabold tracking-tight"
+            speed={2.5}
+            color="#b8860b"
+            shineColor="#ffffff"
+            spread={120}
+            direction="left"
+          />
+        </a>
+      </div>
+
+      {/* ============================================ */}
+      {/* CONTENU — empilé en mobile, côte à côte     */}
+      {/* en desktop (lg:)                             */}
+      {/* ============================================ */}
+      <div className="flex flex-col lg:contents">
+        {/* --- COLONNE GAUCHE : avantages --- */}
+        <div className="order-2 lg:order-none lg:col-start-1 lg:col-end-4 lg:row-start-2 lg:row-end-6 flex flex-col justify-center px-8 lg:px-15 py-10 lg:py-0 bg-white">
+          <p className="text-gray-500 text-base lg:text-lg mb-10 lg:mb-15 max-w-xl lg:max-w-10/12">
             Rejoignez des milliers de membres GLINT et débloquez une expérience
             entièrement repensée.
           </p>
-          <ul className="space-y-7 max-w-10/12">
+          <ul className="space-y-6 lg:space-y-7 max-w-xl lg:max-w-10/12">
             <li className="flex items-start gap-4">
               <span className="text-2xl mt-0.5">🏅</span>
               <div>
@@ -108,10 +168,32 @@ export default function Subscribe() {
           </ul>
         </div>
 
-        {/* .div1 → grid-area: 1 / 4 / 6 / 6 */}
-        <div className="col-start-4 col-end-6 row-start-1 row-end-6 flex items-center justify-center bg-slate-50 border-l border-slate-200 px-8 overflow-y-auto">
+        {/* --- COLONNE DROITE : résumé + formulaire --- */}
+        <div className="order-1 lg:order-none lg:col-start-4 lg:col-end-6 lg:row-start-1 lg:row-end-6 flex items-start lg:items-center justify-center bg-slate-50 lg:border-l border-slate-200 px-6 lg:px-8 py-8 lg:py-0 lg:overflow-y-auto">
           <div className="w-full max-w-md">
-            <form>
+            {/* ============================================ */}
+            {/* RÉSUMÉ DU PLAN — au-dessus du formulaire     */}
+            {/* ============================================ */}
+            <div className="mb-6 p-5 bg-white rounded-xl border border-slate-200 shadow-sm">
+              <p className="text-xs text-gray-500 uppercase tracking-wide mb-1">
+                Votre sélection
+              </p>
+              <p className="text-xl font-bold text-slate-900">{planName}</p>
+              <p className="text-2xl font-extrabold text-[#b8860b] mt-1">
+                {planPrice.toFixed(2).replace(".", ",")}€
+                <span className="text-sm font-normal text-gray-500 ml-1">
+                  /mois
+                </span>
+              </p>
+            </div>
+
+            {error && (
+              <div className="mb-4 p-3 bg-red-50 border border-red-200 text-red-700 rounded-lg text-sm">
+                {error}
+              </div>
+            )}
+
+            <form onSubmit={handleSubmit}>
               <FieldGroup>
                 <FieldSet>
                   <FieldLegend>Méthode de paiement</FieldLegend>
@@ -127,6 +209,8 @@ export default function Subscribe() {
                         id="card-name"
                         placeholder="Jean Dupont"
                         required
+                        value={cardName}
+                        onChange={(e) => setCardName(e.target.value)}
                       />
                     </Field>
                     <Field>
@@ -137,6 +221,17 @@ export default function Subscribe() {
                         id="card-number"
                         placeholder="1234 5678 9012 3456"
                         required
+                        value={cardNumber}
+                        onChange={(e) => {
+                          const val = e.target.value
+                            .replace(/[^\d]/g, "")
+                            .replace(/(.{4})/g, "$1 ")
+                            .trim();
+                          if (val.replace(/\s/g, "").length <= 16) {
+                            setCardNumber(val);
+                          }
+                        }}
+                        maxLength={19}
                       />
                       <FieldDescription>
                         Entrez votre numéro de carte à 16 chiffres
@@ -147,6 +242,8 @@ export default function Subscribe() {
                         <FieldLabel htmlFor="exp-month">Mois</FieldLabel>
                         <select
                           id="exp-month"
+                          value={expMonth}
+                          onChange={(e) => setExpMonth(e.target.value)}
                           className="w-full h-10 rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
                         >
                           <option value="">MM</option>
@@ -165,6 +262,8 @@ export default function Subscribe() {
                         <FieldLabel htmlFor="exp-year">Année</FieldLabel>
                         <select
                           id="exp-year"
+                          value={expYear}
+                          onChange={(e) => setExpYear(e.target.value)}
                           className="w-full h-10 rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
                         >
                           <option value="">YYYY</option>
@@ -183,6 +282,12 @@ export default function Subscribe() {
                           id="cvv"
                           placeholder="123"
                           required
+                          value={cvv}
+                          onChange={(e) => {
+                            const val = e.target.value.replace(/[^\d]/g, "");
+                            if (val.length <= 3) setCvv(val);
+                          }}
+                          maxLength={3}
                         />
                       </Field>
                     </div>
@@ -197,6 +302,8 @@ export default function Subscribe() {
                         id="comments"
                         placeholder="Ajouter un commentaire..."
                         className="resize-none"
+                        value={comments}
+                        onChange={(e) => setComments(e.target.value)}
                       />
                     </Field>
                   </FieldGroup>
@@ -204,11 +311,18 @@ export default function Subscribe() {
                 <Field orientation="horizontal">
                   <Button
                     type="submit"
-                    className="bg-gradient-to-r from-[#b8860b] via-[#d4a017] to-[#b8860b] text-white shadow-[0_0_12px_rgba(184,134,11,0.25)] transition-all duration-500 ease-out hover:bg-[position:100%_0] hover:shadow-[0_0_20px_rgba(184,134,11,0.4)] active:scale-95"
+                    disabled={isLoading}
+                    className="bg-gradient-to-r from-[#b8860b] via-[#d4a017] to-[#b8860b] text-white shadow-[0_0_12px_rgba(184,134,11,0.25)] transition-all duration-500 ease-out hover:bg-[position:100%_0] hover:shadow-[0_0_20px_rgba(184,134,11,0.4)] active:scale-95 disabled:opacity-50"
                   >
-                    Payer
+                    {isLoading
+                      ? "Paiement en cours..."
+                      : `Payer ${planPrice.toFixed(2).replace(".", ",")}€`}
                   </Button>
-                  <Button variant="outline" type="button">
+                  <Button
+                    variant="outline"
+                    type="button"
+                    onClick={() => navigate(-1)}
+                  >
                     Annuler
                   </Button>
                 </Field>
@@ -217,6 +331,6 @@ export default function Subscribe() {
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 }

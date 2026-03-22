@@ -1,4 +1,5 @@
 import { Check, X } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 const allFeatures = [
   "Badges exclusifs GLINT",
@@ -11,28 +12,40 @@ const allFeatures = [
 const packs = [
   {
     name: "GLINT Basique",
-    price: "4,99€",
-    description: "L'essentiel pour votre linge quotidien.",
+    price: 4.99,
+    priceLabel: "4,99€",
+    description: "Offre basique.",
     availableCount: 2,
     highlight: false,
   },
   {
     name: "GLINT Pro",
-    price: "9,99€",
-    description: "Idéal pour les draps et serviettes.",
+    price: 9.99,
+    priceLabel: "9,99€",
+    description: "Offre pro.",
     availableCount: 3,
     highlight: true,
   },
   {
     name: "GLINT Max",
-    price: "19,99€",
-    description: "Le soin ultime pour vos vêtements.",
+    price: 19.99,
+    priceLabel: "19,99€",
+    description: "Offre max.",
     availableCount: 5,
     highlight: false,
   },
 ];
 
 export default function Pricing() {
+  const navigate = useNavigate();
+  const handleChoosePack = (pack: (typeof packs)[0]) => {
+    const params = new URLSearchParams({
+      plan: pack.name,
+      price: pack.price.toString(),
+    });
+    navigate(`/subscribe?${params.toString()}`);
+  };
+
   return (
     <section id="tarifs" className="pb-16">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -49,7 +62,7 @@ export default function Pricing() {
             >
               <h3 className="text-2xl font-bold mb-2">{pack.name}</h3>
               <div className="flex items-baseline mb-4">
-                <span className="text-4xl font-bold">{pack.price}</span>
+                <span className="text-4xl font-bold">{pack.priceLabel}</span>
                 <span className="text-sm opacity-80">/mois</span>
               </div>
               <p
@@ -94,17 +107,16 @@ export default function Pricing() {
                   );
                 })}
               </ul>
-              <a href="/subscribe">
-                <button
-                  className={`w-full py-3 rounded-lg font-bold cursor-pointer transition-colors ${
-                    pack.highlight
-                      ? "bg-white text-gray-950 hover:bg-blue-50"
-                      : "bg-slate-900 text-white hover:bg-slate-800"
-                  }`}
-                >
-                  Choisir ce pack
-                </button>
-              </a>
+              <button
+                onClick={() => handleChoosePack(pack)}
+                className={`w-full py-3 rounded-lg font-bold cursor-pointer transition-colors ${
+                  pack.highlight
+                    ? "bg-white text-gray-950 hover:bg-blue-50"
+                    : "bg-slate-900 text-white hover:bg-slate-800"
+                }`}
+              >
+                Choisir ce pack
+              </button>
             </div>
           ))}
         </div>

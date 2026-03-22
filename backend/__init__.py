@@ -5,6 +5,7 @@ from flask_jwt_extended import JWTManager
 from flask_migrate import Migrate
 from .instance.db import db
 from .routes.auth import auth_bp
+from .routes.payment import payment_bp
 
 def create_app():
     app = Flask(__name__, instance_path=os.path.join(os.path.dirname(os.path.abspath(__file__)), "instance"))
@@ -21,5 +22,6 @@ def create_app():
     from .model.User import User
     from .model.Post import Post
     app.register_blueprint(auth_bp, url_prefix="/api")
+    app.register_blueprint(payment_bp, url_prefix="/api")
 
     return app

@@ -25,7 +25,7 @@ export default function Header() {
             </li>
             <li>
               <a
-                href="#"
+                href="/features"
                 className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
               >
                 Fonctionnalités

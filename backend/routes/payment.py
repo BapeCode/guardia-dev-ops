@@ -1,6 +1,6 @@
 from flask import Blueprint, request, jsonify
-from ..instance.db import db
-from ..model.Payment import Payment
+from ..database import db
+from ..models.Payment import Payment
 
 # ==========================================
 # BLUEPRINT

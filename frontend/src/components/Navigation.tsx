@@ -49,7 +49,7 @@ export default function NavigationDashboard() {
     ]
 
     return (
-        <header className="flex flex-col items-center justify-start py-6 w-75 h-full">
+        <header className="flex flex-col items-center justify-start py-6 w-75 h-full animate-in slide-in-from-left-5 fade-in duration-500">
             <h1 className="uppercase font-bold text-2xl tracking-widest">Glint</h1>
 
             <aside className="flex flex-col justify-between items-center gap-4 mt-16 h-full w-full">

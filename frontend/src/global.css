@@ -75,6 +75,7 @@
   --color-primary: var(--gold);
   --color-primary-light: var(--gold-light);
   --color-primary-subtitle: var(--gold-subtle);
+  --color-destructive: var(--destructive);
   --font-mono: var(--mono);
   --font-serif: var(--serif);
 
@@ -103,5 +104,15 @@ body {
   color: var(--color-text-1);
   font-family: var(--mono);
   line-height: 1.6;
+  overflow: unset;
 }
 
+*::-webkit-scrollbar {
+  display: none;
+}
+
+* {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  overflow-y: scroll;
+}

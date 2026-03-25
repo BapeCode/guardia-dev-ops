@@ -5,18 +5,6 @@ import {useState} from "react";
 
 const TABS = ["Posts", "Réponses", "Reposts", "Likes"];
 
-const MOCK_USER = {
-    fullName: "Léa Dubois",
-    username: "@lea.db",
-    bio: "Capturer l'éphémère. Café noir et matins calmes. ☕️🌿",
-    location: "Lyon, France",
-    joinDate: "Mars 2026",
-    avatarUrl: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=256&q=80",
-    bannerUrl: "https://images.unsplash.com/photo-1707343843437-caacff5cfa74?auto=format&fit=crop&w=1500&q=80", 
-    followers: 1240,
-    following: 342,
-};
-
 export default function Profile() {
     const [activeTab, setActiveTab] = useState("Posts");
     const { user } = useAuth()
@@ -26,7 +14,7 @@ export default function Profile() {
     };
 
     return (
-        <section className="flex flex-col items-center justify-start py-6 border-x border-border w-full bg-glass h-full overflow-auto">
+        <section className="flex flex-col items-center justify-start py-6 border-x border-border w-full bg-glass h-full overflow-auto animate-in slide-in-from-bottom-5 fade-in duration-500">
             {user?.banner && (
                 <div className="relative w-full h-48 md:h-64 lg:h-72 bg-muted overflow-hidden group">
                     <img
@@ -48,8 +36,8 @@ export default function Profile() {
                     <div className="relative flex justify-center items-center h-10 w-10 md:h-14 md:w-14 overflow-hidden rounded-full border-4 border-background bg-background shadow-sm">
                             {user?.avatar && (
                                 <img
-                                    src={MOCK_USER.avatarUrl}
-                                    alt={MOCK_USER.fullName}
+                                    src={user.avatar}
+                                    alt={user.name}
                                     className="h-full w-full object-cover transition-transform duration-500 hover:scale-105 cursor-pointer"
                                 />
                             )}

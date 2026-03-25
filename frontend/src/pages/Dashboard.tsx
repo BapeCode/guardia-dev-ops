@@ -36,10 +36,10 @@ export default function Dashboard() {
     }
 
     return (
-        <section className="h-screen max-w-7xl mx-auto flex items-start justify-start gap-4">
-            <NavigationDashboard/>
-            {render()}
-            <Suggestion/>
+        <section className="h-screen max-w-7xl mx-auto grid grid-cols-4 gap-4">
+            <div className="col-span-1"><NavigationDashboard/></div>
+            <div className="col-span-2">{render()}</div>
+            <div className="col-span-1"><Suggestion/></div>
         </section>
     )
 }

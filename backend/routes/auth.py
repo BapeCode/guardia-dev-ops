@@ -32,9 +32,10 @@ def login():
                 'updated_at': user.updated_at,
                 'avatar': user.avatar,
                 'banner': user.banner,
+                'followers': user.followers_count,
+                'following': user.following_count,
             }
         }), 200
-
 
 @auth_bp.route('/register', methods=['POST'])
 def register():
@@ -70,3 +71,36 @@ def register():
 
         }
     }), 201
+
+@auth_bp.route('/update', methods=['POST'])
+def update():
+    data = request.get_json()
+    id = data.get("id")
+    name = data.get("name")
+    locate = data.get('locate')
+    bio = data.get("bio")
+
+    user_update = User.query.get(id)
+    user_update.name = name
+    user_update.locate = locate
+    user_update.bio = bio
+
+    db.session.commit()
+
+    return jsonify({
+        'message': 'Mise à jour réussie',
+        'user_update': {
+            'id': user_update.id,
+            'name': user_update.name,
+            'email': user_update.email,
+            'username': user_update.username,
+            'bio': user_update.bio,
+            'location': user_update.locate,
+            'created_at': user_update.created_at,
+            'updated_at': user_update.updated_at,
+            'avatar': user_update.avatar,
+            'banner': user_update.banner,
+            'followers': user_update.followers_count,
+            'following': user_update.following_count,
+        }
+    })

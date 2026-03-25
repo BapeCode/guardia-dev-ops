@@ -36,7 +36,7 @@ export default function Fonctionnalites() {
   return (
     <>
       <Header />
-      <div className="mx-auto max-w-7xl px-6 py-16">
+      <div className="mx-auto max-w-7xl px-6 py-16 min-h-screen">
         <div className="mb-12 text-center">
           <h1 className="text-4xl font-bold mb-4">
             Tout ce qui rend Glint{" "}

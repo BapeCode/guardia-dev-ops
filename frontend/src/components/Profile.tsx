@@ -1,7 +1,8 @@
 import { Button } from "@/components/ui/button";
-import {Settings, Camera, Pin, Calendar} from "lucide-react";
+import {Settings, Pin, Calendar} from "lucide-react";
 import {useAuth} from "@/store/AuthContext.tsx";
 import {useState} from "react";
+import {API_URL} from "@/utils/app.ts";
 
 const TABS = ["Posts", "Réponses", "Reposts", "Likes"];
 
@@ -16,32 +17,28 @@ export default function Profile() {
     return (
         <section className="flex flex-col items-center justify-start py-6 border-x border-border w-full bg-glass h-full overflow-auto animate-in slide-in-from-bottom-5 fade-in duration-500">
             {user?.banner && (
-                <div className="relative w-full h-48 md:h-64 lg:h-72 bg-muted overflow-hidden group">
+                <div className="relative w-full h-48 md:h-64 lg:h-72 bg-muted overflow-hidden group mb-6">
                     <img
-                        src={user.banner}
+                        src={`${API_URL}${user.banner}`}
                         alt="Bannière de profil"
                         className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                     />
                     <div className="absolute inset-0 bg-black/10 transition-opacity duration-300 group-hover:bg-black/20" />
-
-                    <button className="absolute top-4 right-4 md:top-6 md:right-6 bg-black/40 hover:bg-black/60 text-white p-2.5 rounded-full backdrop-blur-md transition-all duration-300 flex items-center gap-2">
-                        <Camera className="h-4 w-4" />
-                        <span className="text-xs font-medium hidden md:inline-block pr-1">Modifier la bannière</span>
-                    </button>
                 </div>
             )}
 
             <div className="flex flex-col md:flex-row items-center md:items-start px-4 md:px-8 w-full">
                 <div className="flex items-center justify-start w-full">
-                    <div className="relative flex justify-center items-center h-10 w-10 md:h-14 md:w-14 overflow-hidden rounded-full border-4 border-background bg-background shadow-sm">
-                            {user?.avatar && (
+                    <div className="relative flex justify-center items-center h-14 w-14 md:h-20 md:w-20 overflow-hidden rounded-full border-4 border-background bg-background shadow-sm">
+                            {user?.avatar ? (
                                 <img
-                                    src={user.avatar}
+                                    src={`${API_URL}${user.avatar}`}
                                     alt={user.name}
                                     className="h-full w-full object-cover transition-transform duration-500 hover:scale-105 cursor-pointer"
                                 />
+                            ) : (
+                                <p className="text-2xl">{user?.name.charAt(0)}</p>
                             )}
-                        <p className="text-2xl">{user?.name.charAt(0)}</p>
                     </div>
                 </div>
 
@@ -107,7 +104,7 @@ export default function Profile() {
                     >
                         {tab}
                         {activeTab === tab && (
-                            <span className="absolute bottom-0 left-1/2 -translate-1/2 w-10 h-[3px] rounded-full bg-primary"/>
+                            <span className="absolute bottom-0 left-1/2 -translate-1/2 w-10 h-0.75 rounded-full bg-primary"/>
                         )}
                     </button>
                 ))}

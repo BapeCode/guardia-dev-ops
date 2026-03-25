@@ -11,7 +11,8 @@ from flask_jwt_extended import JWTManager
 def create_app():
     app = Flask(
         __name__,
-        instance_path=os.path.join(os.path.dirname(os.path.abspath(__file__)), "instance")
+        static_folder='static',
+        instance_path=os.path.join(os.path.dirname(os.path.abspath(__file__)), "instance"),
     )
     CORS(app)
 

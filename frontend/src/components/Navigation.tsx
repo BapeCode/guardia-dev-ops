@@ -3,6 +3,7 @@ import { useState} from "react";
 import {cn} from "@/lib/utils.ts";
 import {Avatar, AvatarFallback, AvatarImage} from "@/components/ui/avatar.tsx";
 import {useAuth} from "@/store/AuthContext.tsx";
+import {API_URL} from "@/utils/app.ts";
 
 interface NavigationsItems {
     name: string;
@@ -79,8 +80,8 @@ export default function NavigationDashboard() {
 
                 <div className="flex items-center justify-between gap-2 w-full">
                     {user?.avatar !== "" ? (
-                        <Avatar className="border border-border cursor-pointer" onClick={logout}>
-                            <AvatarImage src={"https://github.com/shadcn.png"}/>
+                        <Avatar className="border border-border cursor-pointer h-12 w-12" onClick={logout}>
+                            <AvatarImage src={`${API_URL}${user?.avatar}`}/>
                             <AvatarFallback></AvatarFallback>
                         </Avatar>
                     ) : (

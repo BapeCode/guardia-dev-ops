@@ -17,6 +17,8 @@ interface Post {
     like_count: number
     repost_count: number
     comment_count: number
+    is_liked: boolean
+    is_repost: boolean
 }
 
 
@@ -28,12 +30,15 @@ export default function Fill() {
     useEffect(() => {
         const getPost = async () => {
             try {
-                const resp = await fetch("/api/posts")
+                const resp = await fetch("/api/posts", {
+                    headers: {
+                        "Authorization": `Bearer ${token}`,
+                    }
+                })
 
                 const data = await resp.json()
                 if (resp.ok) {
                     setPost(data.post)
-                    console.log(data.post)
                 }
             } catch (error) {
                 console.log("Une erreur de réseau est survenue : " + error)
@@ -78,6 +83,59 @@ export default function Fill() {
         }
     }
 
+    const handleLike = async (post_id: number)=> {
+        try {
+            const resp = await fetch(`/api/posts/${post_id}/like`, {
+                method: "POST",
+                headers: {
+                    "Authorization": `Bearer ${token}`,
+                    "Content-Type": "application/json"
+                }
+            })
+
+            const data = await resp.json()
+            if (resp.ok) {
+                if (data.error) {
+                    setError(data.error)
+                    return
+                }
+                setPost(prev => prev.map(p =>
+                    p.id === post_id
+                        ? {...p, like_count: data.like_count, is_liked: data.is_liked}
+                        : p
+                ))
+            }
+        } catch (error) {
+            console.log("Une erreur est survneu " + error)
+        }
+    }
+
+    const handleRepost = async (post_id: number) => {
+        try {
+            const resp = await fetch(`/api/posts/${post_id}/repost`, {
+                method: "POST",
+                headers: {
+                    "Authorization": `Bearer ${token}`,
+                    "Content-Type": "application/type"
+                }
+            })
+
+            const data = await resp.json()
+            if (resp.ok) {
+                if (data.error) {
+                    setError(data.error)
+                }
+                setPost(prev => prev.map(p =>
+                    p.id === post_id
+                        ? {...p, repost_count: data.repost_count, is_repost: data.is_repost}
+                        : p
+                ))
+            }
+        } catch (error) {
+            console.log("Une erreur est survenue : " + error)
+        }
+    }
+
     const formatedDate = (date: Date) => {
         const newDate = new Date(date)
         return newDate.toLocaleDateString("fr-FR", {
@@ -115,12 +173,12 @@ export default function Fill() {
                 </form>
             </div>
 
-            <div className="flex flex-col items-center gap-4 w-full mt-4">
+            <div className="flex flex-col items-center gap-4 w-full mt-4 px-4">
                 {post.length < 1 ? (
                     <p className="">Aucun post n'est disponible actuellement</p>
                 ): (
                     post.map((item) => (
-                        <div key={item.id} className="flex flex-col justify-center items-start w-full p-8 bg-background border-y border-border">
+                        <div key={item.id} className="flex flex-col justify-center items-start w-full p-8 border border-border rounded-sm shadow-xs">
                             <div className="flex items-center justify-center gap-2">
                                 {item.author.avatar ? (
                                     <Avatar className="border border-border cursor-pointer h-10 w-10">
@@ -135,16 +193,16 @@ export default function Fill() {
                             <p className="my-4 text-text-2 font-normal text-md">{item.content}</p>
                             <p className="text-xs font-light text-text-1/60">{formatedDate(item.created_at)}</p>
                             <div className="flex items-center gap-4 border-t border-border mt-2 w-full py-2">
-                                <div className="flex items-center gap-2">
-                                    <Heart className="h-4 w-4 text-text-1/60 hover:text-primary duration-200 transition-colors cursor-pointer"/>
+                                <div className="flex items-center gap-2" onClick={() => handleLike(item.id)}>
+                                    <Heart className={`h-4 w-4 hover:text-primary duration-200 transition-colors cursor-pointer ${item.is_liked ? "fill-primary text-primary" : "text-text-1/60 "}`}/>
                                     <p className="text-text-1 font-medium text-sm">{item.like_count}</p>
                                 </div>
                                 <div className="flex items-center gap-2">
-                                    <MessageCircle className="h-4 w-4 text-text-1/60 hover:text-primary duration-200 transition-colors cursor-pointer"/>
+                                    <MessageCircle className={`h-4 w-4 hover:text-primary duration-200 transition-colors cursor-pointer text-text-1/60`}/>
                                     <p className="text-text-1 font-medium text-sm">{item.comment_count}</p>
                                 </div>
-                                <div className="flex items-center gap-2">
-                                    <Repeat2 className="h-4 w-4 text-text-1/60 hover:text-primary duration-200 transition-colors cursor-pointer"/>
+                                <div className="flex items-center gap-2" onClick={() => handleRepost(item.id)}>
+                                    <Repeat2 className={`h-4 w-4 hover:text-primary duration-200 transition-colors cursor-pointer ${item.is_repost ? "text-primary" : "text-text-1/60 "}`}/>
                                     <p className="text-text-1 font-medium text-sm">{item.repost_count}</p>
                                 </div>
                             </div>

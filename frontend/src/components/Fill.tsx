@@ -1,7 +1,7 @@
 import Input from "@/components/Input.tsx";
 import {useAuth} from "@/store/AuthContext.tsx";
 import {Button} from "@/components/ui/button.tsx";
-import {FileImage} from "lucide-react";
+import {FileImage, Loader} from "lucide-react";
 import {API_URL} from "@/utils/app.ts";
 import {Avatar, AvatarImage} from "@/components/ui/avatar.tsx";
 import {useEffect, useState} from "react";
@@ -13,6 +13,7 @@ export default function Fill() {
     const { user, token } = useAuth()
     const [post, setPost] = useState<Post[]>([])
     const [error, setError] = useState<string | null>(null)
+    const [loading, setLoading] = useState<boolean>(true)
 
     useEffect(() => {
         const getPost = async () => {
@@ -29,11 +30,20 @@ export default function Fill() {
                 }
             } catch (error) {
                 console.log("Une erreur de réseau est survenue : " + error)
+            } finally {
+                setLoading(false)
             }
         }
 
         getPost().then()
     }, []);
+
+    if (loading) return (
+        <div className="flex items-center gap-2">
+            <Loader className="h-10 w-10 animate-spin"/>
+            Chargement...
+        </div>
+    )
 
     return (
         <section className="flex flex-col items-center justify-start py-6 border-x border-border w-full bg-glass min-h-full overflow-auto">

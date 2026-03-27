@@ -29,7 +29,6 @@ export interface PostsProps {
 }
 
 export default function Posts_card({item, setPost, setError, token}: PostsProps) {
-    console.log(item)
     return (
         <div className="flex flex-col justify-center items-start w-full p-8 border border-border rounded-sm shadow-xs">
             <div className="flex items-center justify-center gap-2">

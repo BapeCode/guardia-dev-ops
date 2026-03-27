@@ -1,4 +1,4 @@
-import {Bookmark, House, Settings, User2, MessageCircle, LogOut} from "lucide-react";
+import { House, Settings, User2, MessageCircle, LogOut} from "lucide-react";
 import { useState} from "react";
 import {cn} from "@/lib/utils.ts";
 import {Avatar, AvatarFallback, AvatarImage} from "@/components/ui/avatar.tsx";
@@ -28,12 +28,6 @@ export default function NavigationDashboard() {
             label: "Messages",
             href: "/dashboard#messages",
             icon: MessageCircle
-        },
-        {
-            name: "favoris",
-            label: "Favoris",
-            href: "/dashboard#favoris",
-            icon: Bookmark
         },
         {
             name: "profil",

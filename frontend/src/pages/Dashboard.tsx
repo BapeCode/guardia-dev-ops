@@ -38,7 +38,7 @@ export default function Dashboard() {
     }
 
     return (
-        <section className="h-screen max-w-7xl mx-auto grid grid-cols-4 gap-4">
+        <section className="h-screen max-w-7xl mx-auto grid grid-cols-4 gap-4 animate-in fade-in slide-in-from-bottom-5 duration-1000">
             <div className="col-span-1"><NavigationDashboard/></div>
             <div className="col-span-2">{render()}</div>
             <div className="col-span-1"><Suggestion/></div>

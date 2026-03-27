@@ -160,3 +160,17 @@ def banner_upload():
     user.banner = f"/static/uploads/banners/{filename}"
     db.session.commit()
     return jsonify({'message': 'Bannière sauvegardé', 'user': get_user(user)}), 200
+
+@auth_bp.route("/token", methods=["GET"])
+@jwt_required()
+def token():
+    current_user_id = int(get_jwt_identity())
+    user = User.query.get(current_user_id)
+    if not user:
+        return jsonify({
+            "valid": False
+        })
+
+    return jsonify({
+        "valid": True
+    })

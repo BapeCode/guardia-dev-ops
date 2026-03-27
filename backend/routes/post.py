@@ -31,6 +31,22 @@ def post():
         "post": [p.to_dict(current_user) for p in allpost],
     })
 
+@post_bp.route("/posts/user", methods=['GET'])
+@jwt_required()
+def post_by_user():
+    current_user_id = int(get_jwt_identity())
+    user = User.query.get(current_user_id)
+    if not user:
+        return jsonify({
+            "error": "L'utilisateur n'existe pas"
+        })
+
+    my_post = Post.query.filter_by(author_id=current_user_id).order_by(Post.created_at.desc())
+    return jsonify({
+        "posts": [p.to_dict(user) for p in my_post],
+    })
+
+
 @post_bp.route("/posts/create", methods=['POST'])
 @jwt_required()
 def post_create():
@@ -51,9 +67,9 @@ def post_create():
         "post": get_post(new_post),
     })
 
-@post_bp.route("/posts/<int:post_id>/like", methods=["POST"])
+@post_bp.route("/posts/<int:post_id>/<string:type>", methods=["POST"])
 @jwt_required()
-def post_like(post_id):
+def post_update(post_id, type):
     current_user_id = int(get_jwt_identity())
     user = User.query.get(current_user_id)
 
@@ -63,36 +79,26 @@ def post_like(post_id):
         })
 
     post = Post.query.get(post_id)
-    existing_like = Like.query.filter_by(user_id=current_user_id, post_id=post_id).first()
 
-    if existing_like:
-        db.session.delete(existing_like)
+    if type == "like":
+        existing_like = Like.query.filter_by(user_id=current_user_id, post_id=post_id).first()
+        if existing_like:
+            db.session.delete(existing_like)
+            db.session.commit()
+            return jsonify({"is_liked": False, "like_count": post.likes.count()})
+        db.session.add(Like(user_id=current_user_id, post_id=post_id, comment_id=null()))
         db.session.commit()
-        return jsonify({"is_liked": False, "like_count": post.likes.count()})
-
-    db.session.add(Like(user_id=current_user_id, post_id=post_id, comment_id=null()))
-    db.session.commit()
-    return jsonify({"is_liked": True, "like_count": post.likes.count()})
-
-@post_bp.route("/posts/<int:post_id>/repost", methods=["POST"])
-@jwt_required()
-def post_repost(post_id):
-    current_user_id = int(get_jwt_identity())
-    user = User.query.get(current_user_id)
-
-    if not user:
+        return jsonify({"is_liked": True, "like_count": post.likes.count()})
+    elif type == "repost":
+        existing_repost = Repost.query.filter_by(user_id=current_user_id, post_id=post_id).first()
+        if existing_repost:
+            db.session.delete(existing_repost)
+            db.session.commit()
+            return jsonify({"is_repost": False, "repost_count": post.repost_count})
+        db.session.add(Repost(user_id=current_user_id, post_id=post_id))
+        db.session.commit()
+        return jsonify({"is_repost": True, "repost_count": post.repost_count})
+    else:
         return jsonify({
-            "error": "L'utilisateur n'existe pas"
-        })
-
-    post = Post.query.get(post_id)
-    existing_repost = Repost.query.filter_by(user_id=current_user_id, post_id=post_id).first()
-
-    if existing_repost:
-        db.session.delete(existing_repost)
-        db.session.commit()
-        return jsonify({"is_repost": False, "repost_count": post.repost_count})
-
-    db.session.add(Repost(user_id=current_user_id, post_id=post_id))
-    db.session.commit()
-    return jsonify({"is_repost": True, "repost_count": post.repost_count})
+            "error": "Type d'action non valide"
+        }), 400

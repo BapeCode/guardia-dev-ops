@@ -9,7 +9,9 @@ import Edit from "@/components/Edit.tsx";
 
 export default function Dashboard() {
     const [currentHash, setCurrentHash] = useState(window.location.hash || "#fil");
-    const { isAuthenticated, loading } = useAuth()
+    const { isAuthenticated, loading, token_valid } = useAuth()
+
+    token_valid()
 
     useEffect(() => {
         const handleHashChange = () => {

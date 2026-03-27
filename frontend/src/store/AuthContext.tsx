@@ -21,7 +21,8 @@ interface AuthContextType {
     isAuthenticated: boolean
     login: (userData: User, jwtToken: string) => void
     logout: () => void,
-    update_user: (userData: User) => void
+    update_user: (userData: User) => void,
+    token_valid: () => void
 }
 
 const AuthContext = createContext<AuthContextType | null>(null)
@@ -61,9 +62,34 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         localStorage.setItem("user", JSON.stringify(userData))
     }
 
+    const token_valid = async () => {
+        const currentToken = localStorage.getItem("token")
+
+        if (!currentToken) {
+            logout()
+            return
+        }
+
+         try {
+            const resp = await fetch("/api/token", {
+                method: "GET",
+                headers: {
+                    "Authorization": `Bearer ${currentToken}`,
+                }
+            })
+
+            const data = await resp.json()
+            if (resp.ok && !data.valid) {
+                logout()
+            }
+        } catch (error) {
+            console.log("Une erreur est survenu : " + error)
+        }
+    }
+
     return (
         <AuthContext.Provider value={{
-            user, token, loading, update_user,
+            user, token, loading, update_user, token_valid,
             isAuthenticated: !!token,
             login, logout
         }}>

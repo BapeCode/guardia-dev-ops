@@ -1,21 +1,47 @@
 import { Button } from "@/components/ui/button";
 import {Settings, Pin, Calendar} from "lucide-react";
 import {useAuth} from "@/store/AuthContext.tsx";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import {API_URL} from "@/utils/app.ts";
+import type {Post} from "@/components/ui/posts_card.tsx";
+import Posts_card from "@/components/ui/posts_card.tsx";
 
 const TABS = ["Posts", "Réponses", "Reposts", "Likes"];
 
 export default function Profile() {
     const [activeTab, setActiveTab] = useState("Posts");
-    const { user } = useAuth()
+    const [data, setData] = useState<Post[]>([])
+    const { user, token } = useAuth()
+
+    useEffect(() => {
+        const get_posts = async () => {
+            try {
+                const resp = await fetch("/api/posts/user", {
+                    method: "GET",
+                    headers: {
+                        "Authorization": `Bearer ${token}`,
+                    }
+                })
+
+                const data_resp = await resp.json()
+                if (resp.ok) {
+                    setData(data_resp.posts)
+                }
+            } catch (error) {
+                console.log("Une erreur de réseau est survenu : " + error)
+            }
+        }
+
+        get_posts().then()
+    }, []);
 
     const handleEditProfile = () => {
         window.location.hash = "#profile#edit";
     };
 
+
     return (
-        <section className="flex flex-col items-center justify-start py-6 border-x border-border w-full bg-glass h-full overflow-auto animate-in slide-in-from-bottom-5 fade-in duration-500">
+        <section className="flex flex-col items-center justify-start py-6 border-x border-border w-full bg-glass min-h-full overflow-auto animate-in slide-in-from-bottom-5 fade-in duration-500">
             {user?.banner && (
                 <div className="relative w-full h-48 md:h-64 lg:h-72 bg-muted overflow-hidden group mb-6">
                     <img
@@ -110,6 +136,38 @@ export default function Profile() {
                 ))}
             </div>
 
+            <div className="flex flex-col items-center justify-center gap-4 w-full mt-4 px-4">
+                {activeTab === "Posts" && (
+                    data.length < 1 ? (
+                        <p className="">Aucun posts n'a été fait</p>
+                    ): (
+                        data.map((item) => (
+                            <Posts_card key={item.id} item={item} setPost={setData} setError={() => {}} token={token}/>
+                        ))
+                    )
+                )}
+
+                {activeTab === "Likes" && (
+                    data.length < 1 ? (
+                        <p className="">Aucun posts n'a été liké</p>
+                    ): (
+                        data.filter((i) => i.is_liked).map((item) => (
+                            <Posts_card key={item.id} item={item} setPost={setData} setError={() => {}} token={token}/>
+                        ))
+                    )
+                )}
+
+                {activeTab === "Reposts" && (
+                    data.filter((i) => i.is_repost).length < 1 ? (
+                        <p className="">Aucun posts n'a été republié</p>
+                    ): (
+                        data.filter((i) => i.is_repost).map((item) => (
+                            <Posts_card key={item.id} item={item} setPost={setData} setError={() => {}} token={token}/>
+                        ))
+                    )
+                )}
+
+            </div>
         </section>
     );
 }

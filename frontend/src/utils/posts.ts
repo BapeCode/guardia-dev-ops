@@ -81,3 +81,25 @@ export const handleAction = async (
         console.log("Une erreur est survenu " + error)
     }
 }
+
+export const get_post_action = async (
+    type: 'like' | 'repost',
+    setPost: Dispatch<SetStateAction<Post[]>>,
+    token: string | null
+)=> {
+    try {
+        const resp = await fetch(`/api/posts/${type}`, {
+            method: "GET",
+            headers: {
+                "Authorization": `Bearer ${token}`,
+            },
+        })
+
+        const data = await resp.json()
+        if (resp.ok) {
+            setPost(data.posts)
+        }
+    } catch (error) {
+        console.log("Une erreur est survenue : " + error)
+    }
+}

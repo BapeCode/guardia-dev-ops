@@ -18,7 +18,7 @@ export interface Post {
     repost_count: number
     comment_count: number
     is_liked: boolean
-    is_repost: boolean
+    is_reposted: boolean
 }
 
 export interface PostsProps {
@@ -29,6 +29,7 @@ export interface PostsProps {
 }
 
 export default function Posts_card({item, setPost, setError, token}: PostsProps) {
+    console.log(item)
     return (
         <div className="flex flex-col justify-center items-start w-full p-8 border border-border rounded-sm shadow-xs">
             <div className="flex items-center justify-center gap-2">
@@ -54,7 +55,7 @@ export default function Posts_card({item, setPost, setError, token}: PostsProps)
                     <p className="text-text-1 font-medium text-sm">{item.comment_count}</p>
                 </div>
                 <div className="flex items-center gap-2" onClick={() => handleAction(item.id, "repost", setPost, setError, token)}>
-                    <Repeat2 className={`h-4 w-4 hover:text-primary duration-200 transition-colors cursor-pointer ${item.is_repost ? "text-primary" : "text-text-1/60 "}`}/>
+                    <Repeat2 className={`h-4 w-4 hover:text-primary duration-200 transition-colors cursor-pointer ${item.is_reposted ? "text-primary" : "text-text-1/60 "}`}/>
                     <p className="text-text-1 font-medium text-sm">{item.repost_count}</p>
                 </div>
             </div>

@@ -102,3 +102,41 @@ def post_update(post_id, type):
         return jsonify({
             "error": "Type d'action non valide"
         }), 400
+
+@post_bp.route("/posts/<string:type>", methods=["GET"])
+@jwt_required()
+def post_by_type(type):
+    current_user_id = int(get_jwt_identity())
+    user = User.query.get(current_user_id)
+
+    if not user:
+        return jsonify({
+            "error": "L'utilisateur n'existe pas"
+        })
+
+    if type == "like":
+        all_like = (Post.query
+                    .join(Like, Like.post_id == Post.id)
+                    .filter(Like.user_id == current_user_id)
+                    .filter(Like.post_id != null())
+                    .order_by(Post.created_at.desc())
+                    .all()
+        )
+        return jsonify({
+            "posts": [p.to_dict(user) for p in all_like],
+        })
+    elif type == "repost":
+        all_repost = (Post.query
+                      .join(Repost, Repost.post_id == Post.id)
+                      .filter(Repost.user_id == current_user_id)
+                      .filter(Repost.post_id != null())
+                      .order_by(Repost.created_at.desc())
+                      .all()
+        )
+        return jsonify({
+            "posts": [p.to_dict(user) for p in all_repost],
+        })
+    else:
+        return jsonify({
+            "error": "Type d'action non valide"
+        })

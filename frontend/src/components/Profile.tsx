@@ -5,6 +5,7 @@ import {useEffect, useState} from "react";
 import {API_URL} from "@/utils/app.ts";
 import type {Post} from "@/components/ui/posts_card.tsx";
 import Posts_card from "@/components/ui/posts_card.tsx";
+import {get_post_action} from "@/utils/posts.ts";
 
 const TABS = ["Posts", "Réponses", "Reposts", "Likes"];
 
@@ -13,25 +14,24 @@ export default function Profile() {
     const [data, setData] = useState<Post[]>([])
     const { user, token } = useAuth()
 
-    useEffect(() => {
-        const get_posts = async () => {
-            try {
-                const resp = await fetch("/api/posts/user", {
-                    method: "GET",
-                    headers: {
-                        "Authorization": `Bearer ${token}`,
-                    }
-                })
-
-                const data_resp = await resp.json()
-                if (resp.ok) {
-                    setData(data_resp.posts)
+    const get_posts = async () => {
+        try {
+            const resp = await fetch("/api/posts/user", {
+                method: "GET",
+                headers: {
+                    "Authorization": `Bearer ${token}`,
                 }
-            } catch (error) {
-                console.log("Une erreur de réseau est survenu : " + error)
+            })
+            const data_resp = await resp.json()
+            if (resp.ok) {
+                setData(data_resp.posts)
             }
+        } catch (error) {
+            console.log("Une erreur de réseau est survenu : " + error)
         }
+    }
 
+    useEffect(() => {
         get_posts().then()
     }, []);
 
@@ -39,6 +39,21 @@ export default function Profile() {
         window.location.hash = "#profile#edit";
     };
 
+    const handleChangeTabs = (tab: string) => {
+        if (tab == "Likes") {
+            get_post_action("like", setData, token).then(() => {
+                setActiveTab(tab)
+            })
+        } else if (tab === "Reposts") {
+            get_post_action("repost", setData, token).then(() => {
+                setActiveTab(tab)
+            })
+        } else if (tab === "Posts") {
+            get_posts().then(() => {
+                setActiveTab(tab)
+            })
+        }
+    }
 
     return (
         <section className="flex flex-col items-center justify-start py-6 border-x border-border w-full bg-glass min-h-full overflow-auto animate-in slide-in-from-bottom-5 fade-in duration-500">
@@ -122,7 +137,7 @@ export default function Profile() {
                 {TABS.map((tab) => (
                     <button
                         key={tab}
-                        onClick={() => setActiveTab(tab)}
+                        onClick={() => handleChangeTabs(tab)}
                         className={`relative flex-1 py-3.5 text-sm font-medium transition-colors duration-200 cursor-pointer ${activeTab === tab
                             ? "text-primary"
                             : "text-text-3 hover:text-text-1"
@@ -151,17 +166,17 @@ export default function Profile() {
                     data.length < 1 ? (
                         <p className="">Aucun posts n'a été liké</p>
                     ): (
-                        data.filter((i) => i.is_liked).map((item) => (
+                        data.map((item) => (
                             <Posts_card key={item.id} item={item} setPost={setData} setError={() => {}} token={token}/>
                         ))
                     )
                 )}
 
                 {activeTab === "Reposts" && (
-                    data.filter((i) => i.is_repost).length < 1 ? (
+                    data.length < 1 ? (
                         <p className="">Aucun posts n'a été republié</p>
                     ): (
-                        data.filter((i) => i.is_repost).map((item) => (
+                        data.map((item) => (
                             <Posts_card key={item.id} item={item} setPost={setData} setError={() => {}} token={token}/>
                         ))
                     )

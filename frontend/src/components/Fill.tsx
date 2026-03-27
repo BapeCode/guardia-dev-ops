@@ -1,12 +1,13 @@
 import Input from "@/components/Input.tsx";
 import {useAuth} from "@/store/AuthContext.tsx";
 import {Button} from "@/components/ui/button.tsx";
-import {FileImage, Loader} from "lucide-react";
+import {FileImage} from "lucide-react";
 import {API_URL} from "@/utils/app.ts";
 import {Avatar, AvatarImage} from "@/components/ui/avatar.tsx";
 import {useEffect, useState} from "react";
 import Posts_card, {type Post} from "@/components/ui/posts_card.tsx";
 import {submit_post} from "@/utils/posts.ts";
+import Loading from "@/components/ui/loading.tsx";
 
 
 export default function Fill() {
@@ -31,7 +32,9 @@ export default function Fill() {
             } catch (error) {
                 console.log("Une erreur de réseau est survenue : " + error)
             } finally {
-                setLoading(false)
+                setTimeout(() => {
+                    setLoading(false)
+                }, 500)
             }
         }
 
@@ -39,10 +42,7 @@ export default function Fill() {
     }, []);
 
     if (loading) return (
-        <div className="flex items-center gap-2">
-            <Loader className="h-10 w-10 animate-spin"/>
-            Chargement...
-        </div>
+        <Loading/>
     )
 
     return (

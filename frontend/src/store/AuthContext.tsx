@@ -40,7 +40,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
             setToken(storedToken)
             setUser(JSON.parse(storedUser) as User)
         }
-        setLoading(false)
+        setTimeout(() => {
+            setLoading(false)
+        }, 1000)
     }, [])
 
     const login = (userData: User, jwtToken: string) => {

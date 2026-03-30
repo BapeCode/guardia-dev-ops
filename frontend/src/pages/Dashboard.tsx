@@ -6,6 +6,7 @@ import {useAuth} from "@/store/AuthContext";
 import {Navigate} from "react-router-dom";
 import Suggestion from "@/components/Suggestion.tsx";
 import Edit from "@/components/Edit.tsx";
+import Loading from "@/components/ui/loading.tsx";
 
 export default function Dashboard() {
     const [currentHash, setCurrentHash] = useState(window.location.hash || "#fil");
@@ -21,7 +22,9 @@ export default function Dashboard() {
         return () => window.removeEventListener("hashchange", handleHashChange);
     }, []);
 
-    if (loading) return <div>Chargement...</div>
+    if (loading) return (
+        <Loading/>
+    )
     if (!isAuthenticated) return <Navigate to={"/login"}/>
 
     const render = () => {

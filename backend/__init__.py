@@ -5,10 +5,10 @@ from flask_cors import CORS
 from .database import db
 from .routes.auth import auth_bp
 from .routes.payment import payment_bp
+from .routes.post import post_bp
+from .routes.user import user_bp
 from flask_migrate import Migrate
 from flask_jwt_extended import JWTManager
-
-from .routes.post import post_bp
 
 
 def create_app():
@@ -38,6 +38,7 @@ def create_app():
     app.register_blueprint(auth_bp, url_prefix="/api")
     app.register_blueprint(payment_bp, url_prefix="/api")
     app.register_blueprint(post_bp, url_prefix="/api")
+    app.register_blueprint(user_bp, url_prefix="/api")
 
     JWTManager(app)
 

@@ -6,12 +6,14 @@ import {API_URL} from "@/utils/app.ts";
 import type {Post} from "@/components/ui/posts_card.tsx";
 import Posts_card from "@/components/ui/posts_card.tsx";
 import {get_post_action} from "@/utils/posts.ts";
+import Loading from "@/components/ui/loading.tsx";
 
 const TABS = ["Posts", "Réponses", "Reposts", "Likes"];
 
 export default function Profile() {
     const [activeTab, setActiveTab] = useState("Posts");
     const [data, setData] = useState<Post[]>([])
+    const [loading, setLoading] = useState<boolean>(true)
     const { user, token } = useAuth()
 
     const get_posts = async () => {
@@ -28,6 +30,10 @@ export default function Profile() {
             }
         } catch (error) {
             console.log("Une erreur de réseau est survenu : " + error)
+        } finally {
+            setTimeout(() => {
+                setLoading(false)
+            }, 500)
         }
     }
 
@@ -55,8 +61,12 @@ export default function Profile() {
         }
     }
 
+    if (loading) return (
+        <Loading/>
+    )
+
     return (
-        <section className="flex flex-col items-center justify-start py-6 border-x border-border w-full bg-glass min-h-full overflow-auto animate-in slide-in-from-bottom-5 fade-in duration-500">
+        <section className={`flex flex-col items-center justify-start pb-6 border-x border-border w-full bg-glass min-h-full overflow-auto animate-in slide-in-from-bottom-5 fade-in duration-500 ${user?.banner ? "" : "pt-6"}`}>
             {user?.banner && (
                 <div className="relative w-full h-48 md:h-64 lg:h-72 bg-muted overflow-hidden group mb-6">
                     <img

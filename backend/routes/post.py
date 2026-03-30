@@ -1,7 +1,6 @@
-from flask import Flask, jsonify, request, Blueprint
+from flask import jsonify, request, Blueprint
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from sqlalchemy import null
-
 from ..models import User, Post, Repost, Like
 from ..database import db
 
@@ -46,16 +45,13 @@ def post_by_user():
         "posts": [p.to_dict(user) for p in my_post],
     })
 
-
 @post_bp.route("/posts/create", methods=['POST'])
 @jwt_required()
 def post_create():
     current_user_id = int(get_jwt_identity())
-    user = User.query.get(current_user_id)
-    if not user:
-        return jsonify({
-            "error": "L'utilisateur n'existe pas"
-        })
+    current_user = User.query.get(current_user_id)
+    if not current_user:
+        return jsonify({"error": "L'utilisateur n'existe pas"})
 
     data = request.get_json()
     content = data["content"]
@@ -63,9 +59,30 @@ def post_create():
     new_post = Post(title="", content=content, author_id=current_user_id)
     db.session.add(new_post)
     db.session.commit()
+    db.session.refresh(new_post)
+
     return jsonify({
-        "post": get_post(new_post),
+        "post": new_post.to_dict(current_user),
     })
+
+@post_bp.route("/posts/delete", methods=['POST'])
+@jwt_required()
+def post_delete():
+    current_user_id = int(get_jwt_identity())
+    current_user = User.query.get(current_user_id)
+    if not current_user:
+        return jsonify({"error": "L'utilisateur n'existe pas"})
+
+    data = request.get_json()
+    post_id = data["post_id"]
+
+    current_post = Post.query.filter_by(author_id=current_user_id, id=post_id).first()
+    if not current_post:
+        return jsonify({"error": "L'utilisateur ou le post n'existe pas"})
+
+    db.session.delete(current_post)
+    db.session.commit()
+    return jsonify({"is_deleted": True}), 200
 
 @post_bp.route("/posts/<int:post_id>/<string:type>", methods=["POST"])
 @jwt_required()

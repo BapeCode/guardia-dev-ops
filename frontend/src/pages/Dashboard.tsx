@@ -1,11 +1,11 @@
 import { useState, useEffect } from "react";
-import NavigationDashboard from "@/components/Navigation.tsx";
-import Profile from "@/components/Profile.tsx";
-import Fill from "@/components/Fill.tsx";
+import NavigationDashboard from "@/components/dashboard/Navigation.tsx";
+import Profile from "@/components/dashboard/Profile.tsx";
+import Fill from "@/components/dashboard/Fill.tsx";
 import {useAuth} from "@/store/AuthContext";
 import {Navigate} from "react-router-dom";
 import Suggestion from "@/components/Suggestion.tsx";
-import Edit from "@/components/Edit.tsx";
+import Edit from "@/components/dashboard/Edit.tsx";
 import Loading from "@/components/ui/loading.tsx";
 
 export default function Dashboard() {

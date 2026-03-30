@@ -1,11 +1,11 @@
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/button.tsx";
 import {Settings, Pin, Calendar} from "lucide-react";
 import {useAuth} from "@/store/AuthContext.tsx";
 import {useEffect, useState} from "react";
 import {API_URL} from "@/utils/app.ts";
 import type {Post} from "@/components/ui/posts_card.tsx";
 import Posts_card from "@/components/ui/posts_card.tsx";
-import {get_post_action} from "@/utils/posts.ts";
+import {get_post_action} from "@/lib/posts.ts";
 import Loading from "@/components/ui/loading.tsx";
 
 const TABS = ["Posts", "Réponses", "Reposts", "Likes"];

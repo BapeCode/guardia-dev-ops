@@ -1,43 +1,10 @@
 import type {Post} from "@/components/ui/posts_card.tsx";
 import type {Dispatch, SetStateAction} from "react";
+import axios from "axios";
 
-export const submit_post = async (
-    e: React.ChangeEvent<HTMLFormElement>,
-    setError: (error: string) => void,
-    setPost: (data: Post[]) => void,
-    token: string | null
-) => {
-    const formData = new FormData(e.target)
-    const content = formData.get("post_content")
-
-    if (!content) {
-        setError("Une erreur sur la saisie du contenu est survenue")
-        return
-    }
-
-    try {
-        const resp = await fetch("/api/posts/create", {
-            method: 'POST',
-            headers: {
-                'Authorization': `Bearer ${token}`,
-                "Content-Type": 'application/json'
-            },
-            body: JSON.stringify({
-                "content": content
-            })
-        })
-        const data = await resp.json()
-        if (resp.ok) {
-            if (data.error) {
-                setError(data.error)
-                return
-            }
-            setPost(data.post)
-        }
-    } catch (error) {
-        setError("Une erreur est survenue : " + error)
-    }
-}
+const authHeaders = () => ({
+    Authorization: `Bearer ${localStorage.getItem("token")}`,
+})
 
 export const handleAction = async (
     post_id: number,
@@ -101,5 +68,61 @@ export const get_post_action = async (
         }
     } catch (error) {
         console.log("Une erreur est survenue : " + error)
+    }
+}
+
+export const getPost = async (callback: (post: Post[], error: string | null) => void) => {
+    try {
+        const { data } = await axios.get("/api/posts",
+            {headers: authHeaders()}
+        )
+        callback(data.post, data.error)
+    } catch (error) {
+        console.log("[GET_POST] => " + error)
+        callback([], "Une erreur est survenue lors de la récupération des posts")
+    }
+}
+
+export const createPost = async (
+    formData: FormData,
+    setPosts: Dispatch<SetStateAction<Post[]>>,
+    setError: Dispatch<SetStateAction<string | null>>
+) => {
+    const content = formData.get("post_content")?.toString().trim()
+
+    if (!content) {
+        setError("Le contenu ne peut pas être vide")
+        return
+    }
+
+    try {
+        const {data} = await axios.post("/api/posts/create", {
+            content
+        }, {
+            headers: authHeaders()
+        })
+        setPosts(prev => [data.post, ...prev])
+        setError(null)
+    } catch (error) {
+        setError("Impossible de publier le post")
+        console.log("[CREATE_POST] => ", error)
+    }
+}
+
+export const deletePost = async (
+    post_id: number,
+    setPost: Dispatch<SetStateAction<Post[]>>,
+    setError: Dispatch<SetStateAction<string | null>>
+) => {
+    try {
+        const {data} = await axios.post("/api/posts/delete", {post_id: post_id}, {headers: authHeaders()})
+
+        if (data.is_deleted) {
+            setPost(prev => prev.filter(post => post.id !== post_id))
+        } else {
+            setError("Impossible de supprimé !")
+        }
+    } catch (error) {
+        console.log("[DELETE_POST] => ", error)
     }
 }

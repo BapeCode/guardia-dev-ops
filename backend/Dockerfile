@@ -5,4 +5,4 @@ COPY requirements.txt .
 RUN apt-get update && apt-get install -y sqlite3
 RUN pip install --no-cache-dir -r requirements.txt
 COPY . .
-CMD ["python", "app.py"]
+CMD ["flask", "run"]

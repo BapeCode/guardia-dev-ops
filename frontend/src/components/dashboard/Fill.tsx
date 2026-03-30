@@ -6,7 +6,7 @@ import {API_URL} from "@/utils/app.ts";
 import {Avatar, AvatarImage} from "@/components/ui/avatar.tsx";
 import {useEffect, useState} from "react";
 import Posts_card, {type Post} from "@/components/ui/posts_card.tsx";
-import {submit_post} from "@/utils/posts.ts";
+import {createPost, getPost} from "@/lib/posts.ts";
 import Loading from "@/components/ui/loading.tsx";
 
 
@@ -17,28 +17,15 @@ export default function Fill() {
     const [loading, setLoading] = useState<boolean>(true)
 
     useEffect(() => {
-        const getPost = async () => {
-            try {
-                const resp = await fetch("/api/posts", {
-                    headers: {
-                        "Authorization": `Bearer ${token}`,
-                    }
-                })
-
-                const data = await resp.json()
-                if (resp.ok) {
-                    setPost(data.post)
-                }
-            } catch (error) {
-                console.log("Une erreur de réseau est survenue : " + error)
-            } finally {
-                setTimeout(() => {
-                    setLoading(false)
-                }, 500)
+        getPost((post, error) => {
+            setPost(post)
+            if (error) {
+                setError(error)
             }
-        }
-
-        getPost().then()
+            setLoading(false)
+        }).then(() => {
+            setLoading(false)
+        })
     }, []);
 
     if (loading) return (
@@ -59,7 +46,7 @@ export default function Fill() {
                     )}
                 </div>
 
-                <form onSubmit={(e) => submit_post(e, setError, setPost, token)} className="flex flex-col items-end justify-center w-full gap-4">
+                <form action={(e) => createPost(e, setPost, setError)} className="flex flex-col items-end justify-center w-full gap-4">
                     <Input required={true} placeholder={"Quoi de neuf ?"} name="post_content" className="w-full shadow-none pb-6 border-b border-border outline-none focus:outline-none focus:ring-0 focus:ring-offset-0" />
                     <p className={`text-destructive text-sm font-medium ${error ? 'block' : 'hidden'}`}>{error}</p>
                     <div className="flex items-center justify-between w-full">
@@ -76,7 +63,7 @@ export default function Fill() {
                     <p className="">Aucun post n'est disponible actuellement</p>
                 ): (
                     post.map((item) => (
-                        <Posts_card key={item.id} item={item} setPost={setPost} setError={setError} token={token}/>
+                        <Posts_card key={item.id} item={item} setPost={setPost} setError={setError} token={token} user={user}/>
                     ))
                 )}
             </div>

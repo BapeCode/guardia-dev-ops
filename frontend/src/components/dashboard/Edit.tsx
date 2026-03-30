@@ -1,7 +1,7 @@
-import Section from "./Section";
+import Section from "../Section.tsx";
 import { Save, ArrowLeft, User } from "lucide-react";
 import {useAuth} from "@/store/AuthContext.tsx";
-import Input from "@/components/Input"
+import Input from "@/components/Input.tsx"
 import {useState} from "react";
 import {API_URL} from "@/utils/app.ts";
 

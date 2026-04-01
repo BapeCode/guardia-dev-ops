@@ -76,7 +76,7 @@ export const getPost = async (callback: (post: Post[], error: string | null) => 
         const { data } = await axios.get("/api/posts",
             {headers: authHeaders()}
         )
-        callback(data.post, data.error)
+        callback(data.posts, data.error)
     } catch (error) {
         console.log("[GET_POST] => " + error)
         callback([], "Une erreur est survenue lors de la récupération des posts")

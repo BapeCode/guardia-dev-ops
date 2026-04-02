@@ -1,9 +1,10 @@
-from flask import render_template, request, flash, url_for, redirect, session, make_response
-from flask_jwt_extended import current_user, create_access_token, set_access_cookies, unset_jwt_cookies
+from flask import render_template, request, flash, url_for, redirect, make_response
+from flask_jwt_extended import create_access_token, set_access_cookies, unset_jwt_cookies
 
 from app import database
-from app.validator.AuthValidator import AuthValidator
 from app.models.User import User
+from app.validator.AuthValidator import AuthValidator
+
 
 class AuthController:
     @staticmethod
@@ -42,7 +43,6 @@ class AuthController:
                 database.session.add(new_user)
                 database.session.commit()
                 return render_template("auth/login.html")
-
 
         return render_template('auth/register.html')
 

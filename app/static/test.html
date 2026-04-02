@@ -1,0 +1,32 @@
+<!-- Dans ton template -->
+<h1 id="glint-logo" class="font-serif text-4xl">GLINT</h1>
+<p  id="subtitle"   class="text-lg">Ta communauté</p>
+
+<script src="{{ url_for('static', filename='scripts/ShinyText.js') }}"></script>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+
+    // Usage basique
+    new ShinyText("#glint-logo", {
+        color:      "#C9A96E",
+        shineColor: "#fff8e8",
+        speed:      3,
+    })
+
+    // Avec yoyo + pauseOnHover
+    new ShinyText("#subtitle", {
+        color:        "#9A9A94",
+        shineColor:   "#ffffff",
+        speed:        4,
+        yoyo:         true,
+        pauseOnHover: true,
+        delay:        1,
+    })
+
+    // Direction droite
+    new ShinyText("#autre", {
+        direction: "right",
+        speed:     2,
+    })
+})
+</script>

@@ -1,0 +1,15 @@
+{% macro Flash() %}
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        <div id="flash-messages" class="flex flex-col items-center w-full">
+            {% for category, message in messages %}
+                <div class="text-sm font-medium fade-up {% if category == 'error' %} text-destructive {% else %}text-text-1 {% endif %}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+{% endwith %}
+
+{% endmacro %}

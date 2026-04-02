@@ -1,0 +1,18 @@
+{% set base = "w-full px-2.5 py-3 shadow-sm border-border focus:outline-none focus:ring-1 focus:ring-border-gold focus:ring-offset-2" %}
+
+{% macro Input(label="", type="text", placeholder="", name="", required=false, cls="") %}
+<div class="flex flex-col items-start gap-2 w-full">
+    {% if label %}
+        <label class="text-xs font-light text-text-1/40 uppercase tracking-widest">
+            {{ label }}
+        </label>
+    {% endif %}
+    <input
+        {% if required %}required{% endif %}
+        name="{{ name }}"
+        type="{{ type }}"
+        placeholder="{{ placeholder }}"
+        class="{{ base }} {{ cls }}"
+    />
+</div>
+{% endmacro %}

@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/guardia-dev-ops.iml" filepath="$PROJECT_DIR$/.idea/guardia-dev-ops.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/guardia-devsecops-project.iml" filepath="$PROJECT_DIR$/.idea/guardia-devsecops-project.iml" />
     </modules>
   </component>
 </project>

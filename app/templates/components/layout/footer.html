@@ -1,0 +1,63 @@
+{% macro Footer() %}
+
+    <footer class="mt-8 bg-stone-50 text-foreground">
+      <div class="border-t border-border" />
+
+      <div class="mx-auto max-w-5xl px-6 py-6">
+        <div class="grid grid-cols-3 gap-6 justify-items-center">
+          <div class="flex flex-col gap-2 items-center">
+            <h3 class="text-sm font-semibold text-foreground">Naviguer</h3>
+            <ul class="flex flex-col gap-1 items-center">
+              <li>
+                <a
+                  href="/"
+                  class="text-sm text-muted-foreground hover:text-foreground transition-colors"
+                >
+                  Accueil
+                </a>
+              </li>
+            </ul>
+          </div>
+
+          <div class="flex flex-col gap-2 items-center">
+            <h3 class="text-sm font-semibold text-foreground">Connexion</h3>
+            <ul class="flex flex-col gap-1 items-center">
+              <li>
+                <a
+                  href="/login"
+                  class="text-sm text-muted-foreground hover:text-foreground transition-colors"
+                >
+                  Se connecter
+                </a>
+              </li>
+            </ul>
+          </div>
+
+          <div class="flex flex-col gap-2 items-center">
+            <h3 class="text-sm font-semibold text-foreground">
+              Inscription
+            </h3>
+            <ul class="flex flex-col gap-1 items-center">
+              <li>
+                <a
+                  href="/register"
+                  class="text-sm text-muted-foreground hover:text-foreground transition-colors"
+                >
+                  S'inscrire
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="mt-6 flex flex-col items-center">
+          <div class="inline-flex flex-col items-center border-t-2 border-border pt-2">
+            <p class="text-2xl font-bold tracking-tight text-foreground">
+              Glint<span class="text-xs align-super">®</span>
+            </p>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+{% endmacro %}

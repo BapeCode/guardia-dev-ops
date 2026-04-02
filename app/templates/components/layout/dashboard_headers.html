@@ -1,0 +1,60 @@
+{% set items = [
+    {
+        "name": "fill",
+        "label": "Fil",
+        "href": "/dashboard#fil",
+    },
+    {
+        "name": "messages",
+        "label": "Messages",
+        "href": "/dashboard#messages",
+    },
+    {
+        "name": "profil",
+        "label": "Profil",
+        "href": "/dashboard#profil",
+    },
+    {
+        "name": "settings",
+        "label": "Réglages",
+        "href": "/dashboard#settings",
+     }
+] %}
+
+{% macro DashboardHeaders() %}
+
+    <header class="flex flex-col items-center justify-start py-6 w-75 h-full animate-in slide-in-from-left-5 fade-in duration-500">
+        <h1 class="uppercase font-bold text-2xl tracking-widest">Glint</h1>
+
+        <aside class="flex flex-col justify-between items-center gap-4 mt-16 h-full w-full">
+             <nav class="flex flex-col justify-start items-start gap-1 w-full">
+                {% for item in items %}
+                	<a class="flex grap-2 item-center px-4 py-2 transition-all duration-300 w-full text-text-1 hover:text-primary" href={{ item.href }}>
+                        <p class="text-md font-medium tracking-wider hidden sm:block">
+                            {{ item.label }}
+                        </p>
+                    </a>
+                {% endfor %}
+             </nav>
+
+            <div class="flex items-center justify-between gap-2 w-full">
+                {% for user in current_user %}
+                    {% if user.avatar %}
+                    	<div class="border border-border cursor-pointer h-12 w-12">
+                            <img src="static/uploads/avatar/{{ user.avatar }}" alt="{{ user.name }}"/>
+                        </div>
+                    {% else %}
+                        <div class="border border-border cursor-pointer h-12 w-12">
+                            <p class="text-sm font-medium text-text-1">
+                                {{ user.name[0] }}
+                            </p>
+                        </div>
+                    {% endif %}
+
+                {% endfor %}
+            </div>
+        </aside>
+    </header>
+
+
+{% endmacro %}

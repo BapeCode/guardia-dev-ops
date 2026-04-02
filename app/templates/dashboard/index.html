@@ -1,0 +1,16 @@
+{% extends 'layout.html' %}
+{% from 'components/layout/dashboard_headers.html' import DashboardHeaders %}
+
+{% block content %}
+
+    <section class="h-screen max-w-7xl mx-auto grid grid-cols-4 gap-4 animate-in fade-in slide-in-from-bottom-5 duration-1000">
+        <div class="col-span-1">
+            {{ DashboardHeaders(user=current_user) }}
+        </div>
+        <div class="col-span-2"></div>
+        <div class="col-span-1">
+
+        </div>
+    </section>
+
+{% endblock %}

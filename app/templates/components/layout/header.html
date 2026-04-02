@@ -1,0 +1,32 @@
+{% from 'components/ui/button.html' import Button %}
+{% macro Headers() %}
+
+<header class="sticky top-0 z-20 border-b border-border bg-background/50 backdrop-blur-sm">
+    <div class="mx-auto flex h-16 max-w-7xl items-center justify-between px-6">
+        <a href="/">
+            <h1 class="text-xl font-bold">
+                GLINT
+            </h1>
+        </a>
+        <nav>
+            <ul class="flex items-center gap-6">
+                <li>
+                    <a href="/" class="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground">
+                        Accueil
+                    </a>
+                </li>
+                <li>
+                    <a href="/features" class="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground">
+                        Fonctionnalités
+                    </a>
+                </li>
+                <li>
+                    <a href="/premium" class="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground">
+                        {{ Button("Premium", size="sm", variant="gold", cls="group relative gap-2 overflow-hidden border border-[#b8860b]/30 bg-gradient-to-r from-[#b8860b] via-[#d4a017] to-[#b8860b] bg-[length:200%_100%] px-5 text-white shadow-[0_0_12px_rgba(184,134,11,0.25)] transition-all duration-500 ease-out hover:bg-[position:100%_0] hover:shadow-[0_0_20px_rgba(184,134,11,0.4)] active:scale-95") }}
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</header>
+{% endmacro %}

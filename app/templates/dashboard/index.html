@@ -6,16 +6,21 @@
 {% block content %}
 
     <section
-            class="h-screen max-w-7xl mx-auto grid grid-cols-4 gap-4 animate-in fade-in slide-in-from-bottom-5 duration-1000">
-        <div class="col-span-1">
-            {{ DashboardHeaders(user=current_user, active_tab=active_tab) }}
-        </div>
-        <div class="col-span-2">
-            {% if tab == "fill" %}
-                {% include "dashboard/tab/fill.html" %}
-            {% endif %}
-        </div>
-        <div class="col-span-1">
+            class="h-screen flex flex-col items-center justify-start w-full animate-in fade-in slide-in-from-top-5 duration-1000">
+        {{ DashboardHeaders(user=current_user, active_tab=active_tab) }}
+        <div class="grid grid-cols-1 md:grid-cols-5 w-full">
+
+            <div class="col-span-1 hidden md:flex">
+                {% include "dashboard/profile_aside.html" %}
+            </div>
+
+            <div class="col-span-3">
+                {% if tab == "fill" %}
+                    {% include "dashboard/tab/fill.html" %}
+                {% endif %}
+            </div>
+
+            <div class="col-span-1 hidden md:flex"></div>
 
         </div>
     </section>

@@ -26,14 +26,13 @@ body {
     overflow: unset;
 }
 
-*::-webkit-scrollbar {
-    display: none;
-}
-
 * {
     scrollbar-width: none;
     -ms-overflow-style: none;
-    overflow-y: scroll;
+}
+
+*::-webkit-scrollbar {
+    display: none;
 }
 
 #grid-container {

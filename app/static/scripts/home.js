@@ -1,4 +1,3 @@
-
 // Animated Grid
 class AnimatedGrid {
     constructor(uid) {
@@ -12,9 +11,9 @@ class AnimatedGrid {
     }
 
 
-     getDimension() {
-        return { w: this.svg.clientWidth, h: this.svg.clientHeight}
-     }
+    getDimension() {
+        return {w: this.svg.clientWidth, h: this.svg.clientHeight}
+    }
 
     randomPos(dims) {
         const cols = Math.floor(dims.w / this.CELL_W)
@@ -54,9 +53,9 @@ class AnimatedGrid {
 
         for (let i = 0; i < this.NUM_SQUARES; i++) {
             const rect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
-            rect.setAttribute("width",  String(this.CELL_W - 1));
+            rect.setAttribute("width", String(this.CELL_W - 1));
             rect.setAttribute("height", String(this.CELL_H - 1));
-            rect.setAttribute("fill",   this.color);
+            rect.setAttribute("fill", this.color);
             rect.setAttribute("opacity", "0");
             this.group.appendChild(rect);
             this.animateSquare(rect, dims, i * 100);
@@ -68,7 +67,7 @@ class AnimatedGrid {
                 const [col, row] = this.randomPos(newDims);
                 r.setAttribute("x", String(col * this.CELL_W + 1));
                 r.setAttribute("y", String(row * this.CELL_H + 1));
-              });
+            });
         });
         ro.observe(this.svg);
     }
@@ -82,23 +81,23 @@ class ShinyText {
             : element
 
         // Options avec valeurs par défaut
-        this.disabled     = options.disabled     ?? false
-        this.speed        = options.speed        ?? 2
-        this.color        = options.color        ?? "#b5b5b5"
-        this.shineColor   = options.shineColor   ?? "#ffffff"
-        this.spread       = options.spread       ?? 120
-        this.yoyo         = options.yoyo         ?? false
+        this.disabled = options.disabled ?? false
+        this.speed = options.speed ?? 2
+        this.color = options.color ?? "#b5b5b5"
+        this.shineColor = options.shineColor ?? "#ffffff"
+        this.spread = options.spread ?? 120
+        this.yoyo = options.yoyo ?? false
         this.pauseOnHover = options.pauseOnHover ?? false
-        this.direction    = options.direction    ?? "left"
-        this.delay        = options.delay        ?? 0
+        this.direction = options.direction ?? "left"
+        this.delay = options.delay ?? 0
 
         // État interne
-        this.isPaused     = false
-        this.elapsed      = 0
-        this.lastTime     = null
-        this.dirMult      = this.direction === "left" ? 1 : -1
-        this.progress     = 0
-        this.rafId        = null
+        this.isPaused = false
+        this.elapsed = 0
+        this.lastTime = null
+        this.dirMult = this.direction === "left" ? 1 : -1
+        this.progress = 0
+        this.rafId = null
 
         this._applyBaseStyle()
         this._bindEvents()
@@ -115,11 +114,11 @@ class ShinyText {
             ${this.color} 65%,
             ${this.color} 100%
         )`
-        this.el.style.backgroundSize       = "200% auto"
+        this.el.style.backgroundSize = "200% auto"
         this.el.style.webkitBackgroundClip = "text"
-        this.el.style.backgroundClip       = "text"
-        this.el.style.webkitTextFillColor  = "transparent"
-        this.el.style.display              = "inline-block"
+        this.el.style.backgroundClip = "text"
+        this.el.style.webkitTextFillColor = "transparent"
+        this.el.style.display = "inline-block"
     }
 
     _updatePosition() {
@@ -145,13 +144,13 @@ class ShinyText {
         this.lastTime = time
         this.elapsed += delta
 
-        const animDuration  = this.speed * 1000
+        const animDuration = this.speed * 1000
         const delayDuration = this.delay * 1000
 
         if (this.yoyo) {
             const cycleDuration = animDuration + delayDuration
-            const fullCycle     = cycleDuration * 2
-            const cycleTime     = this.elapsed % fullCycle
+            const fullCycle = cycleDuration * 2
+            const cycleTime = this.elapsed % fullCycle
 
             if (cycleTime < animDuration) {
                 // Aller : 0 → 100
@@ -171,7 +170,7 @@ class ShinyText {
             }
         } else {
             const cycleDuration = animDuration + delayDuration
-            const cycleTime     = this.elapsed % cycleDuration
+            const cycleTime = this.elapsed % cycleDuration
 
             if (cycleTime < animDuration) {
                 // Animation : 0 → 100
@@ -189,8 +188,12 @@ class ShinyText {
 
     _bindEvents() {
         if (!this.pauseOnHover) return
-        this.el.addEventListener("mouseenter", () => { this.isPaused = true  })
-        this.el.addEventListener("mouseleave", () => { this.isPaused = false })
+        this.el.addEventListener("mouseenter", () => {
+            this.isPaused = true
+        })
+        this.el.addEventListener("mouseleave", () => {
+            this.isPaused = false
+        })
     }
 
     // API publique
@@ -208,24 +211,24 @@ class ShinyText {
 
     setDirection(dir) {
         this.direction = dir
-        this.dirMult   = dir === "left" ? 1 : -1
-        this.elapsed   = 0
-        this.progress  = 0
+        this.dirMult = dir === "left" ? 1 : -1
+        this.elapsed = 0
+        this.progress = 0
     }
 }
 
 
-
 // Loader
 const uid = document.getElementById("grid-container").dataset.uid
+
 
 document.addEventListener("DOMContentLoaded", () => {
     const grid = new AnimatedGrid(uid)
     grid.setup()
 
     new ShinyText("#glint-logo", {
-            color:      "#C9A96E",
-            shineColor: "#fff8e8",
-            speed:      3,
-        })
+        color: "#C9A96E",
+        shineColor: "#fff8e8",
+        speed: 3,
+    })
 })

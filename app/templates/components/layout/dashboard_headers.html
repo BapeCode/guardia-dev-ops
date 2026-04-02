@@ -1,52 +1,61 @@
 {% from "components/ui/icons.html" import Icon %}
 
 {% set nav_items = [
-    {"name": "Fil",       "icon": "fill",     "url": "fill"},
+    {"name": "Accueil", "icon": "fill", "url": "fill"},
     {"name": "Messages",  "icon": "messages", "url": "messages"},
-    {"name": "Profil",    "icon": "profil",  "url": "profil"},
-    {"name": "Réglages",  "icon": "settings", "url": "settings"},
+    {"name": "Recherche",  "icon": "search", "url": "search"},
 ] %}
 
 {% macro DashboardHeaders(user={}, active_tab="fill") %}
 
-    <header class="flex flex-col items-center justify-start py-6 w-75 h-full animate-in slide-in-from-left-5 fade-in duration-500">
-        <h1 class="uppercase font-bold text-2xl tracking-widest">Glint</h1>
+    <header class="fixed  flex items-center justify-between py-4 px-6 w-full animate-in slide-in-from-left-5 fade-in duration-500 border-b border-border bg-card">
+        <h1 class="uppercase font-black text-2xl tracking-widest flex-1">Glint</h1>
 
-        <aside class="flex flex-col justify-between items-center gap-4 mt-16 h-full w-full">
-            <nav class="flex flex-col justify-start items-start gap-1 w-full">
-                {% for item in nav_items %}
-                    <a href="{{ url_for('dashboard.index', tab=item.url) }}"
-                       class="flex gap-2 items-center px-4 py-2 transition-all duration-300 w-full {{ 'text-primary font-semibold' if active_tab == item.url else 'text-text-2' }}">
-                        {{ Icon(item.icon, cls="w-5 h-5 " + ("stroke-gold" if active_page == item.icon else "")) }}
-                        {{ item.name }}
-                    </a>
-                {% endfor %}
-            </nav>
-
-            <div class="flex items-center justify-between gap-2 w-full">
-                {% if user.avatar %}
-                    <div class="border border-border cursor-pointer h-12 w-12">
-                        <img src="static/uploads/avatar/{{ user.avatar }}" alt="{{ user.name }}"/>
-                    </div>
-                {% else %}
-                    <div class="border border-border cursor-pointer h-12 w-12 rounded-full flex items-center justify-center">
-                        <p class="text-xl font-black text-text-1">
-                            {{ user.name[0] }}
-                        </p>
-                    </div>
-                {% endif %}
-
-                <div class="flex flex-col items-start gap-0">
-                    <p class="text-text-1 font-bold text-sm">{{ user.name }}</p>
-                    <p class="text-text-2/40 font-light text-xs">@{{ user.username }}</p>
-                </div>
-
-                <a href="{{ url_for('auth.logout') }}">
-                    {{ Icon("logout", cls="w-5 h-5 hover:stroke-primary duration-300 transition-colors cursor-pointer") }}
+        <div class="hidden items-center justify-center gap-2 flex-1 md:flex">
+            {% for item in nav_items %}
+                <a href="{{ url_for('dashboard.index', tab=item.url) }}"
+                   class="flex flex-col items-center px-4 py-2 transition-all duration-300
+                              {{ 'text-primary font-semibold' if active_tab == item.url else 'text-text-2' }}">
+                    {{ Icon(item.icon, cls="w-5 h-5") }}
+                    {{ item.name }}
                 </a>
+            {% endfor %}
+        </div>
+
+        <div class="flex items-center gap-2 flex-1 justify-end">
+            <div class="relative" id="my-account-wrapper">
+                <button onclick="toggleDropdown()" class="flex items-center gap-2">
+                    {% if user.avatar %}#}
+                        <div class="border border-border cursor-pointer h-10 w-10">
+                            <img src="static/uploads/avatar/{{ user.avatar }}" alt="{{ user.name }}"/>
+                        </div>
+                    {% else %}
+                        <div class="border border-border cursor-pointer h-10 w-10 rounded-full flex items-center justify-center bg-primary-light">
+                            <p class="text-lg font-black text-text-1">
+                                {{ user.name[0] }}
+                            </p>
+                        </div>
+                    {% endif %}
+                    {{ Icon("arrow-down") }}
+                </button>
+
+                <div id="my-account-dropdown"
+                     class="hidden absolute right-0 top-full mt-2 rounded-sm flex flex-col items-start justify-center gap-4 border-border border bg-card text-sm py-4 px-6">
+                    <a href="{{ url_for("dashboard.index") }}"
+                       class="hover:text-primary transition-colors duration-300 w-full">
+                        Profile
+                    </a>
+                    <a href="{{ url_for("dashboard.index") }}"
+                       class="hover:text-primary transition-colors duration-300 w-full">
+                        Paramètres
+                    </a>
+                    <a href="{{ url_for('auth.logout') }}"
+                       class="hover:text-primary transition-colors duration-300 w-full">
+                        Déconnection
+                    </a>
+                </div>
             </div>
-        </aside>
+        </div>
     </header>
-
-
+    <script src="{{ url_for('static', filename='scripts/dashboard.js') }}"></script>
 {% endmacro %}

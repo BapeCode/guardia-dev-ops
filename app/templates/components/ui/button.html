@@ -2,13 +2,13 @@
 
 {% macro Button(label="", variant="default", size="default", type="submit", cls="", attrs="") %}
 
-{% set base = "inline-flex shrink-0 items-center justify-center rounded-sm border border-transparent
+    {% set base = "flex items-center justify-center rounded-sm border border-transparent
                text-sm font-medium whitespace-nowrap transition-all outline-none select-none
                active:translate-y-px disabled:pointer-events-none disabled:opacity-50" %}
 
-{% set variants = {
+    {% set variants = {
   "default":     "bg-primary text-text-1 text-card hover:opacity-80",
-  "outline":     "border-custom bg-card hover:bg-hover hover:text-text-1",
+  "outline":     "hover:text-text-1",
   "secondary":   "bg-hover text-text-secondary hover:bg-hover/80",
   "ghost":       "hover:bg-hover hover:text-text-1",
   "destructive": "bg-[rgba(192,112,90,0.10)] text-danger hover:bg-[rgba(192,112,90,0.20)]",
@@ -16,7 +16,7 @@
   "gold":        "bg-primary text-white hover:bg-[#b8934a]",
 } %}
 
-{% set sizes = {
+    {% set sizes = {
   "default": "h-8 gap-1.5 px-4",
   "xs":      "h-6 gap-1 px-2 text-xs rounded-md",
   "sm":      "h-7 gap-1 px-3 text-[0.8rem] rounded-md",
@@ -27,9 +27,9 @@
   "icon-lg": "size-9",
 } %}
 
-<button type="{{ type }}"
-        class="{{ base }} {{ variants[variant] }} {{ sizes[size] }} {{ cls }}"
-        {{ attrs }}>
-  {{ label }}{{ caller() if caller is defined else "" }}
-</button>
+    <button type="{{ type }}"
+            class="{{ base }} {{ variants[variant] }} {{ sizes[size] }} {{ cls }}"
+            {{ attrs }}>
+        {{ label }}{{ caller() if caller is defined else "" }}
+    </button>
 {% endmacro %}

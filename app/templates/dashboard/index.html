@@ -1,5 +1,6 @@
 {% extends 'layout.html' %}
 {% from 'components/layout/dashboard_headers.html' import DashboardHeaders %}
+{% from 'components/ui/icons.html' import Icon %}
 
 {% set active_tab = tab %}
 
@@ -10,17 +11,24 @@
         {{ DashboardHeaders(user=current_user, active_tab=active_tab) }}
         <div class="grid grid-cols-1 md:grid-cols-5 w-full">
 
-            <div class="col-span-1 hidden md:flex">
+            <div class="col-span-1 hidden md:flex overflow-hidden">
                 {% include "dashboard/profile_aside.html" %}
             </div>
 
-            <div class="col-span-3">
-                {% if tab == "fill" %}
-                    {% include "dashboard/tab/fill.html" %}
-                {% endif %}
+            <div class="col-span-3 overflow-auto">
+                <section
+                        class="py-24 flex flex-col items-center justify-start py-6 border-x border-border w-full bg-glass min-h-screen overflow-auto animate-in fade-in slide-in-from-bottom-5 duration-1000">
+                    {% if tab == "fill" %}
+                        {% include "dashboard/tab/fill.html" %}
+                    {% else %}
+                        {% block dashboard_mid %}{% endblock %}
+                    {% endif %}
+                </section>
             </div>
 
-            <div class="col-span-1 hidden md:flex"></div>
+            <div class="col-span-1 hidden md:flex overflow-hidden">
+                {% include "dashboard/suggestion.html" %}
+            </div>
 
         </div>
     </section>

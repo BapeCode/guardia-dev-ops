@@ -3,8 +3,9 @@
 {% set nav_items = [
     {"name": "Accueil", "icon": "fill", "url": "fill"},
     {"name": "Messages",  "icon": "messages", "url": "messages"},
-    {"name": "Recherche",  "icon": "search", "url": "search"},
 ] %}
+
+{# {"name": "Recherche",  "icon": "search", "url": "search"},#}
 
 {% macro DashboardHeaders(user={}, active_tab="fill") %}
 
@@ -25,9 +26,12 @@
         <div class="flex items-center gap-2 flex-1 justify-end">
             <div class="relative" id="my-account-wrapper">
                 <button onclick="toggleDropdown()" class="flex items-center gap-2">
-                    {% if user.avatar %}#}
-                        <div class="border border-border cursor-pointer h-10 w-10">
-                            <img src="static/uploads/avatar/{{ user.avatar }}" alt="{{ user.name }}"/>
+                    {% if user.avatar %}
+                        <div class="border border-border cursor-pointer h-10 w-10 rounded-full">
+                            <img src="{{ url_for('static', filename='uploads/avatars/' ~ user.avatar) }}"
+                                 alt="Avatar de {{ user.name }}"
+                                 class="h-full w-full object-cover transition-opacity duration-300 group-hover:opacity-50 rounded-full"
+                            />
                         </div>
                     {% else %}
                         <div class="border border-border cursor-pointer h-10 w-10 rounded-full flex items-center justify-center bg-primary-light">

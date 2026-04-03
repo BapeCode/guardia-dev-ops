@@ -21,3 +21,15 @@ def index(current_user):
 @login_required
 def delete_post(current_user, post_id):
     return DashboardController.delete_post(current_user, post_id)
+
+
+@dashboard_bp.route("/dashboard/profile", methods=["GET", "POST"])
+@login_required
+def profile(current_user):
+    return DashboardController.profil(current_user)
+
+
+@dashboard_bp.route("dashboard/profile_edit", methods=["GET", "POST"])
+@login_required
+def profile_edit(current_user):
+    return DashboardController.profil_edit(current_user)

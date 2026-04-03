@@ -1,9 +1,8 @@
 from functools import wraps
 
-from flask import redirect, url_for
+from flask_jwt_extended import verify_jwt_in_request, get_jwt_identity
 
 from app.models.User import User
-from flask_jwt_extended import verify_jwt_in_request, get_jwt_identity
 
 
 def login_required(f):
@@ -19,5 +18,6 @@ def login_required(f):
             return f(current_user=user, *args, **kwargs)
         except Exception as e:
             print(f"[login_required] ERREUR: {type(e).__name__}: {e}")
-            return redirect(url_for("auth.login"))
+            return f(current_user=user, *args, **kwargs)
+
     return decorated

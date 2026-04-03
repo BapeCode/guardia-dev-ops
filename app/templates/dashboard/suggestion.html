@@ -1,0 +1,42 @@
+{% block content %}
+    <section
+            class="flex flex-col items-center justify-start py-32 px-4 w-full gap-4 animate-in slide-in-from-right-5 fade-in duration-500">
+        <div class="flex items-center gap-2 bg-card px-6 py-4 rounded-full border border-border w-full">
+            <label for="search" class="flex items-center">
+                {{ Icon("search") }}
+            </label>
+            <input id="search" class="focus:outline-none focus:ring-offset-0" placeholder="Rechercher"/>
+        </div>
+
+        <div class="flex flex-col items-center gap-4 p-4 w-full">
+            {% if all_users | length < 1 %}
+                <p>Aucune suggestion pour le moment.</p>
+            {% else %}
+                {% for user in all_users %}
+                    <div class="flex items-center justify-between gap-2 w-full">
+                        <div class="flex item-center gap-1">
+                            {% if user.avatar %}
+                                <div class="border border-border cursor-pointer h-12 w-12">
+                                    <img src="static/uploads/avatar/{{ user.avatar }}"
+                                         alt="{{ user.name }}"/>
+                                </div>
+                            {% else %}
+                                <div class="border border-border cursor-pointer h-12 w-12 rounded-full flex items-center justify-center">
+                                    <p class="text-xl font-black text-text-1">
+                                        {{ user.name[0] }}
+                                    </p>
+                                </div>
+                            {% endif %}
+                            <div class="flex flex-col">#}
+                                <p class="text-sm font-normal text-text-1">{{ user.name }}</p>
+                                <p class="text-xs font-normal text-text-1/40">@{{ user.username }}</p>
+                            </div>
+                        </div>
+
+                        {{ Button("Suivre", variant="gold", cls="hover:bg-primary cursor-pointer duration-300 transition-colors") }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        </div>
+    </section>
+{% endblock %}

@@ -26,6 +26,8 @@ jobs:
 
   ruff:
     runs-on: ubuntu-22.04
+    permissions:
+      contents: write # Permission pour push des corrections
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -34,7 +36,13 @@ jobs:
         uses: astral-sh/setup-uv@v4
 
       - name: Run Ruff linter
-        run: uvx ruff fix --output-format=github .
+        run: uvx ruff check --fix .
 
       - name: Run Ruff formatter
-        run: uvx ruff format --fix .
+        run: uvx ruff format .
+
+      - name: Commit and Push changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git diff --quiet || (git add -A && git commit -m "style: auto-fix ruff" && git push)

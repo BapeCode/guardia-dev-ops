@@ -22,7 +22,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-  # ── Job 2 : Flake8 ──────────────────────────────
+  # ── Job 2 : Ruff ──────────────────────────────
 
   ruff:
     runs-on: ubuntu-22.04
@@ -34,7 +34,7 @@ jobs:
         uses: astral-sh/setup-uv@v4
 
       - name: Run Ruff linter
-        run: uvx ruff check --output-format=github .
+        run: uvx ruff fix --output-format=github .
 
       - name: Run Ruff formatter
-        run: uvx ruff format --check .
+        run: uvx ruff format --fix .

@@ -1,13 +1,15 @@
 @import url("https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap");
 
 :root {
-    --bg: #F7F5F2;
+    --bg: #ffffff;
+    --bg-foreground: #f5f5f7;
+    --bg-secondary: #1d1d1f;
     --bg-card: #FAFAF8;
     --bg-hover: #F2F0EC;
     --bg-glass: rgba(250, 250, 248, 0.92);
     --border: rgba(0, 0, 0, 0.07);
     --border-gold: rgba(188, 158, 103, 0.35);
-    --text-1: #1A1A18;
+    --text-1: #1d1d1f;
     --text-2: #5A5A56;
     --text-3: #9A9A94;
     --gold: #C9A96E;

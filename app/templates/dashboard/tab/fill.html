@@ -1,7 +1,6 @@
 {% from "components/ui/input.html" import Input %}
 {% from "components/ui/button.html" import Button %}
 {% from "components/ui/flash.html" import Flash %}
-{% from "components/ui/posts_cards.html" import PostCards %}
 
 
 {% block content %}
@@ -9,19 +8,16 @@
     <div class="flex items-start justify-between gap-4 w-full px-2 border-b border-border py-4">
         <div class="rounded-full flex items-center justify-center h-12 w-12">
             {% if current_user.avatar %}
-                <div class="border border-border cursor-pointer h-12 w-12">
-                    <img src="static/uploads/avatar/{{ current_user.avatar }}" alt="{{ current_user.name }}"/>
-                </div>
+                <img src="{{ url_for('static', filename='uploads/avatars/' ~ current_user.avatar) }}"
+                     alt="Avatar de {{ current_user.name }}"
+                     class="h-full w-full object-cover transition-opacity duration-300 group-hover:opacity-50 rounded-full"
+                />
             {% else %}
-                <div class="border border-border cursor-pointer h-12 w-12 rounded-full flex items-center justify-center">
-                    <p class="text-xl font-black text-text-1">
-                        {{ current_user.name[0] }}
-                    </p>
-                </div>
+                <p class="text-3xl">{{ current_user.name[0] }}</p>
             {% endif %}
         </div>
 
-        <form action="{{ url_for("dashboard.index") }}" method="POST"
+        <form action="{{ url_for("posts.create") }}" method="POST"
               class="flex flex-col items-end justify-center w-full gap-4">
             {{ Input(required=true, placeholder="Quoi de neuf ?", name="post_content", cls="w-full pb-6 border-b border-border outline-none focus:outline-none focus:ring-0 focus:ring-offset-0") }}
             {{ Flash() }}
@@ -36,7 +32,7 @@
             <p class="text-sm text-text-1">Aucun post n'est disponible actuellement</p>
         {% else %}
             {% for post in posts %}
-                {{ PostCards(post, current_user) }}
+                {% include "partials/posts_cards.html" %}
             {% endfor %}
         {% endif %}
     </div>

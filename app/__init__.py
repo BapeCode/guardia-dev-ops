@@ -6,6 +6,7 @@ from flask import Flask
 from flask_cors import CORS
 
 from app.extensions import database, migrate, jwt
+from app.routes.posts import posts_bp
 from .context_processors import inject_user
 
 
@@ -21,10 +22,10 @@ def timeago(dt):
     diff = now - dt
     s = int(diff.total_seconds())
     if s < 60:      return "à l'instant"
-    if s < 3600:    return f"{s // 60}min"
-    if s < 86400:   return f"{s // 3600}h"
-    if s < 604800:  return f"{s // 86400}j"
-    if s < 2592000: return f"{s // 604800} sem"
+    if s < 3600:    return f"{s // 60} minute(s)"
+    if s < 86400:   return f"{s // 3600} heure(s)"
+    if s < 604800:  return f"{s // 86400} jour(s)"
+    if s < 2592000: return f"{s // 604800} semaine(s)"
     return dt.strftime("%d/%m/%Y à %H:%M")
 
 
@@ -59,6 +60,7 @@ def create_app():
     app.register_blueprint(home_bp, url_prefix="/")
     app.register_blueprint(auth_bp, url_prefix="/")
     app.register_blueprint(dashboard_bp, url_prefix="/")
+    app.register_blueprint(posts_bp, url_prefix="/posts")
 
     app.jinja_env.filters["timeago"] = timeago
 

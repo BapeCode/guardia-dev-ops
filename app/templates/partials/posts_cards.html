@@ -1,0 +1,52 @@
+{% from "components/ui/icons.html" import Icon %}
+{% from "components/ui/avatar.html" import Avatar %}
+
+<article id="post-{{ post.id }}"
+         class="flex flex-col justify-center items-start w-full p-8 border border-border rounded-md shadow-xs bg-background">
+    <div class="flex items-center justify-between gap-2 w-full">
+        <div class="flex items-center gap-2">
+            {{ Avatar(post.author) }}
+            <div class="flex items-center gap-2">
+                <p class="text-text-1 font-medium tracking-tight text-sm">{{ post.author.name }}</p>
+                <p class="text-text-1/40 font-medium tracking-tight text-xs">@{{ post.author.username }}</p>
+            </div>
+        </div>
+        {% if post.author.id == current_user.id %}
+            <a class="flex items-center" href="{{ url_for('posts.delete', post_id=post.id) }}"
+               onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce post ?')">
+                {{ Icon("delete", cls="w-5 h-5 hover:stroke-destructive duration-300 transition-colors cursor-pointer") }}
+            </a>
+        {% endif %}
+    </div>
+    <p class="my-4 text-text-2 font-normal text-md">{{ post.content }}</p>
+    <p class="text-xs font-light text-text-1/60">{{ post.created_at | timeago }}</p>
+    <div class="flex items-center gap-4 border-t border-border mt-2 w-full py-2">
+        <div class="flex items-center gap-2"
+             hx-post="{{ url_for('posts.like', post_id=post.id) }}" }}
+             hx-target="#post-{{ post.id }}"
+             hx-swap="outerHTML"
+        >
+            {{ Icon("like", cls="h-4 w-4 hover:text-primary duration-200 transition-colors cursor-pointer text-text-1") }}
+            <p class="text-text-1 font-medium text-sm">{{ post.like_count }}</p>
+        </div>
+
+        <div class="flex items-center gap-2"
+             hx-post="{{ url_for('posts.repost', post_id=post.id) }}" }}
+             hx-target="#post-{{ post.id }}"
+             hx-swap="outerHTML"
+        >
+            {{ Icon("repost", cls="h-4 w-4 hover:text-primary duration-200 transition-colors cursor-pointer") }}
+            <p class="font-medium text-sm {{ "text-primary" if post.is_liked else "text-text-1" }}">{{ post.repost_count }}</p>
+        </div>
+
+        <div class="flex items-center gap-2"
+             hx-post="{{ url_for('posts.like', post_id=post.id) }}" }}
+             hx-target="#post-{{ post.id }}"
+             hx-swap="outerHTML"
+        >
+            {{ Icon("comment", cls="h-4 w-4 hover:text-primary duration-200 transition-colors cursor-pointer text-text-1") }}
+            <p class="text-text-1 font-medium text-sm">{{ post.comment_count }}</p>
+        </div>
+
+    </div>
+</article>

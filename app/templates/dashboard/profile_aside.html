@@ -1,33 +1,21 @@
 {% from 'components/ui/button.html' import Button %}
+{% from 'components/ui/avatar.html' import Avatar %}
 
 {% block content %}
 
     <aside class="flex flex-col items-center gap-4 px-4 py-32 w-full h-full">
-        <div class="flex flex-col rounded-xs bg-card border border-border w-full">
+        <div class="flex flex-col rounded-md bg-card border border-border w-full">
             {% if current_user.banner %}
                 <header class="w-full h-24">
                     <img
                             src="{{ url_for('static', filename='uploads/banners/' ~ current_user.banner) }}"
                             alt="Bannière de profil"
-                            class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                            class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 rounded-tr-md rounded-tl-md"
                     />
                 </header>
             {% endif %}
             <div class="px-4 py-6 space-y-2">
-                {% if current_user.avatar %}
-                    <div class="border border-border cursor-pointer h-12 w-12 rounded-full">
-                        <img src="{{ url_for('static', filename='uploads/avatars/' ~ current_user.avatar) }}"
-                             alt="Avatar de {{ current_user.name }}"
-                             class="h-full w-full object-cover transition-opacity duration-300 group-hover:opacity-50 rounded-full"
-                        />
-                    </div>
-                {% else %}
-                    <div class="border border-border cursor-pointer h-12 w-12 rounded-full flex items-center justify-center">
-                        <p class="text-xl font-black text-text-1">
-                            {{ current_user.name[0] }}
-                        </p>
-                    </div>
-                {% endif %}
+                {{ Avatar(current_user) }}
                 <div>
                     <h2 class="font-medium text-text-1 text-lg">{{ current_user.name }}</h2>
                     <p class="font-light text-text-1/40 text-sm">@{{ current_user.username }}</p>
@@ -35,7 +23,7 @@
                     <p class="font-light text-text-1 text-sm">{{ current_user.location }}</p>
 
                     <a href="{{ url_for('dashboard.profile') }}">
-                        {{ Button("Modifier mon profile", cls="outline outline-border mt-4 cursor-pointer duration-300 hover:bg-background w-full", type="button") }}
+                        {{ Button("Modifier mon profile", cls="outline outline-border mt-4 cursor-pointer duration-300 hover:bg-background-foreground w-full md:text-xs", type="button") }}
                     </a>
                 </div>
             </div>

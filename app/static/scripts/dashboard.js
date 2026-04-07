@@ -9,3 +9,4 @@ document.addEventListener("click", (e) => {
         document.getElementById("my-account-dropdown").classList.add("hidden")
     }
 })
+

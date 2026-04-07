@@ -1,0 +1,18 @@
+{% macro Avatar(user={}) %}
+
+    {% if user.avatar %}
+        <div class="border border-border cursor-pointer h-12 w-12 rounded-full">
+            <img src="{{ url_for('static', filename='uploads/avatars/' ~ user.avatar) }}"
+                 alt="Avatar de {{ user.name }}"
+                 class="h-full w-auto object-cover transition-opacity duration-300 group-hover:opacity-50 rounded-full"
+            />
+        </div>
+    {% else %}
+        <div class="border border-border cursor-pointer h-12 w-12 rounded-full flex items-center justify-center">
+            <p class="text-xl font-black text-text-1">
+                {{ user.name[0] }}
+            </p>
+        </div>
+    {% endif %}
+
+{% endmacro %}

@@ -1,0 +1,3 @@
+{% from "components/ui/profile.html" import Profile %}
+
+{{ Profile(user=current_user, owned=True, posts=posts) }}

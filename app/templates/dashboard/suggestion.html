@@ -16,25 +16,27 @@
                 <p>Aucune suggestion pour le moment.</p>
             {% else %}
                 {% for user in all_users %}
-                    <div class="flex items-center justify-between gap-2 w-full">
-                        <div class="flex item-center gap-1">
-                            {% if user.avatar %}
-                                {{ Avatar(user) }}
-                            {% else %}
-                                <div class="border border-border cursor-pointer h-12 w-12 rounded-full flex items-center justify-center">
-                                    <p class="text-xl font-black text-text-1">
-                                        {{ user.name[0] }}
-                                    </p>
+                    <a href="{{ url_for('dashboard.profile', user_id=user.id) }}" class="w-full">
+                        <div class="flex items-center justify-between gap-2 w-full">
+                            <div class="flex item-center gap-1">
+                                {% if user.avatar %}
+                                    {{ Avatar(user) }}
+                                {% else %}
+                                    <div class="border border-border cursor-pointer h-12 w-12 rounded-full flex items-center justify-center">
+                                        <p class="text-xl font-black text-text-1">
+                                            {{ user.name[0] }}
+                                        </p>
+                                    </div>
+                                {% endif %}
+                                <div class="flex flex-col">
+                                    <p class="text-sm font-normal text-text-1">{{ user.name }}</p>
+                                    <p class="text-xs font-normal text-text-1/40">@{{ user.username }}</p>
                                 </div>
-                            {% endif %}
-                            <div class="flex flex-col">
-                                <p class="text-sm font-normal text-text-1">{{ user.name }}</p>
-                                <p class="text-xs font-normal text-text-1/40">@{{ user.username }}</p>
                             </div>
-                        </div>
 
-                        {{ Button("Suivre", variant="gold", cls="hover:bg-primary cursor-pointer duration-300 transition-colors") }}
-                    </div>
+                            {{ Button("Suivre", variant="gold", cls="hover:bg-primary cursor-pointer duration-300 transition-colors") }}
+                        </div>
+                    </a>
                 {% endfor %}
             {% endif %}
         </div>

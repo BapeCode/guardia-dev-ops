@@ -1,5 +1,6 @@
 {% extends 'layout.html' %}
 {% from 'components/layout/dashboard_headers.html' import DashboardHeaders %}
+{% from 'components/ui/profile.html' import Profile %}
 {% from 'components/ui/icons.html' import Icon %}
 
 {% set active_tab = tab %}
@@ -18,10 +19,11 @@
             <div class="col-span-3 overflow-auto bg">
                 <section
                         class="py-24 flex flex-col items-center justify-start py-6 border-x border-border w-full bg-background-foreground min-h-screen overflow-auto animate-in fade-in slide-in-from-bottom-5 duration-1000">
-                    {% if tab == "fill" %}
-                        {% include "dashboard/tab/fill.html" %}
-                    {% else %}
-                        {% block dashboard_mid %}{% endblock %}
+                    {% if pages == "fill" %}
+                        {% include "dashboard/pages/fill.html" %}
+                    {% elif pages == "profile" %}
+                        {% set current_user = current_user %}
+                        {% include "dashboard/pages/profil.html" %}
                     {% endif %}
                 </section>
             </div>

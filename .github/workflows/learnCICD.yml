@@ -24,21 +24,17 @@ jobs:
 
   # ── Job 2 : Flake8 ──────────────────────────────
 
-  lint:
+  ruff:
     runs-on: ubuntu-22.04
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.11"
+      - name: Install uv
+        uses: astral-sh/setup-uv@v4
 
-      - name: Installer Flake8
-        run: |
-          pip install --upgrade pip
-          pip install flake8
+      - name: Run Ruff linter
+        run: uvx ruff check --output-format=github .
 
-      - name: Lint avec Flake8
-        run: flake8 . --max-line-length=120 --exclude=.git,__pycache__,venv
+      - name: Run Ruff formatter
+        run: uvx ruff format --check .

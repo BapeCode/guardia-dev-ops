@@ -6,3 +6,16 @@ secret.txt
 # Pas de fix disponible - vulnérabilités dans l'image de base Debian
 CVE-2025-69720
 CVE-2026-29111
+
+# CVE sans fix disponible - image distroless Debian 12
+CVE-2026-0861
+CVE-2026-25210
+CVE-2025-13836
+CVE-2025-15366
+CVE-2025-15367
+CVE-2025-69534
+CVE-2025-8194
+CVE-2026-1299
+CVE-2026-4519
+CVE-2025-7458
+CVE-2023-45853

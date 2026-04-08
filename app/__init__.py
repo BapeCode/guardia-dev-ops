@@ -21,11 +21,16 @@ def timeago(dt):
     now = datetime.now()
     diff = now - dt
     s = int(diff.total_seconds())
-    if s < 60:      return "à l'instant"
-    if s < 3600:    return f"{s // 60} minute(s)"
-    if s < 86400:   return f"{s // 3600} heure(s)"
-    if s < 604800:  return f"{s // 86400} jour(s)"
-    if s < 2592000: return f"{s // 604800} semaine(s)"
+    if s < 60:      
+        return "à l'instant"
+    if s < 3600:    
+        return f"{s // 60} minute(s)"
+    if s < 86400:   
+        return f"{s // 3600} heure(s)"
+    if s < 604800:  
+        return f"{s // 86400} jour(s)"
+    if s < 2592000: 
+        return f"{s // 604800} semaine(s)"
     return dt.strftime("%d/%m/%Y à %H:%M")
 
 

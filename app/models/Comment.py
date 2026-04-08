@@ -1,3 +1,4 @@
+from __future__ import annotations
 from datetime import datetime
 from typing import Optional, List
 
@@ -5,7 +6,12 @@ from sqlalchemy import Text, DateTime, ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.extensions import database
+from typing import TYPE_CHECKING
 
+if TYPE_CHECKING:
+    from app.models.User import User
+    from app.models.Post import Post
+    from app.models.Like import Like
 
 class Comment(database.Model):
     __tablename__ = "comment"
@@ -48,3 +54,4 @@ class Comment(database.Model):
 
     def __repr__(self) -> str:
         return f"<Comment {self.id} on Post {self.post_id}>"
+

@@ -1,3 +1,4 @@
+from __future__ import annotations
 from datetime import datetime
 from typing import Optional
 
@@ -5,7 +6,12 @@ from sqlalchemy import DateTime, ForeignKey, UniqueConstraint, CheckConstraint
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.extensions import database
+from typing import TYPE_CHECKING
 
+if TYPE_CHECKING:
+    from app.models.User import User
+    from app.models.Post import Post
+    from app.models.Comment import Comment
 
 class Like(database.Model):
     __tablename__ = "like"
@@ -33,3 +39,4 @@ class Like(database.Model):
     def __repr__(self) -> str:
         target = f"Post {self.post_id}" if self.post_id else f"Comment {self.comment_id}"
         return f"<Like by User {self.user_id} on {target}>"
+

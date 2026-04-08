@@ -1,4 +1,4 @@
-from flask import render_template, jsonify
+from flask import render_template
 
 
 class HomeController:

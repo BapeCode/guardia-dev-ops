@@ -1,3 +1,4 @@
+from __future__ import annotations
 from dataclasses import dataclass
 
 from flask import flash
@@ -8,7 +9,7 @@ class PostValidator:
     content: str
 
     @classmethod
-    def from_form(cls, form) -> PostValidator:
+    def from_form(cls, form) -> "PostValidator":
         errors = {}
         content = form.get("post_content", "")
 
@@ -19,3 +20,4 @@ class PostValidator:
             flash(errors["post_content"], "error")
 
         return cls(content=content)
+

@@ -1,10 +1,15 @@
+from __future__ import annotations
 from datetime import datetime
 
 from sqlalchemy import DateTime, ForeignKey, Float, Boolean, UniqueConstraint, CheckConstraint
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.extensions import database
+from typing import TYPE_CHECKING
 
+if TYPE_CHECKING:
+    from app.models.User import User
+    from app.models.Post import Post
 
 class Follow(database.Model):
     __tablename__ = "follow"
@@ -76,3 +81,4 @@ class Suggestion(database.Model):
 
     def __repr__(self) -> str:
         return f"<Suggestion User {self.suggested_user_id} for User {self.user_id}>"
+

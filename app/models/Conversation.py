@@ -1,3 +1,4 @@
+from __future__ import annotations
 from datetime import datetime
 from typing import Optional, List
 
@@ -5,7 +6,10 @@ from sqlalchemy import Text, DateTime, Boolean, ForeignKey, UniqueConstraint
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.extensions import database
+from typing import TYPE_CHECKING
 
+if TYPE_CHECKING:
+    from app.models.User import User
 
 class Conversation(database.Model):
     __tablename__ = "conversation"
@@ -81,3 +85,4 @@ class Message(database.Model):
 
     def __repr__(self) -> str:
         return f"<Message {self.id} from User {self.sender_id}>"
+

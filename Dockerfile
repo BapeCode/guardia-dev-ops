@@ -21,7 +21,7 @@ RUN mkdir -p /app/app/static/uploads/avatars \
     /app/app/static/uploads/posts
 
 # Distroless 
-FROM gcr.io/distroless/python3-debian12
+FROM gcr.io/distroless/python3-debian12:nonroot
 
 WORKDIR /app
 

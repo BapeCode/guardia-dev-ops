@@ -1,4 +1,4 @@
-FROM python:3.12-slim
+FROM python:3.12-slim AS builder
 
 WORKDIR /app
 
@@ -10,21 +10,33 @@ RUN apt-get update && apt-get install -y --no-install-recommends  \
 
 # Dépendances Python
 COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install --no-cache-dir --prefix=/install -r requirements.txt
 
-# Code
+# Code 
 COPY . .
 
-# Dossier uploads persistant & permissions
+# Créer les dossiers uploads dans le builder
 RUN mkdir -p /app/app/static/uploads/avatars \
     /app/app/static/uploads/banners \
-    /app/app/static/uploads/posts \
-    && adduser --disabled-password --gecos "" glintuser \
-    && chown -R glintuser:glintuser /app
+    /app/app/static/uploads/posts
+
+# Distroless 
+FROM gcr.io/distroless/python3-debian12
+
+WORKDIR /app
+
+# Copier les dépendances installées depuis l'étape de build
+COPY --from=builder /install /install
+
+# Copier le code
+COPY --from=builder /app .
+
+# ENV PYTHONPATCH
+ENV PYTHONPATH=/install/lib/python3.12/site-packages
 
 # Switch à un utilisateur non-root pour la sécurité
-USER glintuser
+USER nonroot
 
 EXPOSE 5000
 
-CMD ["flask", "run", "--host=0.0.0.0"]
+CMD ["app.py"]

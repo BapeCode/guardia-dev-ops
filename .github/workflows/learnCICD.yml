@@ -21,6 +21,9 @@ jobs:
         uses: gitleaks/gitleaks-action@v2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  # ── Job 2 : Semgrep ──────────────────────────────
+
   semgrep:
     runs-on: ubuntu-22.04
     steps:
@@ -29,9 +32,9 @@ jobs:
         with:
           config: >
             .semgrep/airtable.yml
-            config: p/secrets
+            p/secrets
 
-  # ── Job 2 : Ruff ──────────────────────────────
+  # ── Job 3 : Ruff ──────────────────────────────
 
   ruff:
     runs-on: ubuntu-22.04

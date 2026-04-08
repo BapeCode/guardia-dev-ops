@@ -10,6 +10,7 @@ on:
 
 jobs:
   gitleaks:
+    name: Check des secrets
     runs-on: ubuntu-22.04
     steps:
       - name: Checkout
@@ -25,7 +26,9 @@ jobs:
   # ── Job 2 : Semgrep ──────────────────────────────
 
   semgrep:
+    name: SAST
     runs-on: ubuntu-22.04
+    needs: gitleaks
     steps:
       - uses: actions/checkout@v4
       - uses: semgrep/semgrep-action@v1
@@ -37,6 +40,7 @@ jobs:
   # ── Job 3 : Ruff ──────────────────────────────
 
   ruff:
+    name: Linting et formatage
     runs-on: ubuntu-22.04
     permissions:
       contents: write # Permission pour push des corrections
@@ -62,6 +66,7 @@ jobs:
   # ── Job 4 : Bandit ──────────────────────────────
 
   bandit:
+    name: SAST - Check des vulnérabilités de sécurité
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v4
@@ -75,11 +80,12 @@ jobs:
     # ── Job 5 : Pip Audit ──────────────────────────────
 
   pip-audit:
+    name: SCA - Check des vulnérabilités de sécurité dans les dépendances Python
     runs-on: ubuntu-22.04
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - uses: pypa/gh-action-pip-audit@v1.1.0
+      - uses: pypa/gh-action-pip-audit@v1.1.0 # Utilisation de l'action et pas le dépot du package officielle pip-audit de PyPA
         with:
           inputs: requirements.txt

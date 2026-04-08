@@ -20,4 +20,3 @@ class PostValidator:
             flash(errors["post_content"], "error")
 
         return cls(content=content)
-

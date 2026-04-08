@@ -1,6 +1,7 @@
 services:
   backend:
     build: .
+    image: dshellz/glint:latest
     ports:
       - "5000:5000"
     environment:

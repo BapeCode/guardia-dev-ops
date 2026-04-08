@@ -26,7 +26,7 @@ jobs:
   # ── Job 2 : Semgrep ──────────────────────────────
 
   semgrep:
-    name: SAST
+    name: SAST - Check des vulnérabilités de sécurité avec Semgrep
     runs-on: ubuntu-22.04
     needs: gitleaks
     steps:
@@ -66,7 +66,7 @@ jobs:
   # ── Job 4 : Bandit ──────────────────────────────
 
   bandit:
-    name: SAST - Check des vulnérabilités de sécurité
+    name: SAST - Check des vulnérabilités de sécurité avec bandit
     runs-on: ubuntu-22.04
     needs: gitleaks
     steps:
@@ -91,3 +91,62 @@ jobs:
       - uses: pypa/gh-action-pip-audit@v1.1.0 # Utilisation de l'action et pas le dépot du package officielle pip-audit de PyPA
         with:
           inputs: requirements.txt
+
+      # ── Job 6 : Pré Build ──────────────────────────────
+
+  pre-build:
+    runs-on: ubuntu-latest
+    needs: [bandit, pip-audit, ruff, semgrep, gitleaks]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Lint Dockerfile avec Hadolint
+        uses: hadolint/hadolint-action@v3.1.0
+        with:
+          dockerfile: Dockerfile
+
+      - name: Trivy - Scan de configuration (Dockerfile & docker-compose)
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: config
+          scan-ref: .
+          exit-code: 1
+          severity: CRITICAL,HIGH
+
+      # ── Job 7 : Build ──────────────────────────────
+
+  build:
+    runs-on: ubuntu-22.04
+    needs: pre-build
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Connextion à DockerHub
+        uses: docker/login-action@v4
+        with:
+          username: ${{ vars.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build & Push de l'image Docker sur DockerHub
+        uses: docker/build-push-action@v3
+        with:
+          context: .
+          push: true
+          tags: ${{ vars.DOCKERHUB_USERNAME }}/glint:latest
+
+      # ── Job 8 : Post Build ──────────────────────────────
+
+  post-build:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Trivy - Scan image Docker avec Trivy
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: ${{ vars.DOCKERHUB_USERNAME }}/glint:latest
+          scan-type: image
+          exit-code: 1
+          severity: CRITICAL,HIGH
+          format: table

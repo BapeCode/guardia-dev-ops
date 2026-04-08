@@ -1,0 +1,6 @@
+# Ignorer le fichier secret fictif 
+secret.txt
+
+# On peut aussi ignorer des fichiers de configuration de scan spécifiques
+# Ignorer une CVE spécifique
+# CVE-2024-12345

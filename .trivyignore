@@ -3,4 +3,6 @@ secret.txt
 
 # On peut aussi ignorer des fichiers de configuration de scan spécifiques
 # Ignorer une CVE spécifique
-# CVE-2024-12345
+# Pas de fix disponible - vulnérabilités dans l'image de base Debian
+CVE-2025-69720
+CVE-2026-29111

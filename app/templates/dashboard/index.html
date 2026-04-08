@@ -1,6 +1,5 @@
 {% extends 'layout.html' %}
 {% from 'components/layout/dashboard_headers.html' import DashboardHeaders %}
-{% from 'components/ui/profile.html' import Profile %}
 {% from 'components/ui/icons.html' import Icon %}
 
 {% set active_tab = tab %}
@@ -24,6 +23,8 @@
                     {% elif pages == "profile" %}
                         {% set current_user = current_user %}
                         {% include "dashboard/pages/profil.html" %}
+                    {% elif pages == "edit_profile" %}
+                        {% include "dashboard/pages/profil_edit.html" %}
                     {% endif %}
                 </section>
             </div>

@@ -1,4 +1,4 @@
-from flask import render_template, request, flash, redirect, url_for
+from flask import render_template, request, flash, redirect, url_for, jsonify
 
 from app import database
 from app.controllers.PostController import PostControllers
@@ -6,6 +6,7 @@ from app.models.Post import Post
 from app.models.User import User
 from app.services.uploads_services import encrypt_filename, upload
 from app.services.uploads_services import harvest_file
+from app.models.Followers import Follow
 
 
 class DashboardController:
@@ -27,8 +28,8 @@ class DashboardController:
         all_users = User.query.all()
 
         return render_template("dashboard/index.html",
-                               current_user=current_user,
                                posts=posts,
+                               owned=True,
                                all_users=all_users,
                                pages="profile"
                                )
@@ -47,11 +48,32 @@ class DashboardController:
                  )
         all_users = User.query.all()
         return render_template("dashboard/index.html",
-                               current_user=user_target,
-                               posts=posts,
+                               target_user=user_target,
                                all_users=all_users,
+                               owned=False,
+                               posts=posts,
                                pages="profile"
                                )
+
+    @staticmethod
+    def follow(current_user, user_id):
+        if current_user.id == user_id:
+            return redirect(url_for("dashboard.profile", current_user=current_user))
+        user_target = User.query.get(user_id)
+        if not user_target:
+            return redirect(url_for("dashboard.index"))
+
+        existing_follower = Follow.query.filter_by(follower_id=current_user.id, followed_id=user_id).first()
+
+        if not existing_follower:
+            new_follow = Follow(follower_id=current_user.id, followed_id=user_id)
+            database.session.add(new_follow)
+            database.session.commit()
+            flash(f"You are now following {user_target.username}!", "success")
+        else:
+            database.session.delete(existing_follower)
+            database.session.commit()
+        return render_template("partials/button_follow.html", user=current_user)
 
     @staticmethod
     def profil_edit(current_user):
@@ -113,8 +135,8 @@ class DashboardController:
 
             return redirect(url_for("dashboard.profile", tab="fill", current_user=current_user))
 
-        return render_template("dashboard/pages/profil_edit.html",
-                               current_user=current_user)
+        return render_template("dashboard/index.html",
+                               current_user=current_user, pages="edit_profile")
 
     @staticmethod
     def messages(current_user):

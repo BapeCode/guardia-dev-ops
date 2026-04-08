@@ -1,0 +1,14 @@
+{% set is_following = current_user.following.filter_by(followed_id=current_user.id).first() %}
+
+<button
+        hx-post="{{ url_for('dashboard.follow', user_id=current_user.id) }}"
+        hx-target="this"
+        hx-swap="outerHTML"
+        class="{{ "bg-primary hover:bg-background-secondary" if is_following else "bg-background-secondary hover:bg-primary"  }}  cursor-pointer duration-300 transition-colors rounded-full px-4 py-2 text-sm font-medium text-background"
+>
+    {% if current_user.id in following_ids %}
+        Suivi
+    {% else %}
+        Suivre
+    {% endif %}
+</button>

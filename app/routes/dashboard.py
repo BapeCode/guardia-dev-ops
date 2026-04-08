@@ -21,8 +21,12 @@ def profile(current_user):
 @dashboard_bp.route("/dashboard/<int:user_id>/profile", methods=["GET", "POST"])
 @login_required
 def other_profile(current_user, user_id):
-    return DashboardController.profile(current_user)
+    return DashboardController.other_profile(current_user, user_id)
 
+@dashboard_bp.route("/dashboard/<int:user_id>/follow", methods=["POST"])
+@login_required
+def follow(current_user, user_id):
+    return DashboardController.follow(current_user, user_id)
 
 @dashboard_bp.route("/dashboard/profile_edit", methods=["GET", "POST"])
 @login_required

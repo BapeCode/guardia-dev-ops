@@ -71,3 +71,12 @@ jobs:
 
       - name: Run Bandit
         run: uvx bandit -r app/ -ll
+
+    # ── Job 5 : Pip Audit ──────────────────────────────
+
+  pip-audit:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: pypa/gh-action-pip-audit@v1.0.0
+        with:
+          inputs: requirements.txt

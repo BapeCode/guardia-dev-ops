@@ -4,8 +4,8 @@ WORKDIR /app
 
 # Dépendances système
 RUN apt-get update && apt-get install -y --no-install-recommends  \
-    gcc \
-    sqlite3 \
+    gcc=4:14.2.0-1 \
+    sqlite3=3.46.1-7+deb13u1 \
     && rm -rf /var/lib/apt/lists/*
 
 # Dépendances Python

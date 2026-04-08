@@ -21,15 +21,15 @@ def timeago(dt):
     now = datetime.now()
     diff = now - dt
     s = int(diff.total_seconds())
-    if s < 60:      
+    if s < 60:
         return "à l'instant"
-    if s < 3600:    
+    if s < 3600:
         return f"{s // 60} minute(s)"
-    if s < 86400:   
+    if s < 86400:
         return f"{s // 3600} heure(s)"
-    if s < 604800:  
+    if s < 604800:
         return f"{s // 86400} jour(s)"
-    if s < 2592000: 
+    if s < 2592000:
         return f"{s // 604800} semaine(s)"
     return dt.strftime("%d/%m/%Y à %H:%M")
 
@@ -37,9 +37,11 @@ def timeago(dt):
 def create_app():
     app = Flask(
         __name__,
-        template_folder='templates',
-        static_folder='static',
-        instance_path=os.path.join(os.path.dirname(os.path.abspath(__file__)), 'instance')
+        template_folder="templates",
+        static_folder="static",
+        instance_path=os.path.join(
+            os.path.dirname(os.path.abspath(__file__)), "instance"
+        ),
     )
     os.makedirs(app.instance_path or "instance", exist_ok=True)
 
@@ -62,6 +64,7 @@ def create_app():
     from .routes.home import home_bp
     from .routes.auth import auth_bp
     from .routes.dashboard import dashboard_bp
+
     app.register_blueprint(home_bp, url_prefix="/")
     app.register_blueprint(auth_bp, url_prefix="/")
     app.register_blueprint(dashboard_bp, url_prefix="/")

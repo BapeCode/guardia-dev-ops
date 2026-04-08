@@ -14,6 +14,7 @@ if TYPE_CHECKING:
     from app.models.Like import Like
     from app.models.Followers import Repost
 
+
 class Post(database.Model):
     __tablename__ = "post"
 
@@ -22,16 +23,21 @@ class Post(database.Model):
     content: Mapped[str] = mapped_column(Text, nullable=False)
     author_id: Mapped[int] = mapped_column(ForeignKey("users.id"), nullable=False)
     created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
-    updated_at: Mapped[Optional[datetime]] = mapped_column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    updated_at: Mapped[Optional[datetime]] = mapped_column(
+        DateTime, default=datetime.utcnow, onupdate=datetime.utcnow
+    )
 
     # Relations
     author: Mapped["User"] = relationship("User", back_populates="posts")
-    comments: Mapped[List["Comment"]] = relationship("Comment", back_populates="post", lazy="dynamic",
-                                                     cascade="all, delete-orphan")
-    likes: Mapped[List["Like"]] = relationship("Like", back_populates="post", lazy="dynamic",
-                                               cascade="all, delete-orphan")
-    reposts: Mapped[List["Repost"]] = relationship("Repost", back_populates="post", lazy="dynamic",
-                                                   cascade="all, delete-orphan")
+    comments: Mapped[List["Comment"]] = relationship(
+        "Comment", back_populates="post", lazy="dynamic", cascade="all, delete-orphan"
+    )
+    likes: Mapped[List["Like"]] = relationship(
+        "Like", back_populates="post", lazy="dynamic", cascade="all, delete-orphan"
+    )
+    reposts: Mapped[List["Repost"]] = relationship(
+        "Repost", back_populates="post", lazy="dynamic", cascade="all, delete-orphan"
+    )
 
     # Propriétés calculées
     @property
@@ -70,4 +76,3 @@ class Post(database.Model):
 
     def __repr__(self) -> str:
         return f"<Post {self.id}: {self.title[:30]}>"
-

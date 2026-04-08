@@ -15,7 +15,7 @@ class AuthValidator:
         email = form.get("auth_email", "").strip()
         password = form.get("auth_password", "")
 
-        if not email or '@' not in email:
+        if not email or "@" not in email:
             errors["error"] = "Veuillez entrer une adresse email valide"
         if len(password) < 8:
             errors["error"] = "Le mots de passe doit contenir 8 caractères minimum"
@@ -33,7 +33,7 @@ class AuthValidator:
         email = form.get("auth_email", "").strip()
         password = form.get("auth_password", "")
 
-        if not email or '@' not in email:
+        if not email or "@" not in email:
             flash("Veuillez entrer une adresse email valide", "error")
             valid = False
         if len(password) < 8:

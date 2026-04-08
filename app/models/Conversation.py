@@ -11,18 +11,30 @@ from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from app.models.User import User
 
+
 class Conversation(database.Model):
     __tablename__ = "conversation"
 
     id: Mapped[int] = mapped_column(primary_key=True)
     created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
-    updated_at: Mapped[Optional[datetime]] = mapped_column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    updated_at: Mapped[Optional[datetime]] = mapped_column(
+        DateTime, default=datetime.utcnow, onupdate=datetime.utcnow
+    )
 
     # Relations
-    members: Mapped[List["ConversationMember"]] = relationship("ConversationMember", back_populates="conversation",
-                                                               lazy="joined", cascade="all, delete-orphan")
-    messages: Mapped[List["Message"]] = relationship("Message", back_populates="conversation", lazy="dynamic",
-                                                     cascade="all, delete-orphan", order_by="Message.created_at.desc()")
+    members: Mapped[List["ConversationMember"]] = relationship(
+        "ConversationMember",
+        back_populates="conversation",
+        lazy="joined",
+        cascade="all, delete-orphan",
+    )
+    messages: Mapped[List["Message"]] = relationship(
+        "Message",
+        back_populates="conversation",
+        lazy="dynamic",
+        cascade="all, delete-orphan",
+        order_by="Message.created_at.desc()",
+    )
 
     @property
     def last_message(self) -> Optional["Message"]:
@@ -44,12 +56,16 @@ class ConversationMember(database.Model):
     __tablename__ = "conversation_member"
 
     id: Mapped[int] = mapped_column(primary_key=True)
-    conversation_id: Mapped[int] = mapped_column(ForeignKey("conversation.id"), nullable=False)
+    conversation_id: Mapped[int] = mapped_column(
+        ForeignKey("conversation.id"), nullable=False
+    )
     user_id: Mapped[int] = mapped_column(ForeignKey("users.id"), nullable=False)
     joined_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
 
     # Relations
-    conversation: Mapped["Conversation"] = relationship("Conversation", back_populates="members")
+    conversation: Mapped["Conversation"] = relationship(
+        "Conversation", back_populates="members"
+    )
     user: Mapped["User"] = relationship("User")
 
     __table_args__ = (
@@ -65,14 +81,18 @@ class Message(database.Model):
 
     id: Mapped[int] = mapped_column(primary_key=True)
     sender_id: Mapped[int] = mapped_column(ForeignKey("users.id"), nullable=False)
-    conversation_id: Mapped[int] = mapped_column(ForeignKey("conversation.id"), nullable=False)
+    conversation_id: Mapped[int] = mapped_column(
+        ForeignKey("conversation.id"), nullable=False
+    )
     content: Mapped[str] = mapped_column(Text, nullable=False)
     is_read: Mapped[bool] = mapped_column(Boolean, default=False)
     created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
 
     # Relations
     sender: Mapped["User"] = relationship("User")
-    conversation: Mapped["Conversation"] = relationship("Conversation", back_populates="messages")
+    conversation: Mapped["Conversation"] = relationship(
+        "Conversation", back_populates="messages"
+    )
 
     def to_dict(self) -> dict:
         return {
@@ -85,4 +105,3 @@ class Message(database.Model):
 
     def __repr__(self) -> str:
         return f"<Message {self.id} from User {self.sender_id}>"
-

@@ -1,6 +1,7 @@
 from flask_jwt_extended import verify_jwt_in_request, get_jwt_identity
 from app.models.User import User
 
+
 def inject_user():
     try:
         verify_jwt_in_request(locations=["cookies"], optional=True)

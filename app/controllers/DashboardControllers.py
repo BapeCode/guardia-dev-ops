@@ -20,24 +20,33 @@ class DashboardController:
             DashboardController.fill(current_user)
 
         post = PostControllers.get_post(current_user)
-        return render_template('dashboard/index.html', current_user=current_user, tab=tab, posts=post)
+        return render_template(
+            "dashboard/index.html", current_user=current_user, tab=tab, posts=post
+        )
 
     @staticmethod
     def fill(current_user):
         posts = PostControllers.get_post(current_user)
         all_users = User.query.all()
-        return render_template('dashboard/index.html', current_user=current_user, tab="fill",
-                               posts=[p.to_dict(current_user) for p in posts], all_users=all_users)
+        return render_template(
+            "dashboard/index.html",
+            current_user=current_user,
+            tab="fill",
+            posts=[p.to_dict(current_user) for p in posts],
+            all_users=all_users,
+        )
 
     @staticmethod
     def profil(current_user):
-        posts = (Post.query
-                 .order_by(Post.created_at.desc())
-                 .filter_by(author_id=current_user.id)
-                 .all()
-                 )
+        posts = (
+            Post.query.order_by(Post.created_at.desc())
+            .filter_by(author_id=current_user.id)
+            .all()
+        )
 
-        return render_template("dashboard/tab/profil.html", current_user=current_user, posts=posts)
+        return render_template(
+            "dashboard/tab/profil.html", current_user=current_user, posts=posts
+        )
 
     @staticmethod
     def profil_edit(current_user):
@@ -56,7 +65,9 @@ class DashboardController:
                     errors = True
                     flash(filename, "error")
 
-                is_upload, message = upload(avatar, filename, "avatars", current_user.avatar)
+                is_upload, message = upload(
+                    avatar, filename, "avatars", current_user.avatar
+                )
                 if not is_upload:
                     errors = True
                     flash(message, "error")
@@ -71,7 +82,9 @@ class DashboardController:
                     errors = True
                     flash(filename, "error")
 
-                is_upload, message = upload(banner, filename, "banners", current_user.banner)
+                is_upload, message = upload(
+                    banner, filename, "banners", current_user.banner
+                )
                 if not is_upload:
                     errors = True
                     flash(message, "error")
@@ -95,8 +108,14 @@ class DashboardController:
             database.session.refresh(updated_user)
 
             if errors:
-                return redirect(url_for("dashboard.profile_edit", current_user=current_user))
+                return redirect(
+                    url_for("dashboard.profile_edit", current_user=current_user)
+                )
 
-            return redirect(url_for("dashboard.profile", tab="fill", current_user=current_user))
+            return redirect(
+                url_for("dashboard.profile", tab="fill", current_user=current_user)
+            )
 
-        return render_template("dashboard/tab/profil_edit.html", current_user=current_user)
+        return render_template(
+            "dashboard/tab/profil_edit.html", current_user=current_user
+        )

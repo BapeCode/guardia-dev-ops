@@ -15,11 +15,16 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Code
 COPY . .
 
-# Dossier uploads persistant
+# Dossier uploads persistant & permissions
 RUN mkdir -p /app/app/static/uploads/avatars \
-             /app/app/static/uploads/banners \
-             /app/app/static/uploads/posts
+    /app/app/static/uploads/banners \
+    /app/app/static/uploads/posts \
+    && adduser --disabled-password --gecos "" glintuser \
+    && chown -R glintuser:glintuser /app
+
+# Switch à un utilisateur non-root pour la sécurité
+USER glintuser
 
 EXPOSE 5000
 
-CMD ["flask", "run", "--debug"]
+CMD ["flask", "run", "--host=0.0.0.0"]

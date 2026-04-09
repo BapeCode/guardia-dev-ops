@@ -33,4 +33,9 @@ def repost(current_user, post_id):
 @posts_bp.route("/posts/<int:post_id>/comment", methods=["POST"])
 @login_required
 def comment(current_user, post_id):
-    pass
+    return PostControllers.comment(current_user, post_id)
+
+@posts_bp.route("/posts/<int:post_id>/comment/<int:comment_id>/delete", methods=["POST"])
+@login_required
+def delete_comment(current_user, post_id, comment_id):
+    return PostControllers.delete_comment(current_user, post_id, comment_id)

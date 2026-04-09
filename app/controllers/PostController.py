@@ -5,10 +5,12 @@ from app.models import Like
 from app.models import Post
 from app.models import User
 from app.models.Followers import Repost
+from app.models.Comment import Comment
 from app.validator.PostValidator import PostValidator
 
 
 class PostControllers:
+
     @staticmethod
     def delete_post(current_user, post_id):
         if not current_user:
@@ -81,6 +83,47 @@ class PostControllers:
             database.session.add(Repost(user_id=current_user.id, post_id=post.id))
 
         database.session.commit()
+        return render_template(
+            "partials/posts_cards.html", post=post, current_user=current_user
+        )
+
+    @staticmethod
+    def comment(current_user, post_id):
+        post = Post.query.get_or_404(post_id)
+        content = request.form.get("content", "").strip()
+
+        if not content:
+            return render_template(
+                "partials/posts_cards.html", post=post, current_user=current_user
+            )
+
+        new_comment = Comment(
+            author_id=current_user.id,
+            post_id=post_id,
+            content=content
+        )
+        database.session.add(new_comment)
+        database.session.commit()
+        post = Post.query.get(post_id)
+
+        return render_template(
+            "partials/posts_cards.html", post=post, current_user=current_user
+        )
+
+    @staticmethod
+    def delete_comment(current_user, post_id, comment_id):
+        comment = Comment.query.get_or_404(comment_id)
+
+        if comment.author_id != current_user.id:
+            post = Post.query.get(post_id)
+            return render_template(
+                "partials/posts_cards.html", post=post, current_user=current_user
+            )
+
+        database.session.delete(comment)
+        database.session.commit()
+        post = Post.query.get(post_id)
+
         return render_template(
             "partials/posts_cards.html", post=post, current_user=current_user
         )

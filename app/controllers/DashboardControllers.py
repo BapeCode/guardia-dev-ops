@@ -17,7 +17,7 @@ class DashboardController:
         return render_template(
             "dashboard/index.html",
             current_user=current_user,
-            posts=[p.to_dict(current_user) for p in posts],
+            posts=posts,
             all_users=all_users,
             pages="fill",
         )
@@ -157,6 +157,4 @@ class DashboardController:
             "dashboard/index.html", current_user=current_user, pages="edit_profile"
         )
 
-    @staticmethod
-    def messages(current_user):
-        return "Salut"
+    

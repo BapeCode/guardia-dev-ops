@@ -18,8 +18,11 @@ def premium():
 def features():
     return HomeController.features()
 
-@home_bp.route("/subscribe", methods=['GET', 'POST'])
+
+@home_bp.route("/subscribe", methods=["GET", "POST"])
 def subscribe():
-    plan_name = request.args.get('plan', '')
-    plan_price = float(request.args.get('price', 0))
-    return render_template('/home/subscribe.html', plan_name=plan_name, plan_price=plan_price)
+    plan_name = request.args.get("plan", "")
+    plan_price = float(request.args.get("price", 0))
+    return render_template(
+        "/home/subscribe.html", plan_name=plan_name, plan_price=plan_price
+    )

@@ -6,7 +6,7 @@ from flask import Flask
 from flask_cors import CORS
 
 from app.extensions import database, migrate, jwt
-from app.routes.posts import posts_bp
+
 from .context_processors import inject_user
 
 
@@ -54,13 +54,17 @@ def create_app():
     jwt.init_app(app)
     app.context_processor(inject_user)
 
+    from .routes.posts import posts_bp
     from .routes.home import home_bp
     from .routes.auth import auth_bp
     from .routes.dashboard import dashboard_bp
+    from .routes.settings import settings_bp
     app.register_blueprint(home_bp, url_prefix="/")
     app.register_blueprint(auth_bp, url_prefix="/")
     app.register_blueprint(dashboard_bp, url_prefix="/")
     app.register_blueprint(posts_bp, url_prefix="/posts")
+    app.register_blueprint(settings_bp, url_prefix="/")
+
 
     app.jinja_env.filters["timeago"] = timeago
 

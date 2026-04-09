@@ -29,6 +29,7 @@ jobs:
   gitleaks:
     name: Check des secrets
     runs-on: ubuntu-22.04
+    needs: [check_changes]
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -60,6 +61,7 @@ jobs:
   ruff:
     name: Ruff - Linting et formatage
     runs-on: ubuntu-22.04
+    needs: check_changes
     if: ${{ needs.check_changes.outputs.python == 'true' }}
     permissions:
       contents: write # Permission pour push des corrections

@@ -6,12 +6,30 @@ on:
   pull_request:
     branches: [master, dev]
 
-  # ── Job 1 : Secrets ──────────────────────────
+  
 
 jobs:
+# ── Labs 5 : CI/CD ──────────────────────────
+  check_changes:
+    runs-on: ubuntu 22.04
+    outputs:
+     python: ${{ steps.filter.outputs.python }}
+    steps:
+    - uses: actions/checkout@v4
+    - uses: dorny/paths-filter@v3
+      id: filter
+      with:
+        filters: |
+         python:
+           - '**/*.py'
+           - 'requirements.txt'
+
+ # ── Job 1 : Secrets ──────────────────────────
+
   gitleaks:
     name: Check des secrets
     runs-on: ubuntu-22.04
+    needs: [check_changes]
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -28,7 +46,8 @@ jobs:
   semgrep:
     name: SAST - Check des vulnérabilités de sécurité avec Semgrep
     runs-on: ubuntu-22.04
-    needs: gitleaks
+    needs: [gitleaks, check_changes]
+    if: ${{ needs.check_changes.outputs.python == 'true'}}
     steps:
       - uses: actions/checkout@v4
       - uses: semgrep/semgrep-action@v1
@@ -42,6 +61,8 @@ jobs:
   ruff:
     name: Ruff - Linting et formatage
     runs-on: ubuntu-22.04
+    needs: check_changes
+    if: ${{ needs.check_changes.outputs.python == 'true' }}
     permissions:
       contents: write # Permission pour push des corrections
     steps:
@@ -69,6 +90,7 @@ jobs:
     name: SAST - Check des vulnérabilités de sécurité avec bandit
     runs-on: ubuntu-22.04
     needs: gitleaks
+    if: ${{ needs.check_changes.outputs.python == 'true' }}
     steps:
       - uses: actions/checkout@v4
 
@@ -83,7 +105,8 @@ jobs:
   pip-audit:
     name: SCA - Check des vulnérabilités de sécurité dans les dépendances Python
     runs-on: ubuntu-22.04
-    needs: [bandit, semgrep]
+    needs: [bandit, semgrep, check_changes]
+    if: ${{ needs.check_changes.outputs.python == 'true' }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -154,3 +177,21 @@ jobs:
           severity: CRITICAL,HIGH
           format: table
           trivyignores: .trivyignore
+
+# ── Job 9 : DAST (Lab 4) ──────────────────────────────
+  dast:
+    name: DAST - Scanner en runtime avec Nikto
+    runs-on: ubuntu-22.04
+    needs: Build 
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Démarrer l'application (Runtime)
+        run: docker run -d -p 5000:5000 ${{ vars.DOCKERHUB_USERNAME }}/glint:latest
+
+      - name: Attendre le démarrage du conteneur
+        run: sleep 10
+
+      - name: Run DAST avec Nikto
+        run: docker run --rm --network host sullo/nikto -h http://127.0.0.1:5000/

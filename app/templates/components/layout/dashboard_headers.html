@@ -1,8 +1,8 @@
 {% from "components/ui/icons.html" import Icon %}
 
 {% set nav_items = [
-    {"name": "Accueil", "icon": "fill", "url": "fill"},
-    {"name": "Messages",  "icon": "messages", "url": "messages"},
+    {"name": "Accueil", "icon": "fill", "url": "dashboard.index"},
+    {"name": "Messages",  "icon": "messages", "url": "dashboard.messages"},
 ] %}
 
 {# {"name": "Recherche",  "icon": "search", "url": "search"},#}
@@ -14,7 +14,7 @@
 
         <div class="hidden items-center justify-center gap-2 flex-1 md:flex">
             {% for item in nav_items %}
-                <a href="{{ url_for('dashboard.index', tab=item.url) }}"
+                <a href="{{ url_for(item.url) }}"
                    class="flex flex-col items-center px-4 py-2 transition-all duration-300
                               {{ 'text-primary font-semibold' if active_tab == item.url else 'text-text-2' }}">
                     {{ Icon(item.icon, cls="w-5 h-5") }}
@@ -55,7 +55,7 @@
                     </a>
                     <a href="{{ url_for('auth.logout') }}"
                        class="hover:text-primary transition-colors duration-300 w-full">
-                        Déconnection
+                        Déconnexion
                     </a>
                 </div>
             </div>

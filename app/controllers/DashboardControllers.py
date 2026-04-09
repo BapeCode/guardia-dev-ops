@@ -1,4 +1,4 @@
-from flask import render_template, request, flash, redirect, url_for
+from flask import render_template, request, flash, redirect, url_for, jsonify
 
 from app import database
 from app.controllers.PostController import PostControllers
@@ -6,38 +6,74 @@ from app.models.Post import Post
 from app.models.User import User
 from app.services.uploads_services import encrypt_filename, upload
 from app.services.uploads_services import harvest_file
+from app.models.Followers import Follow
 
 
 class DashboardController:
-    TABS = ["fill", "messages", "profil", "settings"]
 
     @staticmethod
-    def index(current_user, tab="fill"):
-        if tab not in DashboardController.TABS:
-            tab = "fill"
-
-        if tab == "fill":
-            DashboardController.fill(current_user)
-
-        post = PostControllers.get_post(current_user)
-        return render_template('dashboard/index.html', current_user=current_user, tab=tab, posts=post)
-
-    @staticmethod
-    def fill(current_user):
+    def index(current_user):
         posts = PostControllers.get_post(current_user)
         all_users = User.query.all()
-        return render_template('dashboard/index.html', current_user=current_user, tab="fill",
-                               posts=[p.to_dict(current_user) for p in posts], all_users=all_users)
+        return render_template('dashboard/index.html', current_user=current_user,
+                               posts=[p.to_dict(current_user) for p in posts], all_users=all_users, pages="fill")
 
     @staticmethod
-    def profil(current_user):
+    def profile(current_user):
         posts = (Post.query
                  .order_by(Post.created_at.desc())
                  .filter_by(author_id=current_user.id)
                  .all()
                  )
+        all_users = User.query.all()
 
-        return render_template("dashboard/tab/profil.html", current_user=current_user, posts=posts)
+        return render_template("dashboard/index.html",
+                               posts=posts,
+                               owned=True,
+                               all_users=all_users,
+                               pages="profile"
+                               )
+
+    @staticmethod
+    def other_profile(current_user, user_id):
+        if current_user.id == user_id:
+            return redirect(url_for("dashboard.profile", current_user=current_user))
+        user_target = User.query.get(user_id)
+        if not user_target:
+            return redirect(url_for("dashboard.index"))
+        posts = (Post.query
+                 .order_by(Post.created_at.desc())
+                 .filter_by(author_id=user_target.id)
+                 .all()
+                 )
+        all_users = User.query.all()
+        return render_template("dashboard/index.html",
+                               target_user=user_target,
+                               all_users=all_users,
+                               owned=False,
+                               posts=posts,
+                               pages="profile"
+                               )
+
+    @staticmethod
+    def follow(current_user, user_id):
+        if current_user.id == user_id:
+            return redirect(url_for("dashboard.profile", current_user=current_user))
+        user_target = User.query.get(user_id)
+        if not user_target:
+            return redirect(url_for("dashboard.index"))
+
+        existing_follower = Follow.query.filter_by(follower_id=current_user.id, followed_id=user_id).first()
+
+        if not existing_follower:
+            new_follow = Follow(follower_id=current_user.id, followed_id=user_id)
+            database.session.add(new_follow)
+            database.session.commit()
+            flash(f"You are now following {user_target.username}!", "success")
+        else:
+            database.session.delete(existing_follower)
+            database.session.commit()
+        return render_template("partials/button_follow.html", user=current_user)
 
     @staticmethod
     def profil_edit(current_user):
@@ -99,4 +135,9 @@ class DashboardController:
 
             return redirect(url_for("dashboard.profile", tab="fill", current_user=current_user))
 
-        return render_template("dashboard/tab/profil_edit.html", current_user=current_user)
+        return render_template("dashboard/index.html",
+                               current_user=current_user, pages="edit_profile")
+
+    @staticmethod
+    def messages(current_user):
+        return "Salut"

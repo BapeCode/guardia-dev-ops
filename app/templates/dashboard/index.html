@@ -18,10 +18,13 @@
             <div class="col-span-3 overflow-auto bg">
                 <section
                         class="py-24 flex flex-col items-center justify-start py-6 border-x border-border w-full bg-background-foreground min-h-screen overflow-auto animate-in fade-in slide-in-from-bottom-5 duration-1000">
-                    {% if tab == "fill" %}
-                        {% include "dashboard/tab/fill.html" %}
-                    {% else %}
-                        {% block dashboard_mid %}{% endblock %}
+                    {% if pages == "fill" %}
+                        {% include "dashboard/pages/fill.html" %}
+                    {% elif pages == "profile" %}
+                        {% set current_user = current_user %}
+                        {% include "dashboard/pages/profil.html" %}
+                    {% elif pages == "edit_profile" %}
+                        {% include "dashboard/pages/profil_edit.html" %}
                     {% endif %}
                 </section>
             </div>

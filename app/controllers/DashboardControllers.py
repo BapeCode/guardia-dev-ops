@@ -81,7 +81,9 @@ class DashboardController:
         else:
             database.session.delete(existing_follower)
             database.session.commit()
-        return render_template("partials/button_follow.html", user=current_user)
+        return render_template(
+            "partials/button_follow.html", target_user=user_target, is_htmx=True
+        )
 
     @staticmethod
     def profil_edit(current_user):

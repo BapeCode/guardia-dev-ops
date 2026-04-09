@@ -66,12 +66,12 @@ def create_app():
     from .routes.auth import auth_bp
     from .routes.dashboard import dashboard_bp
     from .routes.settings import settings_bp
+
     app.register_blueprint(home_bp, url_prefix="/")
     app.register_blueprint(auth_bp, url_prefix="/")
     app.register_blueprint(dashboard_bp, url_prefix="/")
     app.register_blueprint(posts_bp, url_prefix="/posts")
     app.register_blueprint(settings_bp, url_prefix="/")
-
 
     app.jinja_env.filters["timeago"] = timeago
 

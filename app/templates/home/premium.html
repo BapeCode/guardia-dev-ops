@@ -92,10 +92,11 @@
                                     </li>
                                 {% endfor %}
                             </ul>
-
-                            <button class="w-full py-3 rounded-lg font-bold cursor-pointer transition-colors {{ 'bg-white text-slate-900 hover:bg-gray-100' if pack.highlight else 'bg-slate-900 text-white hover:bg-slate-800' }}">
-                                Choisir ce pack
-                            </button>
+                            <a href="/subscribe?plan={{ pack.name }}&price={{ pack.price }}">
+                                <button class="w-full py-3 rounded-lg font-bold cursor-pointer transition-colors {{ 'bg-white text-slate-900 hover:bg-gray-100' if pack.highlight else 'bg-slate-900 text-white hover:bg-slate-800' }}">
+                                    Choisir ce pack
+                                </button>
+                            </a>  
                         </div>
                     {% endfor %}
                 </div>

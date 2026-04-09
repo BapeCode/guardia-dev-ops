@@ -78,7 +78,7 @@
                     </p>
                 </div>
                 {% if not owned %}
-                    {% with target_user=profile_user %}
+                    {% with target_user=profile_user, btn_location="profile" %}
                         {% include 'partials/button_follow.html' %}
                     {% endwith %}
                 {% endif %}

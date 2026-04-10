@@ -77,7 +77,7 @@ class DashboardController:
             new_follow = Follow(follower_id=current_user.id, followed_id=user_id)
             database.session.add(new_follow)
             database.session.commit()
-            flash(f"You are now following {user_target.username}!", "success")
+            flash(f"Vous suivez maintenant {user_target.username}!", "success")
         else:
             database.session.delete(existing_follower)
             database.session.commit()

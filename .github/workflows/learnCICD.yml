@@ -6,25 +6,29 @@ on:
   pull_request:
     branches: [master, dev]
 
-  
-
 jobs:
-# ── Labs 5 : CI/CD ──────────────────────────
+  # ── Labs 5 : CI/CD ──────────────────────────
   check_changes:
-    runs-on: ubuntu 22.04
+    runs-on: ubuntu-22.04
     outputs:
-     python: ${{ steps.filter.outputs.python }}
+      python: ${{ steps.filter.outputs.python }}
     steps:
-    - uses: actions/checkout@v4
-    - uses: dorny/paths-filter@v3
-      id: filter
-      with:
-        filters: |
-         python:
-           - '**/*.py'
-           - 'requirements.txt'
+      - uses: actions/checkout@v4
+      - uses: dorny/paths-filter@v4.0.0
+        id: filter
+        with:
+          filters: |
+            python:
+              - '**/*.py'
+              - 'requirements.txt'
+              - 'Dockerfile'
+              - '.github/workflows/learnCICD.yml'
+              - '.trivyignore'
+              - 'app/**'
+            html: 
+              - '**/*.html'
 
- # ── Job 1 : Secrets ──────────────────────────
+  # ── Job 1 : Secrets ──────────────────────────
 
   gitleaks:
     name: Check des secrets
@@ -47,7 +51,6 @@ jobs:
     name: SAST - Check des vulnérabilités de sécurité avec Semgrep
     runs-on: ubuntu-22.04
     needs: [gitleaks, check_changes]
-    if: ${{ needs.check_changes.outputs.python == 'true'}}
     steps:
       - uses: actions/checkout@v4
       - uses: semgrep/semgrep-action@v1
@@ -178,11 +181,11 @@ jobs:
           format: table
           trivyignores: .trivyignore
 
-# ── Job 9 : DAST (Lab 4) ──────────────────────────────
+  # ── Job 9 : DAST (Lab 4) ──────────────────────────────
   dast:
     name: DAST - Scanner en runtime avec Nikto
     runs-on: ubuntu-22.04
-    needs: Build 
+    needs: Build
     steps:
       - name: Checkout
         uses: actions/checkout@v4

@@ -21,8 +21,7 @@ class PostControllers:
 
         database.session.delete(deleted_post)
         database.session.commit()
-        flash("Post supprimé", "success")
-        return redirect(url_for("dashboard.index", tab="fill"))
+        return ""
 
     @staticmethod
     def get_post(current_user):

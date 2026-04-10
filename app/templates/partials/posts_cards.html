@@ -14,10 +14,13 @@
             </div>
         </div>
         {% if post.author.id == current_user.id %}
-            <a class="flex items-center" href="{{ url_for('posts.delete', post_id=post.id) }}"
-               onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce post ?')">
+            <button class="flex items-center"
+                    hx-post="{{ url_for('posts.delete', post_id=post.id) }}"
+                    hx-target="#post-{{ post.id }}"
+                    hx-swap="outerHTML"
+                    hx-confirm="Êtes-vous sûr de vouloir supprimer ce post ?">
                 {{ Icon("delete", cls="w-5 h-5 hover:stroke-destructive duration-300 transition-colors cursor-pointer") }}
-            </a>
+            </button>
         {% endif %}
     </div>
 

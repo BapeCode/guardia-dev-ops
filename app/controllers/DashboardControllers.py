@@ -166,5 +166,5 @@ class DashboardController:
             "dashboard/index.html",
             current_user=current_user,
             all_users=all_users,
-            pages="messages"
+            pages="messages",
         )

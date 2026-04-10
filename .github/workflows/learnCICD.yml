@@ -197,4 +197,4 @@ jobs:
         run: sleep 10
 
       - name: Run DAST avec Nikto
-        run: docker run --rm --network host sullo/nikto -h http://127.0.0.1:5000/
+        run: docker run --rm securecodebox/nikto:latest -h http://127.0.0.1:5000/

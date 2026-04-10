@@ -1,13 +1,17 @@
 import os
-from datetime import datetime
+from datetime import datetime, timezone
 from datetime import timedelta
+
 
 from flask import Flask
 from flask_cors import CORS
 
+
 from app.extensions import database, migrate, jwt
 
+
 from .context_processors import inject_user
+
 
 
 def timeago(dt):
@@ -18,7 +22,9 @@ def timeago(dt):
             dt = datetime.fromisoformat(dt)
         except ValueError:
             return dt
-    now = datetime.now()
+    if dt.tzinfo is None:
+        dt = dt.replace(tzinfo=timezone.utc)
+    now = datetime.now(timezone.utc)
     diff = now - dt
     s = int(diff.total_seconds())
     if s < 60:
@@ -34,6 +40,7 @@ def timeago(dt):
     return dt.strftime("%d/%m/%Y à %H:%M")
 
 
+
 def create_app():
     app = Flask(
         __name__,
@@ -45,6 +52,7 @@ def create_app():
     )
     os.makedirs(app.instance_path or "instance", exist_ok=True)
 
+
     app.config["SECRET_KEY"] = os.getenv("SECRET_KEY", "dev")
     app.config["SQLALCHEMY_DATABASE_URI"] = f"sqlite:///{app.instance_path}/database.db"
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
@@ -54,12 +62,15 @@ def create_app():
     app.config["JWT_COOKIE_CSRF_PROTECT"] = False
     app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(days=7)
 
+
     CORS(app)
+
 
     database.init_app(app)
     migrate.init_app(app, database)
     jwt.init_app(app)
     app.context_processor(inject_user)
+
 
     from .routes.posts import posts_bp
     from .routes.home import home_bp
@@ -67,12 +78,15 @@ def create_app():
     from .routes.dashboard import dashboard_bp
     from .routes.settings import settings_bp
 
+
     app.register_blueprint(home_bp, url_prefix="/")
     app.register_blueprint(auth_bp, url_prefix="/")
     app.register_blueprint(dashboard_bp, url_prefix="/")
     app.register_blueprint(posts_bp, url_prefix="/posts")
     app.register_blueprint(settings_bp, url_prefix="/")
 
+
     app.jinja_env.filters["timeago"] = timeago
+
 
     return app

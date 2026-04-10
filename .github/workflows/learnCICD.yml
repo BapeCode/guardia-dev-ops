@@ -8,8 +8,11 @@ on:
 
 jobs:
   # ── Labs 5 : CI/CD ──────────────────────────
-  check_changes:
+  Check_changes:
     runs-on: ubuntu-22.04
+    permissions:
+      pull-requests: read
+      contents: read
     outputs:
       python: ${{ steps.filter.outputs.python }}
     steps:
@@ -30,7 +33,7 @@ jobs:
   gitleaks:
     name: Check des secrets
     runs-on: ubuntu-22.04
-    needs: [check_changes]
+    needs: [Check_changes]
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -47,7 +50,7 @@ jobs:
   semgrep:
     name: SAST - Check des vulnérabilités de sécurité avec Semgrep
     runs-on: ubuntu-22.04
-    needs: [gitleaks, check_changes]
+    needs: [gitleaks, Check_changes]
     steps:
       - uses: actions/checkout@v4
       - uses: semgrep/semgrep-action@v1
@@ -61,8 +64,8 @@ jobs:
   ruff:
     name: Ruff - Linting et formatage
     runs-on: ubuntu-22.04
-    needs: check_changes
-    if: ${{ needs.check_changes.outputs.python == 'true' }}
+    needs: Check_changes
+    if: ${{ needs.Check_changes.outputs.python == 'true' }}
     permissions:
       contents: write # Permission pour push des corrections
     steps:
@@ -90,7 +93,7 @@ jobs:
     name: SAST - Check des vulnérabilités de sécurité avec bandit
     runs-on: ubuntu-22.04
     needs: gitleaks
-    if: ${{ needs.check_changes.outputs.python == 'true' }}
+    if: ${{ needs.Check_changes.outputs.python == 'true' }}
     steps:
       - uses: actions/checkout@v4
 
@@ -105,8 +108,8 @@ jobs:
   pip-audit:
     name: SCA - Check des vulnérabilités de sécurité dans les dépendances Python
     runs-on: ubuntu-22.04
-    needs: [bandit, semgrep, check_changes]
-    if: ${{ needs.check_changes.outputs.python == 'true' }}
+    needs: [bandit, semgrep, Check_changes]
+    if: ${{ needs.Check_changes.outputs.python == 'true' }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4

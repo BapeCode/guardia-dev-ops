@@ -10,6 +10,9 @@ jobs:
   # ── Labs 5 : CI/CD ──────────────────────────
   check_changes:
     runs-on: ubuntu-22.04
+    permissions:
+      pull-requests: read
+      contents: read
     outputs:
       python: ${{ steps.filter.outputs.python }}
     steps:

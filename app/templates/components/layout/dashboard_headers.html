@@ -10,7 +10,7 @@
 {% macro DashboardHeaders(user={}, active_tab="fill") %}
 
     <header class="fixed z-50 flex items-center justify-between py-4 px-6 w-full animate-in slide-in-from-left-5 fade-in duration-500 border-b border-border bg-card">
-        <h1 class="uppercase font-black text-2xl tracking-widest flex-1">Glint</h1>
+        <h1 class="uppercase font-black text-2xl tracking-widest flex-1"><a href="{{ url_for('home.home') }}">Glint</a></h1>
 
         <div class="hidden items-center justify-center gap-2 flex-1 md:flex">
             {% for item in nav_items %}
@@ -47,7 +47,7 @@
                      class="hidden absolute right-0 top-full mt-2 rounded-sm flex flex-col items-start justify-center gap-4 border-border border bg-card text-sm py-4 px-6">
                     <a href="{{ url_for("dashboard.index") }}"
                        class="hover:text-primary transition-colors duration-300 w-full">
-                        Profile
+                        Profil
                     </a>
                     <a href="{{ url_for("settings.settings") }}"
                        class="hover:text-primary transition-colors duration-300 w-full">

@@ -1,9 +1,22 @@
+from __future__ import annotations
 from datetime import datetime
 
-from sqlalchemy import DateTime, ForeignKey, Float, Boolean, UniqueConstraint, CheckConstraint
+from sqlalchemy import (
+    DateTime,
+    ForeignKey,
+    Float,
+    Boolean,
+    UniqueConstraint,
+    CheckConstraint,
+)
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.extensions import database
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from app.models.User import User
+    from app.models.Post import Post
 
 
 class Follow(database.Model):
@@ -15,8 +28,12 @@ class Follow(database.Model):
     created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
 
     # Relations
-    follower: Mapped["User"] = relationship("User", foreign_keys=[follower_id], back_populates="following")
-    followed: Mapped["User"] = relationship("User", foreign_keys=[followed_id], back_populates="followers")
+    follower: Mapped["User"] = relationship(
+        "User", foreign_keys=[follower_id], back_populates="following"
+    )
+    followed: Mapped["User"] = relationship(
+        "User", foreign_keys=[followed_id], back_populates="followers"
+    )
 
     __table_args__ = (
         UniqueConstraint("follower_id", "followed_id", name="uq_follow"),
@@ -39,9 +56,7 @@ class Repost(database.Model):
     user: Mapped["User"] = relationship("User", back_populates="reposts")
     post: Mapped["Post"] = relationship("Post", back_populates="reposts")
 
-    __table_args__ = (
-        UniqueConstraint("user_id", "post_id", name="uq_user_repost"),
-    )
+    __table_args__ = (UniqueConstraint("user_id", "post_id", name="uq_user_repost"),)
 
     def __repr__(self) -> str:
         return f"<Repost by User {self.user_id} of Post {self.post_id}>"
@@ -52,14 +67,18 @@ class Suggestion(database.Model):
 
     id: Mapped[int] = mapped_column(primary_key=True)
     user_id: Mapped[int] = mapped_column(ForeignKey("users.id"), nullable=False)
-    suggested_user_id: Mapped[int] = mapped_column(ForeignKey("users.id"), nullable=False)
+    suggested_user_id: Mapped[int] = mapped_column(
+        ForeignKey("users.id"), nullable=False
+    )
     score: Mapped[float] = mapped_column(Float, default=0.0)
     dismissed: Mapped[bool] = mapped_column(Boolean, default=False)
     created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
 
     # Relations
     user: Mapped["User"] = relationship("User", foreign_keys=[user_id])
-    suggested_user: Mapped["User"] = relationship("User", foreign_keys=[suggested_user_id])
+    suggested_user: Mapped["User"] = relationship(
+        "User", foreign_keys=[suggested_user_id]
+    )
 
     __table_args__ = (
         UniqueConstraint("user_id", "suggested_user_id", name="uq_suggestion"),

@@ -1,3 +1,4 @@
+from __future__ import annotations
 from datetime import datetime
 from typing import Optional, List
 
@@ -5,6 +6,14 @@ from sqlalchemy import String, Text, DateTime
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.extensions import database
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from app.models.Post import Post
+    from app.models.Like import Like
+    from app.models.Comment import Comment
+    from app.models.Followers import Follow
+    from app.models.Followers import Repost
 
 
 class User(database.Model):
@@ -20,18 +29,36 @@ class User(database.Model):
     banner: Mapped[str] = mapped_column(String(255), default="", server_default="")
     avatar: Mapped[str] = mapped_column(String(255), default="", server_default="")
     created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
-    updated_at: Mapped[Optional[datetime]] = mapped_column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    updated_at: Mapped[Optional[datetime]] = mapped_column(
+        DateTime, default=datetime.utcnow, onupdate=datetime.utcnow
+    )
 
     # Relations
-    posts: Mapped[List["Post"]] = relationship("Post", back_populates="author", lazy="dynamic")
-    comments: Mapped[List["Comment"]] = relationship("Comment", back_populates="author", lazy="dynamic")
-    likes: Mapped[List["Like"]] = relationship("Like", back_populates="user", lazy="dynamic")
-    reposts: Mapped[List["Repost"]] = relationship("Repost", back_populates="user", lazy="dynamic")
+    posts: Mapped[List["Post"]] = relationship(
+        "Post", back_populates="author", lazy="dynamic"
+    )
+    comments: Mapped[List["Comment"]] = relationship(
+        "Comment", back_populates="author", lazy="dynamic"
+    )
+    likes: Mapped[List["Like"]] = relationship(
+        "Like", back_populates="user", lazy="dynamic"
+    )
+    reposts: Mapped[List["Repost"]] = relationship(
+        "Repost", back_populates="user", lazy="dynamic"
+    )
     # payments: Mapped[List["Payment"]] = relationship("Payment", back_populates="user", lazy="dynamic")
-    following: Mapped[List["Follow"]] = relationship("Follow", back_populates="follower", lazy="dynamic",
-                                                     foreign_keys="Follow.follower_id")
-    followers: Mapped[List["Follow"]] = relationship("Follow", back_populates="followed", lazy="dynamic",
-                                                     foreign_keys="Follow.followed_id")
+    following: Mapped[List["Follow"]] = relationship(
+        "Follow",
+        back_populates="follower",
+        lazy="dynamic",
+        foreign_keys="Follow.follower_id",
+    )
+    followers: Mapped[List["Follow"]] = relationship(
+        "Follow",
+        back_populates="followed",
+        lazy="dynamic",
+        foreign_keys="Follow.followed_id",
+    )
 
     @property
     def followers_count(self) -> int:

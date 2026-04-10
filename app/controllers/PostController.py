@@ -5,11 +5,11 @@ from app.models import Like
 from app.models import Post
 from app.models import User
 from app.models.Followers import Repost
+from app.models.Comment import Comment
 from app.validator.PostValidator import PostValidator
 
 
 class PostControllers:
-
     @staticmethod
     def delete_post(current_user, post_id):
         if not current_user:
@@ -21,28 +21,20 @@ class PostControllers:
 
         database.session.delete(deleted_post)
         database.session.commit()
-        flash("Post supprimé", "success")
-        return redirect(url_for("dashboard.index", tab="fill"))
+        return ""
 
     @staticmethod
     def get_post(current_user):
         if not current_user:
             return redirect(url_for("dashboard.index", tab="fill"))
-        posts = (Post.query
-                 .order_by(Post.id.desc())
-                 .all()
-                 )
+        posts = Post.query.order_by(Post.id.desc()).all()
         return posts
 
     @staticmethod
     def create(current_user):
         if request.method == "POST":
             dto = PostValidator.from_form(request.form)
-            new_post = Post(
-                title="",
-                content=dto.content,
-                author_id=current_user.id
-            )
+            new_post = Post(title="", content=dto.content, author_id=current_user.id)
             database.session.add(new_post)
             database.session.commit()
             database.session.refresh(new_post)
@@ -51,29 +43,83 @@ class PostControllers:
 
         posts = PostControllers.get_post(current_user)
         all_users = User.query.all()
-        return redirect(url_for("dashboard.index", tab="fill", current_user=current_user,
-                                posts=[p.to_dict(current_user) for p in posts]), all_users=all_users)
+        return redirect(
+            url_for(
+                "dashboard.index",
+                tab="fill",
+                current_user=current_user,
+                posts=[p.to_dict(current_user) for p in posts],
+            ),
+            all_users=all_users,
+        )
 
     @staticmethod
     def like(current_user, post_id):
         post = Post.query.get_or_404(post_id)
-        existing = Like.query.filter_by(user_id=current_user.id, post_id=post.id).first()
+        existing = Like.query.filter_by(
+            user_id=current_user.id, post_id=post.id
+        ).first()
         if existing:
             database.session.delete(existing)
         else:
             database.session.add(Like(user_id=current_user.id, post_id=post.id))
 
         database.session.commit()
-        return render_template("partials/posts_cards.html", post=post, current_user=current_user)
+        return render_template(
+            "partials/posts_cards.html", post=post, current_user=current_user
+        )
 
     @staticmethod
     def repost(current_user, post_id):
         post = Post.query.get_or_404(post_id)
-        existing = Repost.query.filter_by(user_id=current_user.id, post_id=post.id).first()
+        existing = Repost.query.filter_by(
+            user_id=current_user.id, post_id=post.id
+        ).first()
         if existing:
             database.session.delete(existing)
         else:
             database.session.add(Repost(user_id=current_user.id, post_id=post.id))
 
         database.session.commit()
-        return render_template("partials/posts_cards.html", post=post, current_user=current_user)
+        return render_template(
+            "partials/posts_cards.html", post=post, current_user=current_user
+        )
+
+    @staticmethod
+    def comment(current_user, post_id):
+        post = Post.query.get_or_404(post_id)
+        content = request.form.get("content", "").strip()
+
+        if not content:
+            return render_template(
+                "partials/posts_cards.html", post=post, current_user=current_user
+            )
+
+        new_comment = Comment(
+            author_id=current_user.id, post_id=post_id, content=content
+        )
+        database.session.add(new_comment)
+        database.session.commit()
+        post = Post.query.get(post_id)
+
+        return render_template(
+            "partials/posts_cards.html", post=post, current_user=current_user
+        )
+
+    @staticmethod
+    def delete_comment(current_user, post_id, comment_id):
+        comment = Comment.query.get_or_404(comment_id)
+
+        if comment.author_id != current_user.id:
+            post = Post.query.get(post_id)
+            return render_template(
+                "partials/posts_cards.html", post=post, current_user=current_user
+            )
+
+        database.session.delete(comment)
+        database.session.commit()
+        post = Post.query.get(post_id)
+
+        return render_template(
+            "partials/posts_cards.html", post=post, current_user=current_user
+        )

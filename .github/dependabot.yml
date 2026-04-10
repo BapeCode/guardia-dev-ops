@@ -1,0 +1,7 @@
+# Dependabot ouvre automatiquement une PR chaque semaine si une nouvelle version de l'image de base est disponible avec des patches de sécurité.
+version: 2
+updates:
+  - package-ecosystem: docker
+    directory: "/"
+    schedule:
+      interval: weekly

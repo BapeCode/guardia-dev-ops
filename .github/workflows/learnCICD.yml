@@ -2,13 +2,35 @@ name: Glint
 
 on:
   push:
-    branches: [main]
+    branches: [master, dev]
   pull_request:
-    branches: [main]
+    branches: [master, dev]
 
 jobs:
-  gitleaks:
+  # ── Labs 5 : CI/CD ──────────────────────────
+  check_changes:
     runs-on: ubuntu-22.04
+    outputs:
+      python: ${{ steps.filter.outputs.python }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dorny/paths-filter@v4.0.0
+        id: filter
+        with:
+          filters: |
+            python:
+              - '**/*.py'
+              - 'requirements.txt'
+              - 'Dockerfile'
+              - '.github/workflows/learnCICD.yml'
+              - '.trivyignore'
+
+  # ── Job 1 : Secrets ──────────────────────────
+
+  gitleaks:
+    name: Check des secrets
+    runs-on: ubuntu-22.04
+    needs: [check_changes]
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -19,3 +41,157 @@ jobs:
         uses: gitleaks/gitleaks-action@v2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  # ── Job 2 : Semgrep ──────────────────────────────
+
+  semgrep:
+    name: SAST - Check des vulnérabilités de sécurité avec Semgrep
+    runs-on: ubuntu-22.04
+    needs: [gitleaks, check_changes]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: semgrep/semgrep-action@v1
+        with:
+          config: >
+            .semgrep/airtable.yml
+            p/secrets
+
+  # ── Job 3 : Ruff ──────────────────────────────
+
+  ruff:
+    name: Ruff - Linting et formatage
+    runs-on: ubuntu-22.04
+    needs: check_changes
+    if: ${{ needs.check_changes.outputs.python == 'true' }}
+    permissions:
+      contents: write # Permission pour push des corrections
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v4
+
+      - name: Run Ruff linter
+        run: uvx ruff check --fix .
+
+      - name: Run Ruff formatter
+        run: uvx ruff format .
+
+      - name: Commit and Push changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git diff --quiet || (git add -A && git commit -m "style: auto-fix ruff" && git push)
+
+  # ── Job 4 : Bandit ──────────────────────────────
+
+  bandit:
+    name: SAST - Check des vulnérabilités de sécurité avec bandit
+    runs-on: ubuntu-22.04
+    needs: gitleaks
+    if: ${{ needs.check_changes.outputs.python == 'true' }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v4
+
+      - name: Run Bandit
+        run: uvx bandit -r app/ -ll
+
+    # ── Job 5 : Pip Audit ──────────────────────────────
+
+  pip-audit:
+    name: SCA - Check des vulnérabilités de sécurité dans les dépendances Python
+    runs-on: ubuntu-22.04
+    needs: [bandit, semgrep, check_changes]
+    if: ${{ needs.check_changes.outputs.python == 'true' }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - uses: pypa/gh-action-pip-audit@v1.1.0 # Utilisation de l'action et pas le dépot du package officielle pip-audit de PyPA
+        with:
+          inputs: requirements.txt
+
+      # ── Job 6 : Pré Build ──────────────────────────────
+
+  Pre-build:
+    runs-on: ubuntu-latest
+    needs: [bandit, pip-audit, semgrep, gitleaks]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Lint Dockerfile avec Hadolint
+        uses: hadolint/hadolint-action@v3.1.0
+        with:
+          dockerfile: Dockerfile
+
+      - name: Trivy - Scan de configuration (Dockerfile & docker-compose)
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: config
+          scan-ref: .
+          exit-code: 1
+          severity: CRITICAL,HIGH
+
+      # ── Job 7 : Build ──────────────────────────────
+
+  Build:
+    runs-on: ubuntu-22.04
+    needs: Pre-build
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Connextion à DockerHub
+        uses: docker/login-action@v4
+        with:
+          username: ${{ vars.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build & Push de l'image Docker sur DockerHub
+        uses: docker/build-push-action@v3
+        with:
+          context: .
+          push: true
+          tags: ${{ vars.DOCKERHUB_USERNAME }}/glint:latest
+
+      # ── Job 8 : Post Build ──────────────────────────────
+
+  Post-build:
+    runs-on: ubuntu-latest
+    needs: Build
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Trivy - Scan image Docker avec Trivy
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: ${{ vars.DOCKERHUB_USERNAME }}/glint:latest
+          scan-type: image
+          exit-code: 1
+          severity: CRITICAL,HIGH
+          format: table
+          trivyignores: .trivyignore
+
+  # ── Job 9 : DAST (Lab 4) ──────────────────────────────
+  dast:
+    name: DAST - Scanner en runtime avec Nikto
+    runs-on: ubuntu-22.04
+    needs: Post-build
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Démarrer l'application (Runtime)
+        run: docker run -d -p 5000:5000 ${{ vars.DOCKERHUB_USERNAME }}/glint:latest
+
+      - name: Attendre le démarrage du conteneur
+        run: sleep 10
+
+      - name: Run DAST avec Nikto
+        run: docker run --rm --network host sullo/nikto -h http://127.0.0.1:5000/

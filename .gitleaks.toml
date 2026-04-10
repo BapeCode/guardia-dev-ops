@@ -1,0 +1,7 @@
+[allowlist]
+  description = "Fichiers de test secrets"
+  commits = [
+    "b5a231dd4db5de800263924a74d6105487fb6135",
+    "88e6b5c848955db9c40cc705de4ab541e6997d38",
+    "81f3d1636475482e7ff37e6f10cf13f0ce826e72"
+  ]

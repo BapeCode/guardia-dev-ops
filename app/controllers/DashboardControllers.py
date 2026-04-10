@@ -156,5 +156,3 @@ class DashboardController:
         return render_template(
             "dashboard/index.html", current_user=current_user, pages="edit_profile"
         )
-
-    

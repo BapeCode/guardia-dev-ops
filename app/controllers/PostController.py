@@ -10,7 +10,6 @@ from app.validator.PostValidator import PostValidator
 
 
 class PostControllers:
-
     @staticmethod
     def delete_post(current_user, post_id):
         if not current_user:
@@ -22,8 +21,7 @@ class PostControllers:
 
         database.session.delete(deleted_post)
         database.session.commit()
-        flash("Post supprimé", "success")
-        return redirect(url_for("dashboard.index", tab="fill"))
+        return ""
 
     @staticmethod
     def get_post(current_user):
@@ -98,9 +96,7 @@ class PostControllers:
             )
 
         new_comment = Comment(
-            author_id=current_user.id,
-            post_id=post_id,
-            content=content
+            author_id=current_user.id, post_id=post_id, content=content
         )
         database.session.add(new_comment)
         database.session.commit()

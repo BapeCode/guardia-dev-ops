@@ -19,4 +19,6 @@ CVE-2026-1299
 CVE-2026-4519
 CVE-2025-7458
 CVE-2023-45853
+
+# On utilise pas openssl / Fix disponible mais pas encore appliqué à l'image distroless Debian 12
 CVE-2026-28390

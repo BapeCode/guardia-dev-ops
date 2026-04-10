@@ -9,9 +9,7 @@ class SettingsControllers:
         """
         Gère l'affichage de la page des paramètres (Méthode GET)
         """
-        return render_template(
-            "dashboard/pages/settings.html", current_user=current_user
-        )
+        return render_template("dashboard/pages/settings.html", current_user=current_user)
 
     @staticmethod
     def settings_update(current_user):

@@ -77,7 +77,7 @@ class DashboardController:
             new_follow = Follow(follower_id=current_user.id, followed_id=user_id)
             database.session.add(new_follow)
             database.session.commit()
-            flash(f"Vous suivez maintenant {user_target.username}!", "success")
+            flash(f"You are now following {user_target.username}!", "success")
         else:
             database.session.delete(existing_follower)
             database.session.commit()
@@ -155,4 +155,16 @@ class DashboardController:
 
         return render_template(
             "dashboard/index.html", current_user=current_user, pages="edit_profile"
+        )
+
+    @staticmethod
+    def messages(current_user):
+        posts = PostControllers.get_post(current_user)
+        all_users = User.query.all()
+
+        return render_template(
+            "dashboard/index.html",
+            current_user=current_user,
+            all_users=all_users,
+            pages="messages"
         )

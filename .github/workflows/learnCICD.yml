@@ -33,6 +33,9 @@ jobs:
   gitleaks:
     name: Check des secrets
     runs-on: ubuntu-22.04
+    permissions:
+      pull-requests: read
+      contents: read
     needs: [check_changes]
     steps:
       - name: Checkout

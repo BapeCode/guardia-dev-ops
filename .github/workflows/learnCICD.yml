@@ -24,9 +24,6 @@ jobs:
               - 'Dockerfile'
               - '.github/workflows/learnCICD.yml'
               - '.trivyignore'
-              - 'app/**'
-            html: 
-              - '**/*.html'
 
   # ── Job 1 : Secrets ──────────────────────────
 

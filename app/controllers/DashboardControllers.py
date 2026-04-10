@@ -157,4 +157,14 @@ class DashboardController:
             "dashboard/index.html", current_user=current_user, pages="edit_profile"
         )
 
-    
+    @staticmethod
+    def messages(current_user):
+        posts = PostControllers.get_post(current_user)
+        all_users = User.query.all()
+
+        return render_template(
+            "dashboard/index.html",
+            current_user=current_user,
+            all_users=all_users,
+            pages="messages"
+        )

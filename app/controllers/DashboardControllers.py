@@ -159,12 +159,12 @@ class DashboardController:
 
     @staticmethod
     def messages(current_user):
-        posts = PostControllers.get_post(current_user)
+        PostControllers.get_post(current_user)
         all_users = User.query.all()
 
         return render_template(
             "dashboard/index.html",
             current_user=current_user,
             all_users=all_users,
-            pages="messages"
+            pages="messages",
         )

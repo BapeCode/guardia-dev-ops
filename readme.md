@@ -196,7 +196,33 @@ guardia-dev-ops/
 ├── requirements.txt
 └── run.py                       # Point d'entrée
 ```
+## Pipeline CI/CD
 
+Le projet utilise **GitHub Actions** avec une approche **DevSecOps** ("Shift Left Security"). Le pipeline s'exécute sur push et pull request vers `master` et `dev`.
+
+### Jobs
+
+| # | Job | Type | Outil | Description |
+|---|---|---|---|---|
+| 0 | **Check_changes** | Optimisation | `paths-filter` | Détecte les fichiers modifiés pour skip les jobs inutiles |
+| 1 | **Gitleaks** | Secrets | `gitleaks` | Détection de secrets commités |
+| 2 | **Semgrep** | SAST | `semgrep` | Analyse statique (règles custom + `p/secrets`) |
+| 3 | **Ruff** | Lint | `ruff` | Linting + formatage auto (auto-commit) |
+| 4 | **Bandit** | SAST | `bandit` | Vulnérabilités de sécurité Python |
+| 5 | **Pip Audit** | SCA | `pip-audit` | CVE des dépendances Python |
+| 6 | **Pre-build** | Config | `Hadolint` + `Trivy` | Lint Dockerfile + scan config |
+| 7 | **Build** | Build | `docker/build-push` | Build & push image sur DockerHub |
+| 8 | **Post-build** | Image | `Trivy` | Scan de l'image Docker buildée |
+| 9 | **DAST** | Runtime | `Nikto` | Scan dynamique de l'app en runtime |
+
+### Sécurité intégrée
+
+- 🔍 **Secrets scanning** au checkout (Gitleaks)
+- 🛡️ **SAST** avant build (Semgrep, Bandit)
+- 📦 **SCA** sur les dépendances (Pip Audit)
+- 🐳 **Container security** avant/après build (Hadolint, Trivy)
+- 🌐 **DAST** en runtime (Nikto)
+- ⚙️ Chaque job bloque le suivant en cas d'échec critique
 ---
 
 ## Patches & Changelog

@@ -17,27 +17,30 @@ Le projet suit une approche **DevSecOps** : pipeline CI/CD, conteneurisation Doc
 ## Stack technique
 
 ### Backend
-| Technologie | Usage |
-|---|---|
-| **Python 3.12** | Langage principal |
-| **Flask** | Framework web |
-| **SQLAlchemy** (Mapped / `mapped_column`) | ORM avec typage moderne |
-| **Flask-Migrate** / **Alembic** | Migrations de base de données |
-| **Flask-JWT-Extended** | Authentification JWT via cookies HttpOnly |
-| **Flask-CORS** | Gestion des origines cross-domain |
-| **Werkzeug** | Hashage des mots de passe, utilitaires HTTP |
-| **SQLite** | Base de données (développement) |
-| **Docker** | Conteneurisation |
+
+| Technologie                               | Usage                                       |
+| ----------------------------------------- | ------------------------------------------- |
+| **Python 3.12**                           | Langage principal                           |
+| **Flask**                                 | Framework web                               |
+| **SQLAlchemy** (Mapped / `mapped_column`) | ORM avec typage moderne                     |
+| **Flask-Migrate** / **Alembic**           | Migrations de base de données               |
+| **Flask-JWT-Extended**                    | Authentification JWT via cookies HttpOnly   |
+| **Flask-CORS**                            | Gestion des origines cross-domain           |
+| **Werkzeug**                              | Hashage des mots de passe, utilitaires HTTP |
+| **SQLite**                                | Base de données (développement)             |
+| **Docker**                                | Conteneurisation                            |
 
 ### Frontend
-| Technologie | Usage |
-|---|---|
-| **Jinja2** | Moteur de templates Flask |
-| **Tailwind CSS** (CDN) | Framework CSS utilitaire |
-| **HTMX** | Interactions dynamiques sans rechargement |
+
+| Technologie            | Usage                                               |
+| ---------------------- | --------------------------------------------------- |
+| **Jinja2**             | Moteur de templates Flask                           |
+| **Tailwind CSS** (CDN) | Framework CSS utilitaire                            |
+| **HTMX**               | Interactions dynamiques sans rechargement           |
 | **JavaScript vanilla** | Composants interactifs (dropdown, tabs, animations) |
 
 ### Architecture
+
 - Pattern **MVC** (Models / Controllers / Routes)
 - **Decorators** custom (`@login_required` avec injection de `current_user`)
 - **Validators** (DTOs) pour la validation des formulaires
@@ -100,8 +103,8 @@ pip install -r requirements.txt
 Crée un fichier `.env` à la racine :
 
 ```env
-SECRET_KEY=change-moi
-JWT_SECRET_KEY=change-moi-aussi
+SECRET_KEY
+JWT_SECRET_KEY
 FLASK_APP=run.py
 FLASK_DEBUG=1
 ```
@@ -202,6 +205,7 @@ guardia-dev-ops/
 ## Patches & Changelog
 
 ### v0.3.0 — Architecture MVC & DevSecOps
+
 - Refactorisation complète en pattern Controllers / Routes / Models
 - Ajout du decorator `@login_required` avec injection de `current_user`
 - Ajout des validators (DTOs) pour la validation des formulaires
@@ -210,6 +214,7 @@ guardia-dev-ops/
 - Naming convention Alembic pour compatibilité SQLite
 
 ### v0.2.0 — Authentification & Modèles
+
 - JWT stocké en cookie HttpOnly (plus de localStorage)
 - Modèles réécrits avec la syntaxe `Mapped` / `mapped_column` (SQLAlchemy moderne)
 - Relations `back_populates` sur tous les modèles
@@ -218,6 +223,7 @@ guardia-dev-ops/
 - Suggestions d'utilisateurs
 
 ### v0.1.0 — Bootstrap du projet
+
 - Initialisation Flask avec factory pattern `create_app()`
 - `extensions.py` pour éviter les imports circulaires
 - Mise en place Flask-Migrate avec naming convention

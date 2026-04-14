@@ -148,6 +148,9 @@ jobs:
   Build:
     runs-on: ubuntu-22.04
     needs: Pre-build
+    permissions:
+      contents: read
+      packages: write
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -172,7 +175,7 @@ jobs:
           push: true
           tags: |
             ${{ vars.DOCKERHUB_USERNAME }}/glint:latest
-            ghcr.io/${{ github.repository_owner }}:/glint:latest
+            ghcr.io/${{ github.repository_owner }}/glint:latest
 
       # ── Job 8 : Post Build ──────────────────────────────
 

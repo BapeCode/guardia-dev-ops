@@ -155,6 +155,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: lowercase owner
+        id: owner
+        run: echo "name=$(echo ${{ github.repository_owner }} | tr '[:upper:]' '[:lower:]')" >> $GITHUB_OUTPUT
+
       - name: Connextion à DockerHub
         uses: docker/login-action@v4
         with:

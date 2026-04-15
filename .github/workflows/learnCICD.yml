@@ -219,3 +219,10 @@ jobs:
 
       - name: Run DAST avec Nikto
         run: docker run --rm securecodebox/nikto:latest -h http://127.0.0.1:5000/
+
+  Deploy:
+    runs-on: ubuntu-22.04
+    needs: dast
+    steps:
+      - name: Render Deploy
+        run: curl -X POST ${{ secrets.RENDER_DEPLOY_HOOK }}

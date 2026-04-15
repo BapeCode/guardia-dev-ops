@@ -32,7 +32,7 @@ COPY --from=builder /install /install
 COPY --from=builder /app .
 
 # ENV PYTHONPATCH
-ENV PYTHONPATH=/install/lib/python3.12/site-packages
+ENV PYTHONPATH=/install/lib/python3.14/site-packages
 
 # Switch à un utilisateur non-root pour la sécurité
 USER nonroot

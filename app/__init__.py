@@ -8,7 +8,7 @@ from flask_cors import CORS
 
 
 from app.extensions import database, migrate, jwt
-
+from routes.health import health_bp
 
 from .context_processors import inject_user
 
@@ -77,6 +77,7 @@ def create_app():
     app.register_blueprint(dashboard_bp, url_prefix="/")
     app.register_blueprint(posts_bp, url_prefix="/posts")
     app.register_blueprint(settings_bp, url_prefix="/")
+    app.register_blueprint(health_bp, url_prefix="/health")
 
     app.jinja_env.filters["timeago"] = timeago
 

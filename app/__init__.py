@@ -8,7 +8,6 @@ from flask_cors import CORS
 
 
 from app.extensions import database, migrate, jwt
-from routes.health import health_bp
 
 from .context_processors import inject_user
 
@@ -71,6 +70,7 @@ def create_app():
     from .routes.auth import auth_bp
     from .routes.dashboard import dashboard_bp
     from .routes.settings import settings_bp
+    from .routes.health import health_bp
 
     app.register_blueprint(home_bp, url_prefix="/")
     app.register_blueprint(auth_bp, url_prefix="/")

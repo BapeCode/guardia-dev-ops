@@ -1,4 +1,4 @@
-FROM python:3.14-slim AS builder
+FROM python:3.11-slim AS builder
 
 WORKDIR /app
 
@@ -32,7 +32,7 @@ COPY --from=builder /install /install
 COPY --from=builder /app .
 
 # ENV PYTHONPATCH
-ENV PYTHONPATH=/install/lib/python3.14/site-packages
+ENV PYTHONPATH=/install/lib/python3.11/site-packages
 
 # Switch à un utilisateur non-root pour la sécurité
 USER nonroot

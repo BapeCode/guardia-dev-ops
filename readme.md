@@ -29,6 +29,7 @@ Le projet suit une approche **DevSecOps** : pipeline CI/CD, conteneurisation Doc
 | **Werkzeug**                              | Hashage des mots de passe, utilitaires HTTP |
 | **SQLite**                                | Base de données (développement)             |
 | **Docker**                                | Conteneurisation                            |
+| **Kubernetes** (Minikube)                 | Orchestration de conteneurs                 |
 
 ### Frontend
 
@@ -147,6 +148,100 @@ L'application est accessible sur [http://localhost:5000](http://localhost:5000)
 
 ---
 
+## Installation avec Kubernetes (Minikube)
+
+Cette méthode déploie l'application sur un cluster Kubernetes local, utile pour reproduire un environnement proche de la production. L'image Docker `dshellz/glint` doit être disponible publiquement sur Docker Hub.
+
+### Prérequis (à installer une fois sur la machine)
+
+- [Docker Desktop](https://www.docker.com/products/docker-desktop)
+- **Minikube** : `winget install Kubernetes.minikube` (Windows) ou voir [doc officielle](https://minikube.sigs.k8s.io/docs/start/)
+- **kubectl** : `winget install Kubernetes.kubectl`
+
+> 💡 Pour comprendre les alternatives à Minikube (clusters cloud, autres drivers, etc.), voir [`docs/k8s-setup-alternatives.md`](docs/k8s-setup-alternatives.md).
+
+### 1. Démarrer le cluster
+
+```powershell
+minikube start --driver=docker --cpus=4 --memory=4g --kubernetes-version=v1.31.0
+```
+
+Vérification :
+```powershell
+kubectl get nodes
+```
+
+### 2. Créer le fichier Secret
+
+Le fichier `k8s/01-secret.yaml` **n'est pas versionné** (présent dans `.gitignore`). Il faut le créer à partir de l'exemple :
+
+```powershell
+Copy-Item k8s/01-secret.example.yaml k8s/01-secret.yaml
+```
+
+Encoder tes vraies valeurs en base64 :
+```powershell
+[Convert]::ToBase64String([Text.Encoding]::UTF8.GetBytes("ta-secret-key"))
+[Convert]::ToBase64String([Text.Encoding]::UTF8.GetBytes("ta-jwt-key"))
+```
+
+Puis remplacer les valeurs dans `k8s/01-secret.yaml`.
+
+### 3. Appliquer tous les manifests
+
+```powershell
+kubectl apply -f k8s/
+```
+
+Cela crée :
+- Le **Secret** `glint-secrets` (clés sensibles)
+- La **ConfigMap** `nginx-config` (fichier `nginx.conf`)
+- Les **PersistentVolumeClaim** `uploads-pvc` (1 Gi) et `db-pvc` (500 Mi)
+- Le **Deployment** + **Service** `backend` (Flask)
+- Le **Deployment** + **Service** `nginx` (reverse proxy)
+
+Vérifier que tous les pods sont en `Running` :
+```powershell
+kubectl get pods
+```
+
+### 4. Initialiser la base de données (première fois uniquement)
+
+```powershell
+kubectl exec deployment/backend -- python -m flask db upgrade
+```
+
+Les tables sont créées dans le PVC `db-pvc` et **persistent** au redémarrage des pods.
+
+### 5. Accéder à l'application
+
+```powershell
+minikube service nginx
+```
+
+La commande ouvre automatiquement le navigateur sur l'URL exposée par Minikube.
+
+### Commandes utiles
+
+| Commande | Effet |
+|---|---|
+| `kubectl get pods` | État des pods |
+| `kubectl get pvc` | État des volumes persistants |
+| `kubectl logs deployment/backend` | Logs du backend Flask |
+| `kubectl logs deployment/nginx` | Logs du reverse proxy |
+| `kubectl describe pod <nom>` | Détails et événements d'un pod |
+| `kubectl delete pod -l app=backend` | Forcer le redémarrage du backend (test de résilience) |
+| `minikube stop` | Arrêter le cluster (libère CPU/RAM, garde l'état) |
+| `minikube delete` | Détruire le cluster (perd toutes les ressources) |
+
+### ⚠️ Limitations actuelles
+
+- **1 seul replica du backend** (SQLite ne supporte pas les écritures concurrentes via plusieurs pods). Pour scaler horizontalement, migrer vers PostgreSQL.
+- Migrations à lancer **manuellement** après chaque déploiement de nouvelle image. Une évolution future ajoutera un init container pour automatiser.
+- Sur Windows + driver Docker, l'IP du node Minikube (`192.168.49.2`) n'est pas routable directement : utiliser `minikube service nginx` pour le tunneling.
+
+---
+
 ## Structure du projet
 
 ```
@@ -203,6 +298,19 @@ guardia-dev-ops/
 ---
 
 ## Patches & Changelog
+
+### v0.4.0 — Orchestration Kubernetes
+
+- Intégration **Kubernetes** via Minikube en local
+- Manifests YAML versionnés dans `k8s/` :
+  - `Secret` pour les clés sensibles (non versionné, exemple fourni)
+  - `ConfigMap` pour `nginx.conf`
+  - `PersistentVolumeClaim` pour les uploads et la base SQLite
+  - `Deployment` + `Service` du backend Flask (1 replica, contrainte SQLite)
+  - `Deployment` + `Service` Nginx exposé via NodePort
+- Variables d'environnement injectées depuis le Secret (`SECRET_KEY`, `JWT_SECRET_KEY`)
+- Volumes persistants validés : les données survivent au redémarrage des pods
+- Documentation des alternatives K8s (cloud managé, autres drivers) dans `docs/k8s-setup-alternatives.md`
 
 ### v0.3.0 — Architecture MVC & DevSecOps
 

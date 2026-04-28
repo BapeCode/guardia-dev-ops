@@ -1,0 +1,75 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend
+  labels:
+    app: backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: backend
+  template:
+    metadata:
+      labels:
+        app: backend
+    spec:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 65532
+        runAsGroup: 65532
+        fsGroup: 65532
+      secomprofile:
+        type: RuntimeDefault
+      containers:
+        - name: backend
+          image: dshellz/glint:11535ee5f82bb8e080072af15eca269be1ce6fe6
+          ports:
+            - containerPort: 5000
+          env:
+            - name: FLASK_DEBUG
+              value: "1"
+            - name: FLASK_APP
+              value: "app.py"
+            - name: PYTHONPATH
+              value: "/install/lib/python3.11/site-packages:/app"
+            - name: SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: glint-secrets
+                  key: SECRET_KEY
+            - name: JWT_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: glint-secrets
+                  key: JWT_SECRET_KEY
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+            drop: 
+              - ALL
+          volumeMounts:
+            - name: uploads
+              mountPath: /app/app/static/uploads
+            - name: db
+              mountPath: /app/app/instance
+      volumes:
+        - name: uploads
+          persistentVolumeClaim:
+            claimName: uploads-pvc
+        - name: db
+          persistentVolumeClaim:
+            claimName: db-pvc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend
+spec:
+  selector:
+    app: backend
+  ports:
+    - port: 5000
+      targetPort: 5000
+  type: ClusterIP

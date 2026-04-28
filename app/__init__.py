@@ -50,7 +50,10 @@ def create_app():
     os.makedirs(app.instance_path or "instance", exist_ok=True)
 
     app.config["SECRET_KEY"] = os.getenv("SECRET_KEY", "dev")
-    app.config["SQLALCHEMY_DATABASE_URI"] = f"sqlite:///{app.instance_path}/database.db"
+    app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv(
+        "DATABASE_URL",
+        f"sqlite:///{app.instance_path}/database.db"  # fallback local si pas de .env
+    )
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
     app.config["JWT_SECRET_KEY"] = os.getenv("JWT_SECRET_KEY", "dev")
     app.config["JWT_TOKEN_LOCATION"] = ["cookies"]

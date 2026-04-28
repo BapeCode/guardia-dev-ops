@@ -14,11 +14,24 @@ spec:
       labels:
         app: nginx
     spec:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 101
+        runAsGroup: 101
+        fsGroup: 101
+        secomprofile:
+          type: RuntimeDefault
       containers:
         - name: nginx
-          image: nginx:alpine
+          image: nginxinc/nginx-unprivileged:alpine
           ports:
-            - containerPort: 80
+            - containerPort: 8080
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+            drop: 
+              - ALL
           volumeMounts:
             - name: nginx-config
               mountPath: /etc/nginx/nginx.conf
@@ -37,6 +50,6 @@ spec:
     app: nginx
   ports:
     - port: 80
-      targetPort: 80
+      targetPort: 8080
       nodePort: 30080
   type: NodePort

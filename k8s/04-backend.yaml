@@ -19,8 +19,8 @@ spec:
         runAsUser: 65532
         runAsGroup: 65532
         fsGroup: 65532
-      secomprofile:
-        type: RuntimeDefault
+        seccompProfile:
+          type: RuntimeDefault
       containers:
         - name: backend
           image: dshellz/glint:11535ee5f82bb8e080072af15eca269be1ce6fe6
@@ -47,8 +47,8 @@ spec:
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: true
             capabilities:
-            drop: 
-              - ALL
+              drop: 
+                - ALL
           volumeMounts:
             - name: uploads
               mountPath: /app/app/static/uploads

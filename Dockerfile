@@ -27,9 +27,8 @@ COPY --from=builder /app .
 ENV PYTHONPATH=/install/lib/python3.11/site-packages
 ENV PATH=/install/bin:$PATH
 
-RUN pip install --upgrade --no-cache-dir setuptools wheel
-
-RUN useradd -m nonroot
+RUN pip install --upgrade --no-cache-dir setuptools==82.0.1 wheel==0.47.0 \
+    && useradd -m nonroot
 USER nonroot
 
 EXPOSE 5000

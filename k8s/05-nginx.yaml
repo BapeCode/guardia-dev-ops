@@ -19,7 +19,7 @@ spec:
         runAsUser: 101
         runAsGroup: 101
         fsGroup: 101
-        secomprofile:
+        seccompProfile:
           type: RuntimeDefault
       containers:
         - name: nginx
@@ -30,16 +30,28 @@ spec:
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: true
             capabilities:
-            drop: 
-              - ALL
+              drop: 
+                - ALL
           volumeMounts:
             - name: nginx-config
               mountPath: /etc/nginx/nginx.conf
               subPath: nginx.conf
+            - name: tmp
+              mountPath: /tmp
+            - name: cache
+              mountPath: /var/cache/nginx
+            - name: run
+              mountPath: /run
       volumes:
         - name: nginx-config
           configMap:
             name: nginx-config
+        - name: tmp
+          emptyDir: {}
+        - name: cache
+          emptyDir: {}
+        - name: run
+          emptyDir: {}
 ---
 apiVersion: v1
 kind: Service

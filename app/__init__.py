@@ -9,7 +9,6 @@ from flask_cors import CORS
 
 from app.extensions import database, migrate, jwt
 
-
 from .context_processors import inject_user
 
 
@@ -51,7 +50,10 @@ def create_app():
     os.makedirs(app.instance_path or "instance", exist_ok=True)
 
     app.config["SECRET_KEY"] = os.getenv("SECRET_KEY", "dev")
-    app.config["SQLALCHEMY_DATABASE_URI"] = f"sqlite:///{app.instance_path}/database.db"
+    app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv(
+        "DATABASE_URL",
+        f"sqlite:///{app.instance_path}/database.db",  # fallback local si pas de .env
+    )
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
     app.config["JWT_SECRET_KEY"] = os.getenv("JWT_SECRET_KEY", "dev")
     app.config["JWT_TOKEN_LOCATION"] = ["cookies"]
@@ -71,12 +73,14 @@ def create_app():
     from .routes.auth import auth_bp
     from .routes.dashboard import dashboard_bp
     from .routes.settings import settings_bp
+    from .routes.health import health_bp
 
     app.register_blueprint(home_bp, url_prefix="/")
     app.register_blueprint(auth_bp, url_prefix="/")
     app.register_blueprint(dashboard_bp, url_prefix="/")
     app.register_blueprint(posts_bp, url_prefix="/posts")
     app.register_blueprint(settings_bp, url_prefix="/")
+    app.register_blueprint(health_bp, url_prefix="/health")
 
     app.jinja_env.filters["timeago"] = timeago
 

@@ -148,9 +148,16 @@ jobs:
   Build:
     runs-on: ubuntu-22.04
     needs: Pre-build
+    permissions:
+      contents: read
+      packages: write
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
+      - name: lowercase owner
+        id: owner
+        run: echo "name=$(echo ${{ github.repository_owner }} | tr '[:upper:]' '[:lower:]')" >> $GITHUB_OUTPUT
 
       - name: Connextion à DockerHub
         uses: docker/login-action@v4
@@ -158,12 +165,23 @@ jobs:
           username: ${{ vars.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
+      - name: Connexion à GitHub Container Registry
+        uses: docker/login-action@v4
+        with:
+          registry: ghcr.io
+          username: ${{ steps.owner.outputs.name }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Build & Push de l'image Docker sur DockerHub
         uses: docker/build-push-action@v3
         with:
           context: .
           push: true
-          tags: ${{ vars.DOCKERHUB_USERNAME }}/glint:latest
+          tags: |
+            ${{ vars.DOCKERHUB_USERNAME }}/glint:latest
+            ${{ vars.DOCKERHUB_USERNAME }}/glint:${{ github.sha }}
+            ghcr.io/${{ steps.owner.outputs.name }}/glint:latest
+            ghcr.io/${{ steps.owner.outputs.name }}/glint:${{ github.sha }}
 
       # ── Job 8 : Post Build ──────────────────────────────
 
@@ -201,3 +219,10 @@ jobs:
 
       - name: Run DAST avec Nikto
         run: docker run --rm securecodebox/nikto:latest -h http://127.0.0.1:5000/
+
+  Deploy:
+    runs-on: ubuntu-22.04
+    needs: dast
+    steps:
+      - name: Render Deploy
+        run: curl -X POST ${{ secrets.RENDER_DEPLOY_HOOK }}

@@ -1,8 +1,8 @@
-"""Add Like, Post, Followers, Comment, Conversation
+"""initial migration
 
-Revision ID: 41d8bae7e5e8
-Revises: f552468008c9
-Create Date: 2026-04-02 11:29:52.624364
+Revision ID: 1dac2fee7947
+Revises:
+Create Date: 2026-04-28 09:36:28.107879
 
 """
 
@@ -11,8 +11,8 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = "41d8bae7e5e8"
-down_revision = "f552468008c9"
+revision = "1dac2fee7947"
+down_revision = None
 branch_labels = None
 depends_on = None
 
@@ -25,6 +25,23 @@ def upgrade():
         sa.Column("created_at", sa.DateTime(), nullable=False),
         sa.Column("updated_at", sa.DateTime(), nullable=True),
         sa.PrimaryKeyConstraint("id"),
+    )
+    op.create_table(
+        "users",
+        sa.Column("id", sa.Integer(), nullable=False),
+        sa.Column("name", sa.String(length=80), nullable=False),
+        sa.Column("username", sa.String(length=80), nullable=False),
+        sa.Column("email", sa.String(length=120), nullable=False),
+        sa.Column("password", sa.String(length=255), nullable=False),
+        sa.Column("biography", sa.Text(), nullable=False),
+        sa.Column("location", sa.String(length=120), server_default="", nullable=False),
+        sa.Column("banner", sa.String(length=255), server_default="", nullable=False),
+        sa.Column("avatar", sa.String(length=255), server_default="", nullable=False),
+        sa.Column("created_at", sa.DateTime(), nullable=False),
+        sa.Column("updated_at", sa.DateTime(), nullable=True),
+        sa.PrimaryKeyConstraint("id"),
+        sa.UniqueConstraint("email"),
+        sa.UniqueConstraint("username"),
     )
     op.create_table(
         "conversation_member",
@@ -194,5 +211,6 @@ def downgrade():
     op.drop_table("message")
     op.drop_table("follow")
     op.drop_table("conversation_member")
+    op.drop_table("users")
     op.drop_table("conversation")
     # ### end Alembic commands ###

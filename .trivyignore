@@ -22,3 +22,6 @@ CVE-2023-45853
 
 # On utilise pas openssl / Fix disponible mais pas encore appliqué à l'image distroless Debian 12
 CVE-2026-28390
+
+# CVE sans fix disponible - python3.11 embarqué dans l'image distroless Debian 12
+CVE-2026-6100

@@ -24,7 +24,7 @@ class User(database.Model):
     username: Mapped[str] = mapped_column(String(80), unique=True, nullable=False)
     email: Mapped[str] = mapped_column(String(120), unique=True, nullable=False)
     password: Mapped[str] = mapped_column(String(255), nullable=False)
-    biography: Mapped[str] = mapped_column(Text, default="", server_default="")
+    biography: Mapped[str] = mapped_column(Text, default="")
     location: Mapped[str] = mapped_column(String(120), default="", server_default="")
     banner: Mapped[str] = mapped_column(String(255), default="", server_default="")
     avatar: Mapped[str] = mapped_column(String(255), default="", server_default="")

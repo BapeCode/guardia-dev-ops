@@ -1,4 +1,4 @@
-FROM python:3.11-slim AS builder
+FROM python:3.14-slim AS builder
 
 WORKDIR /app
 
@@ -17,7 +17,7 @@ RUN mkdir -p /app/app/static/uploads/avatars \
              /app/app/static/uploads/banners \
              /app/app/static/uploads/posts
 
-FROM python:3.11-slim
+FROM python:3.14-slim
 
 WORKDIR /app
 
